@@ -4,10 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import wooteco.retrospective.domain.member.Member;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class MemberDaoTest {
@@ -33,6 +35,13 @@ class MemberDaoTest {
 
     @Test
     void insertWithDuplicatedName() {
+        Member memberPika = new Member("피카", "123");
+        Member duplicatedMember = new Member("피카", "123");
+
+        memberDao.insert(memberPika);
+
+        assertThatThrownBy(() -> memberDao.insert(duplicatedMember))
+                .isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test
