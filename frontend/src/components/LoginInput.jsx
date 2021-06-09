@@ -8,6 +8,7 @@ class LoginInput extends React.Component {
         type='text'
         value={this.props.value}
         onChange={this.props.onChange}
+        autofocus="autofocus"
       />
     )
   }
@@ -19,13 +20,15 @@ const StInput = styled.input`
   width: 60%;
   font-size: 1.2rem;
   margin: 1rem 0 1rem 0;
+  padding-bottom: 0.2rem;
   
   border: none;
   border-bottom: 1px solid black;
   outline: none;
-  
+  text-align: center;
+
   font-family: 'Hanna-Air';
-  
+
   :focus {
     outline: none;
   }

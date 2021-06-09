@@ -77,4 +77,14 @@ const StButton = styled.button`
 
   font-size: 1.1rem;
   font-family: 'Hanna-Air';
+
+  :hover {
+    background: #788a9a;
+    color: #fdfdfd;
+  }
+
+  :focus {
+    background: #788a9a;
+    color: #fdfdfd;
+  }
 `
