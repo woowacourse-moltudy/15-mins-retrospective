@@ -1,6 +1,10 @@
 package wooteco.retrospective.domain.member;
 
+import java.util.Objects;
+
 public class Member {
+
+    private static final int MAX_LENGTH = 10;
 
     private final Long id;
     private final String name;
@@ -11,9 +15,27 @@ public class Member {
     }
 
     public Member(Long id, String name, String password) {
+        validateMember(name, password);
         this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    private void validateMember(String name, String password) {
+        validateName(name);
+        validatePassword(password);
+    }
+
+    private void validateName(String name) {
+        if (Objects.isNull(name) || name.length() <= 0 || name.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (Objects.isNull(password) || password.length() <= 0 || password.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Long getId() {
