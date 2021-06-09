@@ -1,5 +1,7 @@
 package wooteco.retrospective.domain.pair;
 
+import wooteco.retrospective.domain.pair.member.Member;
+
 import java.util.Collections;
 import java.util.List;
 

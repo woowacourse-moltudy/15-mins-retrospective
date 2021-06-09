@@ -1,4 +1,4 @@
-package wooteco.retrospective.domain.pair;
+package wooteco.retrospective.domain.pair.member;
 
 public class Member {
 
