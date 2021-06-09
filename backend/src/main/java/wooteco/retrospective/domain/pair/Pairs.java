@@ -1,70 +1,43 @@
 package wooteco.retrospective.domain.pair;
 
+import wooteco.retrospective.domain.pair.matchpolicy.DefaultMatchPolicy;
+import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 import wooteco.retrospective.domain.pair.member.Member;
 import wooteco.retrospective.domain.pair.member.Shuffled;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class Pairs {
-    private static final int NUMBER_OF_PAIR = 3;
-    private static final int MINIMUM_PAIRS_SIZE = 2;
+    private static final MatchPolicy DEFAULT_MATCH_POLICY = new DefaultMatchPolicy();
 
     private List<Pair> pairs;
     private final List<Member> members;
+    private final MatchPolicy matchPolicy;
+
+    public Pairs(final List<Member> pairs, MatchPolicy matchPolicy) {
+        this.members = pairs;
+        this.matchPolicy = matchPolicy;
+    }
+
+    public Pairs(final Shuffled<Member> pairs, MatchPolicy matchPolicy) {
+        this(pairs.value(), matchPolicy);
+    }
 
     public Pairs(final List<Member> pairs) {
-        validateNumberOfPairs(pairs);
-        this.members = pairs;
+        this(pairs, DEFAULT_MATCH_POLICY);
     }
 
     public Pairs(final Shuffled<Member> pairs) {
-        this(pairs.value());
-    }
-
-    private void validateNumberOfPairs(List<Member> pairs) {
-        if(pairs.size() < MINIMUM_PAIRS_SIZE) {
-            throw new IllegalArgumentException();
-        }
+        this(pairs.value(), DEFAULT_MATCH_POLICY);
     }
 
     public synchronized List<Pair> getPairs() {
         if (pairs == null) {
-            this.pairs = createPairs(members).stream()
-                    .map(Pair::new)
-                    .collect(toList());
+            this.pairs = matchPolicy.apply(this.members);
         }
 
         return Collections.unmodifiableList(this.pairs);
-    }
-
-    private List<List<Member>> createPairs(final List<Member> members) {
-        if (members.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        int numberOfPair = setNumberOfPair(members);
-
-        List<List<Member>> pairs = createPairs(
-                members.subList(Math.min(numberOfPair, members.size()), members.size())
-        );
-
-        List<Member> pair = new ArrayList<>(members.subList(0, Math.min(numberOfPair, members.size())));
-        pairs.add(pair);
-
-        return pairs;
-    }
-
-    private int setNumberOfPair(List<Member> members) {
-        int numberOfPair = NUMBER_OF_PAIR;
-        if (members.size() % NUMBER_OF_PAIR == 1 || members.size() % 3 == MINIMUM_PAIRS_SIZE) {
-            numberOfPair = MINIMUM_PAIRS_SIZE;
-        }
-
-        return numberOfPair;
     }
 
 }

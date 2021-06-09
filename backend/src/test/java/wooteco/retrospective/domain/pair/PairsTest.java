@@ -1,44 +1,26 @@
 package wooteco.retrospective.domain.pair;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import wooteco.retrospective.domain.pair.common.Texture;
+import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 import wooteco.retrospective.domain.pair.member.Member;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PairsTest {
-    private static final Member neozal = new Member("손너잘");
-    private static final Member whyguy = new Member("웨지");
-    private static final Member danijani = new Member("다니");
-    private static final Member soulg = new Member("솔지");
-    private static final Member chu = new Member("피카");
-    private static final Member spring = new Member("나봄");
-    private static final Member duck = new Member("조연우");
 
-    @DisplayName("사용자 리스트가 2보다 작으면 예외")
-    @Test
-    void getPair_inFalseCase() {
-        assertThatThrownBy(() -> new Pairs(Collections.singletonList(neozal)).getPairs())
-                .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> new Pairs(Collections.emptyList()).getPairs())
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @DisplayName("사용자 리스트를 받으면, 회고 가능한 인원대로 페어로 만들어준다.")
+    @DisplayName("기본 matchPolicy 를 이용하여 페어 매칭을 진행한다.")
     @ParameterizedTest
-    @MethodSource("provideMemberListForGetPairsTest")
-    void getPairs_makePairAccordingToTheRightNumberOfPeople(List<Member> members, List<Integer> expected) {
+    @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
+    void getPairs_pairMatchWithDefaultPolicy(List<Member> members, List<Integer> expected) {
         List<Pair> pairs = new Pairs(members).getPairs();
 
         List<List<Member>> pairMembers = pairs.stream()
@@ -54,30 +36,48 @@ class PairsTest {
 
     @DisplayName("페어 생성 시 멤버 중복은 허용하지 않는다.")
     @ParameterizedTest
-    @MethodSource("provideMemberListForGetPairsTest")
-    void getPairs_membersCannotBeDuplicated(List<Member> members, List<Integer> expected) {
+    @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
+    void getPairs_cannotAllowDuplicatedMemberForAllPairs(List<Member> members) {
+        List<Pair> pairs = new Pairs(members).getPairs();
+
+        long actual = pairs.stream()
+                .distinct()
+                .mapToLong(pair -> pair.getMembers().size())
+                .sum();
+
+        assertThat(actual).isEqualTo(members.size());
+    }
+
+    private static Stream<Arguments> provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy() {
+        return Texture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
+    }
+
+    @DisplayName("기본 matchPolicy 를 이용하여 페어 매칭을 진행한다.")
+    @ParameterizedTest
+    @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
+    void getPairs_inTrueCase(List<Member> members, List<Integer> expected) {
         List<Pair> pairs = new Pairs(members).getPairs();
 
         List<List<Member>> pairMembers = pairs.stream()
                 .map(Pair::getMembers)
                 .collect(toList());
 
-        long actual = pairMembers.stream()
-                .flatMap(Collection::stream)
-                .distinct()
-                .count();
+        List<Integer> actual = pairMembers.stream()
+                .map(List::size)
+                .collect(toList());
 
-        assertThat(actual).isEqualTo(members.size());
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
-    private static Stream<Arguments> provideMemberListForGetPairsTest() {
-        return Stream.of(
-                Arguments.of(List.of(neozal, whyguy), List.of(2)),
-                Arguments.of(List.of(neozal, whyguy, danijani, soulg), List.of(2, 2)),
-                Arguments.of(List.of(neozal, whyguy, danijani, soulg, chu), List.of(3, 2)),
-                Arguments.of(List.of(neozal, whyguy, danijani, soulg, chu, spring), List.of(3, 3)),
-                Arguments.of(List.of(neozal, whyguy, danijani, soulg, chu, spring, duck), List.of(3, 2, 2))
-        );
+    @DisplayName("customPolicy 를 이용하여 페어 매칭을 진행한다.")
+    @ParameterizedTest
+    @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
+    void getPairs_withCustomPolicy(List<Member> members) {
+        final MatchPolicy matchPolicy = memberList -> Collections.singletonList(new Pair(memberList));
+
+        List<Pair> actual = new Pairs(members, matchPolicy).getPairs();
+
+        assertThat(actual).isEqualTo(Collections.singletonList(new Pair(members)));
     }
-    
+
 }

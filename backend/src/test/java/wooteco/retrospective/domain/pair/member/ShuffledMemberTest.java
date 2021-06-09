@@ -1,31 +1,25 @@
-package wooteco.retrospective.domain.pair;
+package wooteco.retrospective.domain.pair.member;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import wooteco.retrospective.domain.pair.member.Member;
-import wooteco.retrospective.domain.pair.member.Shuffled;
-import wooteco.retrospective.domain.pair.member.ShuffledMembers;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.retrospective.domain.pair.common.Texture.*;
 
 class ShuffledMemberTest {
-
-    private static final Member neozal = new Member("손너잘");
-    private static final Member whyGuy = new Member("웨지");
-    private static final Member daniJani = new Member("다니");
 
     @DisplayName("셔플된 맴버를 반환한다.")
     @ParameterizedTest
     @MethodSource("provideShufflePolicies")
     void value_returnShuffledMembers(UnaryOperator<List<Member>> shufflePolicy, List<Member> expected) {
         Shuffled<Member> shuffledMembers = new ShuffledMembers(
-                List.of(neozal, whyGuy, daniJani),
+                List.of(neozal, whyguy, danijani),
                 shufflePolicy
         );
 
@@ -35,16 +29,16 @@ class ShuffledMemberTest {
     private static Stream<Arguments> provideShufflePolicies() {
         return Stream.of(
                 Arguments.of(
-                        (UnaryOperator<List<Member>>) members -> List.of(neozal, whyGuy, daniJani),
-                        List.of(neozal, whyGuy, daniJani)
+                        (UnaryOperator<List<Member>>) members -> List.of(neozal, whyguy, danijani),
+                        List.of(neozal, whyguy, danijani)
                 ),
                 Arguments.of(
-                        (UnaryOperator<List<Member>>) members -> List.of(whyGuy, neozal, daniJani),
-                        List.of(whyGuy, neozal, daniJani)
+                        (UnaryOperator<List<Member>>) members -> List.of(whyguy, neozal, danijani),
+                        List.of(whyguy, neozal, danijani)
                 ),
                 Arguments.of(
-                        (UnaryOperator<List<Member>>) members -> List.of(daniJani, whyGuy, neozal),
-                        List.of(daniJani, whyGuy, neozal)
+                        (UnaryOperator<List<Member>>) members -> List.of(danijani, whyguy, neozal),
+                        List.of(danijani, whyguy, neozal)
                 )
         );
     }
