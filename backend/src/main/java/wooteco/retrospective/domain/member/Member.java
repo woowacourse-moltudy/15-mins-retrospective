@@ -8,32 +8,23 @@ public class Member {
 
     private final Long id;
     private final String name;
-    private final String password;
 
-    public Member(String name, String password) {
-        this(null, name, password);
+    public Member(String name) {
+        this(null, name);
     }
 
-    public Member(Long id, String name, String password) {
-        validateMember(name, password);
+    public Member(Long id, String name) {
+        validateMember(name);
         this.id = id;
         this.name = name;
-        this.password = password;
     }
 
-    private void validateMember(String name, String password) {
+    private void validateMember(String name) {
         validateName(name);
-        validatePassword(password);
     }
 
     private void validateName(String name) {
         if (Objects.isNull(name) || name.length() <= 0 || name.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (Objects.isNull(password) || password.length() <= 0 || password.length() > MAX_LENGTH) {
             throw new IllegalArgumentException();
         }
     }
@@ -44,10 +35,6 @@ public class Member {
 
     public String getName() {
         return name;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override

@@ -17,16 +17,19 @@ class MemberDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private MemberDao memberDao;
+    private Member memberPika;
+    private Member memberLion;
 
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
+        memberPika = new Member("피카");
+        memberLion = new Member("라이언");
     }
 
     @Test
     void insert() {
-        Member member = new Member("피카", "123");
-        Member insertMember = memberDao.insert(member);
+        Member insertMember = memberDao.insert(memberPika);
 
         Member findById = memberDao.findById(insertMember.getId()).orElseThrow(IllegalArgumentException::new);
 
@@ -35,8 +38,7 @@ class MemberDaoTest {
 
     @Test
     void insertWithDuplicatedName() {
-        Member memberPika = new Member("피카", "123");
-        Member duplicatedMember = new Member("피카", "123");
+        Member duplicatedMember = new Member("피카");
 
         memberDao.insert(memberPika);
 
@@ -46,9 +48,6 @@ class MemberDaoTest {
 
     @Test
     void delete() {
-        Member memberPika = new Member("피카", "123");
-        Member memberLion = new Member("라이언", "123");
-
         Member insertMemberPika = memberDao.insert(memberPika);
         Member insertMemberLion = memberDao.insert(memberLion);
 
@@ -60,16 +59,13 @@ class MemberDaoTest {
 
     @Test
     void update() {
-        Member memberPika = new Member("피카", "123");
         Member insertMemberPika = memberDao.insert(memberPika);
-        Member memberLion = new Member("라이언", "456");
 
         memberDao.update(insertMemberPika.getId(), memberLion);
 
         Member updateMember = memberDao.findById(insertMemberPika.getId()).orElseThrow(IllegalArgumentException::new);
 
         assertThat(updateMember.getName()).isEqualTo(memberLion.getName());
-        assertThat(updateMember.getPassword()).isEqualTo(memberLion.getPassword());
     }
 
 }

@@ -23,23 +23,21 @@ public class MemberDao {
     private final RowMapper<Member> rowMapper = (rs, rn) ->
             new Member(
                     rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("password")
+                    rs.getString("name")
             );
 
     public Member insert(Member member) {
-        String query = "INSERT INTO MEMBER(name, password) VALUES(?, ?)";
+        String query = "INSERT INTO MEMBER(name) VALUES(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         this.jdbcTemplate.update(c -> {
             PreparedStatement ps = c.prepareStatement(query, new String[]{"id"});
             ps.setString(1, member.getName());
-            ps.setString(2, member.getPassword());
 
             return ps;
         }, keyHolder);
 
-        return new Member(keyHolder.getKey().longValue(), member.getName(), member.getPassword());
+        return new Member(keyHolder.getKey().longValue(), member.getName());
     }
 
     public Optional<Member> findById(Long id) {
@@ -69,9 +67,9 @@ public class MemberDao {
     }
 
     public int update(Long id, Member memberLion) {
-        String query = "UPDATE MEMBER SET name = ?, password = ? WHERE id = ?";
+        String query = "UPDATE MEMBER SET name = ? WHERE id = ?";
 
-        return this.jdbcTemplate.update(query, memberLion.getName(), memberLion.getPassword(), id);
+        return this.jdbcTemplate.update(query, memberLion.getName(), id);
     }
 
 }
