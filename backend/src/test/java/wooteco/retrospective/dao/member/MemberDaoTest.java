@@ -1,6 +1,7 @@
 package wooteco.retrospective.dao.member;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -27,6 +28,7 @@ class MemberDaoTest {
         memberLion = new Member("라이언");
     }
 
+    @DisplayName("Member 추가")
     @Test
     void insert() {
         Member insertMember = memberDao.insert(memberPika);
@@ -36,6 +38,7 @@ class MemberDaoTest {
         assertThat(insertMember).isEqualTo(findById);
     }
 
+    @DisplayName("중복된 Member를 추가할 시 에러")
     @Test
     void insertWithDuplicatedName() {
         Member duplicatedMember = new Member("피카");
@@ -46,6 +49,7 @@ class MemberDaoTest {
                 .isInstanceOf(DuplicateKeyException.class);
     }
 
+    @DisplayName("Member 삭제")
     @Test
     void delete() {
         Member insertMemberPika = memberDao.insert(memberPika);
@@ -57,6 +61,7 @@ class MemberDaoTest {
         assertThat(memberDao.findAll()).containsExactly(insertMemberPika);
     }
 
+    @DisplayName("Member 수정")
     @Test
     void update() {
         Member insertMemberPika = memberDao.insert(memberPika);
