@@ -35,27 +35,39 @@ class PairsTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("사용자 리스트를 받으면, 페어로 만들어준다.")
+    @DisplayName("사용자 리스트를 받으면, 회고 가능한 인원대로 페어로 만들어준다.")
     @ParameterizedTest
     @MethodSource("provideMemberListForGetPairsTest")
-    void getPairs(List<Member> members, List<Integer> expected) {
+    void getPairs_makePairAccordingToTheRightNumberOfPeople(List<Member> members, List<Integer> expected) {
         List<Pair> pairs = new Pairs(members).getPairs();
 
         List<List<Member>> pairMembers = pairs.stream()
                 .map(Pair::getMembers)
                 .collect(toList());
 
-        long countOfAllPairMembers = pairMembers.stream()
+        List<Integer> actual = pairMembers.stream()
+                .map(List::size)
+                .collect(toList());
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @DisplayName("페어 생성 시 멤버 중복은 허용하지 않는다.")
+    @ParameterizedTest
+    @MethodSource("provideMemberListForGetPairsTest")
+    void getPairs_membersCannotBeDuplicated(List<Member> members, List<Integer> expected) {
+        List<Pair> pairs = new Pairs(members).getPairs();
+
+        List<List<Member>> pairMembers = pairs.stream()
+                .map(Pair::getMembers)
+                .collect(toList());
+
+        long actual = pairMembers.stream()
                 .flatMap(Collection::stream)
                 .distinct()
                 .count();
 
-        List<Integer> countOfEachPairMembers = pairMembers.stream()
-                .map(List::size)
-                .collect(toList());
-
-        assertThat(countOfEachPairMembers).usingRecursiveComparison().isEqualTo(expected);
-        assertThat(countOfAllPairMembers).isEqualTo(members.size());
+        assertThat(actual).isEqualTo(members.size());
     }
 
     private static Stream<Arguments> provideMemberListForGetPairsTest() {
