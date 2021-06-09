@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,13 +40,21 @@ class PairsTest {
     void getPairs(List<Member> members, List<Integer> expected) {
         List<Pair> pairs = new Pairs(members).getPairs();
 
-        List<Integer> actual = pairs.stream()
+        List<List<Member>> pairMembers = pairs.stream()
                 .map(Pair::getMembers)
+                .collect(toList());
+
+        long countOfAllPairMembers = pairMembers.stream()
+                .flatMap(Collection::stream)
+                .distinct()
+                .count();
+
+        List<Integer> countOfEachPairMembers = pairMembers.stream()
                 .map(List::size)
                 .collect(toList());
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-
+        assertThat(countOfEachPairMembers).usingRecursiveComparison().isEqualTo(expected);
+        assertThat(countOfAllPairMembers).isEqualTo(members.size());
     }
 
     private static Stream<Arguments> provideMemberListForGetPairsTest() {
