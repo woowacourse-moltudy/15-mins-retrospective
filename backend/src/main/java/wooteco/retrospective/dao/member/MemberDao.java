@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import wooteco.retrospective.domain.member.Member;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -48,4 +49,29 @@ public class MemberDao {
                 .stream()
                 .findAny();
     }
+
+    public int count() {
+        String query = "SELECT count(*) FROM MEMBER";
+
+        return this.jdbcTemplate.queryForObject(query, Integer.class);
+    }
+
+    public int delete(Long id) {
+        String query = "DELETE FROM MEMBER WHERE id = ?";
+
+        return this.jdbcTemplate.update(query, id);
+    }
+
+    public List<Member> findAll() {
+        String query = "SELECT * FROM MEMBER";
+
+        return this.jdbcTemplate.query(query, rowMapper);
+    }
+
+    public int update(Long id, Member memberLion) {
+        String query = "UPDATE MEMBER SET name = ?, password = ? WHERE id = ?";
+
+        return this.jdbcTemplate.update(query, memberLion.getName(), memberLion.getPassword(), id);
+    }
+
 }
