@@ -22,13 +22,13 @@ class Login extends React.Component {
       <StDiv>
         <StContainer>
           <StHeading>
-            닉네임을 입력해주세요.
+            똑똑! 로그인
           </StHeading>
           <LoginInput
             value={this.state.name}
             onChange={this.handleInput}
           />
-          <StButton>등록</StButton>
+          <StButton>입장</StButton>
         </StContainer>
       </StDiv>
     )
@@ -78,13 +78,40 @@ const StButton = styled.button`
   font-size: 1.1rem;
   font-family: 'Hanna-Air';
 
-  :hover {
-    background: #788a9a;
-    color: #fdfdfd;
+  /* ripple effect */
+  position: relative;
+  overflow: hidden;
+
+  :after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(253, 253, 253, 0.58);
+    opacity: 0;
+    border-radius: 50%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
   }
 
-  :focus {
-    background: #788a9a;
-    color: #fdfdfd;
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 1;
+    }
+    20% {
+      transform: scale(60, 50);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(100, 100);
+    }
+  }
+
+  :focus:not(:active)::after {
+    animation: ripple 2s ease-out;
   }
 `

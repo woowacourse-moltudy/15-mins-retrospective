@@ -21,9 +21,9 @@ const StInput = styled.input`
   font-size: 1.2rem;
   margin: 1rem 0 1rem 0;
   padding-bottom: 0.2rem;
-  
+
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #303030;
   outline: none;
   text-align: center;
 
