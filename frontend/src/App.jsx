@@ -27,5 +27,6 @@ export default App
 const GlobalStyles = createGlobalStyle`
   body {
     font-family: 'Hanna-Air';
+    color: #303030;
   }
 `
