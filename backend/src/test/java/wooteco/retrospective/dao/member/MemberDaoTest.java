@@ -17,23 +17,25 @@ class MemberDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private MemberDao memberDao;
-    private Member memberPika;
-    private Member memberLion;
+    private Member pika;
+    private Member lion;
 
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
-        memberPika = new Member("피카");
-        memberLion = new Member("라이언");
+        pika = new Member("피카");
+        lion = new Member("라이언");
     }
 
     @DisplayName("Member 추가")
     @Test
     void insert() {
-        Member insertMember = memberDao.insert(memberPika);
+        Member insertMember = memberDao.insert(pika);
 
-        Member findMember = memberDao.findById(insertMember.getId()).orElseThrow(IllegalArgumentException::new);
+        Member findMember = memberDao.findById(insertMember.getId())
+                .orElseThrow(IllegalArgumentException::new);
 
         assertThat(insertMember).isEqualTo(findMember);
     }
@@ -41,19 +43,17 @@ class MemberDaoTest {
     @DisplayName("중복된 Member를 추가할 시 에러")
     @Test
     void insertWithDuplicatedName() {
-        Member duplicatedMember = new Member("피카");
+        memberDao.insert(pika);
 
-        memberDao.insert(memberPika);
-
-        assertThatThrownBy(() -> memberDao.insert(duplicatedMember))
+        assertThatThrownBy(() -> memberDao.insert(pika))
                 .isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("Member 삭제")
     @Test
     void delete() {
-        Member insertMemberPika = memberDao.insert(memberPika);
-        Member insertMemberLion = memberDao.insert(memberLion);
+        Member insertMemberPika = memberDao.insert(pika);
+        Member insertMemberLion = memberDao.insert(lion);
 
         memberDao.delete(insertMemberLion.getId());
 
@@ -64,13 +64,13 @@ class MemberDaoTest {
     @DisplayName("Member 수정")
     @Test
     void update() {
-        Member insertMemberPika = memberDao.insert(memberPika);
+        Member insertMemberPika = memberDao.insert(pika);
 
-        memberDao.update(insertMemberPika.getId(), memberLion);
+        memberDao.update(insertMemberPika.getId(), lion);
 
         Member updateMember = memberDao.findById(insertMemberPika.getId()).orElseThrow(IllegalArgumentException::new);
 
-        assertThat(updateMember.getName()).isEqualTo(memberLion.getName());
+        assertThat(updateMember.getName()).isEqualTo(lion.getName());
     }
 
 }
