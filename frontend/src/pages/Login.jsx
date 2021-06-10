@@ -6,28 +6,41 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ''
+      name: '',
+      valid: true
     }
   }
 
   handleInput = async (e) => {
+    if (e.target.value.length > 10) {
+      this.setState({
+        valid: false
+      })
+    } else {
+      this.setState({
+        valid: true
+      })
+    }
+
     await this.setState({
-      name: e.target.value,
+      name: e.target.value.substring(0, 10),
     });
-    console.log(this.state.name)
   };
 
   render() {
     return (
       <StDiv>
         <StContainer>
-          <StHeading>
-            똑똑! 로그인
-          </StHeading>
-          <LoginInput
-            value={this.state.name}
-            onChange={this.handleInput}
-          />
+          <Wrapper>
+            <StHeading>
+              똑똑! 로그인
+            </StHeading>
+            <LoginInput
+              value={this.state.name}
+              onChange={this.handleInput}
+            />
+          </Wrapper>
+          {!this.state.valid && <StMessage>닉네임은 10글자 이하로 입력해주세요.</StMessage>}
           <StButton>입장</StButton>
         </StContainer>
       </StDiv>
@@ -40,7 +53,7 @@ export default Login
 const StHeading = styled.div`
   font-size: 1.4rem;
   font-family: 'Hanna-Pro';
-  margin-top: 4rem;
+  margin: 4rem 0 2rem 0;
 `
 
 const StDiv = styled.div`
@@ -114,4 +127,19 @@ const StButton = styled.button`
   :focus:not(:active)::after {
     animation: ripple 2s ease-out;
   }
+`
+
+const StMessage = styled.div`
+  font-size: 0.8rem;
+  color: red;
+  position: relative;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  width: 100%;
 `
