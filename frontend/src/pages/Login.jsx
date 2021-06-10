@@ -40,13 +40,22 @@ class Login extends React.Component {
     const _data = {
       name: this.state.name
     }
-    const _res = await axios({
-      method: 'post',
-      url: 'http://localhost:3000/login',
-      data: _data
-    })
+    try {
+      const _res = await axios({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: _data
+      })
+      if (_res.status < 300) {
+        localStorage.setItem('token', _res.data.token)
+      }
+    } catch (err) {
+      this.toggleValid(false)
+      this.setState({
+        validMessage: err.message
+      })
+    }
 
-    console.log(_res)
   }
 
   render() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter, Route} from 'react-router-dom'
-import styled, {createGlobalStyle} from 'styled-components'
+import {createGlobalStyle} from 'styled-components'
 import Login from './pages/Login'
 import Main from './pages/Main'
 import GlobalFonts from './styles/fonts/fonts'

@@ -8,7 +8,7 @@ class LoginInput extends React.Component {
         type='text'
         value={this.props.value}
         onChange={this.props.onChange}
-        autofocus="autofocus"
+        autoFocus="autoFocus"
       />
     )
   }
