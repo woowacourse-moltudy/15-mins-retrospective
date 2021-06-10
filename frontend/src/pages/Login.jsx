@@ -1,31 +1,53 @@
 import React from 'react'
 import styled from "styled-components";
 import LoginInput from "../components/LoginInput";
+import axios from "axios";
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
-      valid: true
+      valid: false,
+      validMessage: ""
     }
+  }
+
+  toggleValid(isValid) {
+    this.setState({
+      valid: isValid
+    })
   }
 
   handleInput = async (e) => {
     if (e.target.value.length > 10) {
+      this.toggleValid(false)
       this.setState({
-        valid: false
+        validMessage: "닉네임은 10글자 이하로 입력해주세요."
       })
+    } else if (e.target.value.length < 1) {
+      this.toggleValid(false)
     } else {
-      this.setState({
-        valid: true
-      })
+      this.toggleValid(true)
     }
 
     await this.setState({
-      name: e.target.value.substring(0, 10),
+      name: e.target.value.substring(0, 10).replaceAll(' ', ''),
     });
   };
+
+  handleSubmit = async () => {
+    const _data = {
+      name: this.state.name
+    }
+    const _res = await axios({
+      method: 'post',
+      url: 'http://localhost:3000/login',
+      data: _data
+    })
+
+    console.log(_res)
+  }
 
   render() {
     return (
@@ -40,8 +62,13 @@ class Login extends React.Component {
               onChange={this.handleInput}
             />
           </Wrapper>
-          {!this.state.valid && <StMessage>닉네임은 10글자 이하로 입력해주세요.</StMessage>}
-          <StButton>입장</StButton>
+          {!this.state.valid && <StMessage>{this.state.validMessage}</StMessage>}
+          <StButton
+            onClick={this.handleSubmit}
+            disabled={!this.state.valid}
+          >
+            입장
+          </StButton>
         </StContainer>
       </StDiv>
     )
@@ -140,6 +167,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   width: 100%;
 `
