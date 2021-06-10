@@ -20,7 +20,7 @@ public class Member {
     }
 
     private void validateMember(String name) {
-        if(Objects.isNull(name)) {
+        if (Objects.isNull(name)) {
             throw new IllegalArgumentException();
         }
 
@@ -53,5 +53,5 @@ public class Member {
     public int hashCode() {
         return getId() != null ? getId().hashCode() : 0;
     }
-    
+
 }

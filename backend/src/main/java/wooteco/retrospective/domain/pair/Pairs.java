@@ -10,10 +10,9 @@ import java.util.List;
 
 public class Pairs {
     private static final MatchPolicy DEFAULT_MATCH_POLICY = new DefaultMatchPolicy();
-
-    private List<Pair> pairs;
     private final List<Member> members;
     private final MatchPolicy matchPolicy;
+    private List<Pair> pairs;
 
     public Pairs(final List<Member> pairs) {
         this(pairs, DEFAULT_MATCH_POLICY);

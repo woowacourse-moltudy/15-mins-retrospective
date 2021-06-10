@@ -17,6 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PairsTest {
 
+    private static Stream<Arguments> provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy() {
+        return Fixture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
+    }
+
     @DisplayName("기본 matchPolicy 를 이용하여 페어 매칭을 진행한다.")
     @ParameterizedTest
     @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
@@ -46,10 +50,6 @@ class PairsTest {
                 .sum();
 
         assertThat(actual).isEqualTo(members.size());
-    }
-
-    private static Stream<Arguments> provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy() {
-        return Fixture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
     }
 
     @DisplayName("기본 matchPolicy 를 이용하여 페어 매칭을 진행한다.")

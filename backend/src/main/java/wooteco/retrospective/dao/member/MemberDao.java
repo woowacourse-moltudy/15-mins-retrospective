@@ -15,16 +15,15 @@ import java.util.Optional;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public MemberDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<Member> rowMapper = (rs, rn) ->
             new Member(
                     rs.getLong("id"),
                     rs.getString("name")
             );
+
+    public MemberDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Member insert(Member member) {
         String query = "INSERT INTO MEMBER(name) VALUES(?)";

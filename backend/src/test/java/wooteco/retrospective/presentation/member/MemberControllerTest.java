@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wooteco.dto.member.MemberLoginRequest;
 import wooteco.dto.member.MemberLoginResponse;
-import wooteco.exception.RetrospectiveException;
 import wooteco.retrospective.application.member.MemberService;
 
 import static org.mockito.ArgumentMatchers.any;
