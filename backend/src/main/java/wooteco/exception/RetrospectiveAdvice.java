@@ -2,9 +2,12 @@ package wooteco.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.dto.exception.RetrospectiveExceptionResponse;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class RetrospectiveAdvice {
@@ -14,6 +17,14 @@ public class RetrospectiveAdvice {
         int httpStatus = HttpStatus.NOT_FOUND.value();
         RetrospectiveExceptionResponse response =
                 new RetrospectiveExceptionResponse(httpStatus, e.getMessage());
+        return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<RetrospectiveExceptionResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        int httpStatus = HttpStatus.BAD_REQUEST.value();
+        RetrospectiveExceptionResponse response =
+                new RetrospectiveExceptionResponse(httpStatus, Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
         return ResponseEntity.status(httpStatus).body(response);
     }
 
