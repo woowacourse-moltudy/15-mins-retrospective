@@ -37,7 +37,7 @@ public class MemberDao {
             return ps;
         }, keyHolder);
 
-        return new Member(keyHolder.getKey().longValue(), member.getName());
+        return new Member(keyHolder.getKeyAs(long.class), member.getName());
     }
 
     public Optional<Member> findById(Long id) {
@@ -48,7 +48,7 @@ public class MemberDao {
                 .findAny();
     }
 
-    public int count() {
+    public int size() {
         String query = "SELECT count(*) FROM MEMBER";
 
         return this.jdbcTemplate.queryForObject(query, Integer.class);

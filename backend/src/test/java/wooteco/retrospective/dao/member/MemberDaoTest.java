@@ -33,9 +33,9 @@ class MemberDaoTest {
     void insert() {
         Member insertMember = memberDao.insert(memberPika);
 
-        Member findById = memberDao.findById(insertMember.getId()).orElseThrow(IllegalArgumentException::new);
+        Member findMember = memberDao.findById(insertMember.getId()).orElseThrow(IllegalArgumentException::new);
 
-        assertThat(insertMember).isEqualTo(findById);
+        assertThat(insertMember).isEqualTo(findMember);
     }
 
     @DisplayName("중복된 Member를 추가할 시 에러")
@@ -57,7 +57,7 @@ class MemberDaoTest {
 
         memberDao.delete(insertMemberLion.getId());
 
-        assertThat(memberDao.count()).isEqualTo(1);
+        assertThat(memberDao.size()).isEqualTo(1);
         assertThat(memberDao.findAll()).containsExactly(insertMemberPika);
     }
 
