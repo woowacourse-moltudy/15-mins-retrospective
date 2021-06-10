@@ -20,11 +20,13 @@ public class Member {
     }
 
     private void validateMember(String name) {
-        validateName(name);
-    }
+        if(Objects.isNull(name)) {
+            throw new IllegalArgumentException();
+        }
 
-    private void validateName(String name) {
-        if (Objects.isNull(name) || name.length() <= 0 || name.length() > MAX_LENGTH) {
+        name = name.replaceAll(" ", "");
+
+        if (name.length() <= 0 || name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException();
         }
     }

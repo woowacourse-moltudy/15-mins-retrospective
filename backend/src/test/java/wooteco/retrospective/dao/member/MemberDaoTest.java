@@ -57,7 +57,6 @@ class MemberDaoTest {
 
         memberDao.delete(insertMemberLion.getId());
 
-        assertThat(memberDao.size()).isEqualTo(1);
         assertThat(memberDao.findAll()).containsExactly(insertMemberPika);
     }
 
