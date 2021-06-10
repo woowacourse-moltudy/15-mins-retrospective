@@ -6,7 +6,7 @@ import wooteco.retrospective.domain.pair.member.Member;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Texture {
+public class Fixture {
 
     public static final Member neozal = new Member("손너잘");
     public static final Member whyguy = new Member("웨지");

@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.retrospective.domain.pair.common.Texture.*;
+import static wooteco.retrospective.domain.pair.common.Fixture.*;
 
 class ShuffledMemberTest {
 

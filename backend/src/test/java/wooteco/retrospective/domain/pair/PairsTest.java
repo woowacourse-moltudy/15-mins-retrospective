@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import wooteco.retrospective.domain.pair.common.Texture;
+import wooteco.retrospective.domain.pair.common.Fixture;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 import wooteco.retrospective.domain.pair.member.Member;
 
@@ -49,7 +49,7 @@ class PairsTest {
     }
 
     private static Stream<Arguments> provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy() {
-        return Texture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
+        return Fixture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
     }
 
     @DisplayName("기본 matchPolicy 를 이용하여 페어 매칭을 진행한다.")
