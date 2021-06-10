@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Main from './pages/Main'
 import GlobalFonts from './styles/fonts/fonts'
 import BackGround from './components/BackGround'
+import PrivateRoute from './components/PrivateRoute'
 
 class App extends React.Component {
   render() {
@@ -14,7 +15,7 @@ class App extends React.Component {
         <GlobalFonts/>
         <BackGround/>
         <BrowserRouter>
-          <Route exact path="/" component={Main}/>
+          <PrivateRoute exact path="/" component={Main}/>
           <Route exact path="/login" component={Login}/>
         </BrowserRouter>
       </div>
