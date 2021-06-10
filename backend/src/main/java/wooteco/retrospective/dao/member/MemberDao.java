@@ -37,7 +37,7 @@ public class MemberDao {
             return ps;
         }, keyHolder);
 
-        return new Member(keyHolder.getKeyAs(long.class), member.getName());
+        return new Member(keyHolder.getKeyAs(Long.class), member.getName());
     }
 
     public Optional<Member> findById(Long id) {
@@ -48,16 +48,12 @@ public class MemberDao {
                 .findAny();
     }
 
-    public int size() {
-        String query = "SELECT count(*) FROM MEMBER";
+    public Optional<Member> findByName(String name) {
+        String query = "SELECT * FROM MEMBER WHERE name = ?";
 
-        return this.jdbcTemplate.queryForObject(query, Integer.class);
-    }
-
-    public int delete(Long id) {
-        String query = "DELETE FROM MEMBER WHERE id = ?";
-
-        return this.jdbcTemplate.update(query, id);
+        return this.jdbcTemplate.query(query, rowMapper, name)
+                .stream()
+                .findAny();
     }
 
     public List<Member> findAll() {
@@ -70,6 +66,24 @@ public class MemberDao {
         String query = "UPDATE MEMBER SET name = ? WHERE id = ?";
 
         return this.jdbcTemplate.update(query, memberLion.getName(), id);
+    }
+
+    public int delete(Long id) {
+        String query = "DELETE FROM MEMBER WHERE id = ?";
+
+        return this.jdbcTemplate.update(query, id);
+    }
+
+    public int size() {
+        String query = "SELECT count(*) FROM MEMBER";
+
+        return this.jdbcTemplate.queryForObject(query, Integer.class);
+    }
+
+    public boolean exists(String name) {
+        String query = "SELECT EXISTS (SELECT * FROM MEMBER WHERE name = ?)";
+
+        return this.jdbcTemplate.queryForObject(query, Boolean.class, name);
     }
 
 }

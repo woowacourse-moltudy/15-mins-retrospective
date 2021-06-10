@@ -12,6 +12,7 @@ import wooteco.retrospective.domain.member.Member;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("회원 - DAO 테스트")
 @JdbcTest
 class MemberDaoTest {
 
@@ -49,6 +50,18 @@ class MemberDaoTest {
                 .isInstanceOf(DuplicateKeyException.class);
     }
 
+    @DisplayName("Member 수정")
+    @Test
+    void update() {
+        Member insertMemberPika = memberDao.insert(pika);
+
+        memberDao.update(insertMemberPika.getId(), lion);
+
+        Member updateMember = memberDao.findById(insertMemberPika.getId()).orElseThrow(IllegalArgumentException::new);
+
+        assertThat(updateMember.getName()).isEqualTo(lion.getName());
+    }
+
     @DisplayName("Member 삭제")
     @Test
     void delete() {
@@ -60,16 +73,21 @@ class MemberDaoTest {
         assertThat(memberDao.findAll()).containsExactly(insertMemberPika);
     }
 
-    @DisplayName("Member 수정")
+    @DisplayName("존재하는지 확인한다. - 존재하는 경우")
     @Test
-    void update() {
-        Member insertMemberPika = memberDao.insert(pika);
+    void existsTrue() {
+        Member insertMember = memberDao.insert(pika);
 
-        memberDao.update(insertMemberPika.getId(), lion);
+        assertThat(memberDao.exists(insertMember.getName())).isTrue();
+    }
 
-        Member updateMember = memberDao.findById(insertMemberPika.getId()).orElseThrow(IllegalArgumentException::new);
+    @DisplayName("존재하는지 확인한다. - 존재하지 않는 경우")
+    @Test
+    void existsFalse() {
+        Member insertMember = memberDao.insert(pika);
+        memberDao.delete(insertMember.getId());
 
-        assertThat(updateMember.getName()).isEqualTo(lion.getName());
+        assertThat(memberDao.exists(insertMember.getName())).isFalse();
     }
 
 }
