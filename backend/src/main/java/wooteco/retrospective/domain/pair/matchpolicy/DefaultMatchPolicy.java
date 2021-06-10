@@ -9,6 +9,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class DefaultMatchPolicy implements MatchPolicy {
+
     private static final int NUMBER_OF_PAIR = 3;
     private static final int MINIMUM_PAIRS_SIZE = 2;
 

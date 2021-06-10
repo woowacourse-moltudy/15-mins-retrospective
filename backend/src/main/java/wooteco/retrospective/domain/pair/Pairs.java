@@ -15,21 +15,21 @@ public class Pairs {
     private final List<Member> members;
     private final MatchPolicy matchPolicy;
 
-    public Pairs(final List<Member> pairs, MatchPolicy matchPolicy) {
-        this.members = pairs;
-        this.matchPolicy = matchPolicy;
-    }
-
-    public Pairs(final Shuffled<Member> pairs, MatchPolicy matchPolicy) {
-        this(pairs.value(), matchPolicy);
-    }
-
     public Pairs(final List<Member> pairs) {
         this(pairs, DEFAULT_MATCH_POLICY);
     }
 
     public Pairs(final Shuffled<Member> pairs) {
         this(pairs.value(), DEFAULT_MATCH_POLICY);
+    }
+
+    public Pairs(final Shuffled<Member> pairs, MatchPolicy matchPolicy) {
+        this(pairs.value(), matchPolicy);
+    }
+
+    public Pairs(final List<Member> pairs, MatchPolicy matchPolicy) {
+        this.members = pairs;
+        this.matchPolicy = matchPolicy;
     }
 
     public synchronized List<Pair> getPairs() {

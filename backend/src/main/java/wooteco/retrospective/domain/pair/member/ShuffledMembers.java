@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class ShuffledMembers implements Shuffled<Member> {
+
     private static final UnaryOperator<List<Member>> DEFAULT_SHUFFLE_POLICY = members -> {
         List<Member> copiedMembers = new ArrayList<>(members);
         Collections.shuffle(copiedMembers);
