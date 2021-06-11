@@ -26,6 +26,11 @@ public class Attendance {
         this.time = time;
     }
 
+    public Attendance(String date, Member member, Time time) {
+        this(member, time);
+        this.date = date;
+    }
+
     public Attendance(Member member, Time time) {
         this.member = member;
         this.time = time;
