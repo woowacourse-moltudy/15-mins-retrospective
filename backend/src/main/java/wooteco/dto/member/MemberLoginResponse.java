@@ -6,7 +6,7 @@ public class MemberLoginResponse {
 
     private String token;
 
-    public MemberLoginResponse() {
+    private MemberLoginResponse() {
     }
 
     public MemberLoginResponse(String token) {

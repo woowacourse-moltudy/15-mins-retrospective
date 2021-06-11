@@ -5,7 +5,7 @@ public class RetrospectiveExceptionResponse {
     private int httpStatus;
     private String message;
 
-    public RetrospectiveExceptionResponse() {
+    private RetrospectiveExceptionResponse() {
     }
 
     public RetrospectiveExceptionResponse(int httpStatus, String message) {
