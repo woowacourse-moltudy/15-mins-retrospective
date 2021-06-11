@@ -66,7 +66,7 @@ class AttendanceDaoTest {
         Attendance attendance = attendanceDao.findById(1L).orElseThrow(RuntimeException::new);
 
         assertTrue(
-            attendanceDao.existSameTime(attendance.getMember().getId(), attendance.getTime().getId()).isPresent());
+            attendanceDao.isExistSameTime(attendance.getMember().getId(), attendance.getTime().getId()));
     }
 
     @Test

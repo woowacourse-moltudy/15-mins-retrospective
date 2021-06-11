@@ -38,7 +38,6 @@ public class TimeDao {
     public Optional<Time> findById(long id) {
         String query = "SELECT * FROM CONFERENCE_TIME WHERE id = ?";
 
-        return jdbcTemplate.query(query, rowMapper, id).stream()
-            .findAny();
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
     }
 }

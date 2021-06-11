@@ -56,15 +56,13 @@ public class AttendanceDao {
     public Optional<Attendance> findById(long id) {
         String query = "SELECT * FROM ATTENDANCE WHERE id = ?";
 
-        return jdbcTemplate.query(query, rowMapper, id).stream()
-            .findAny();
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
     }
 
-    public Optional<Attendance> existSameTime(long memberId, long timeId) {
+    public boolean isExistSameTime(long memberId, long timeId) {
         String query = "SELECT * FROM ATTENDANCE WHERE member_id = ? AND time_id = ?";
 
-        return jdbcTemplate.query(query, rowMapper, memberId, timeId).stream()
-            .findAny();
+        return jdbcTemplate.query(query, rowMapper, memberId, timeId).size() > 0;
     }
 
     public List<Attendance> findByDate(String date) {

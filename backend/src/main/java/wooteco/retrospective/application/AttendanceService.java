@@ -26,7 +26,7 @@ public class AttendanceService {
     }
 
     public Attendance postAttendance(AttendanceRequest attendanceRequest) {
-        if(attendanceDao.existSameTime(attendanceRequest.getMemberId(), attendanceRequest.getTimeId()).isPresent()) {
+        if(attendanceDao.isExistSameTime(attendanceRequest.getMemberId(), attendanceRequest.getTimeId())) {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }
 
