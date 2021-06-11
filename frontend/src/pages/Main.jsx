@@ -11,8 +11,20 @@ class Main extends React.Component {
       <StDiv>
         <StContainer>
           <StHeading>
-            메인 페이지
+            <StInfo>
+              <StImg src="/logo.png"/>
+              <StHead>15분 회고</StHead>
+              <StName>닉네임</StName>
+            </StInfo>
+            <StRule>
+              <StRuleItem>✔️오후 6시, 10시 중 원하는 시간을 선택</StRuleItem>
+              <StRuleItem>✔️매칭된 페어와 줌 또는 오프라인 진행</StRuleItem>
+              <StRuleItem>✔️월요일 ~ 일요일 중 4일 이상 참여</StRuleItem>
+              <StRuleItem>✔️참여 횟수 미달일 경우 벌금 5천원!</StRuleItem>
+            </StRule>
+            <div/>
           </StHeading>
+          <StContents></StContents>
         </StContainer>
       </StDiv>
     )
@@ -21,8 +33,19 @@ class Main extends React.Component {
 
 export default Main
 
-const StHeading = styled.h1`
-  color: #303030;
+const StHeading = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  
+  width: 90%;
+  height: 30%;
+  padding: 5%;
+
+  background: #d2e5f5;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0px 3px 6px 0px #b4c5d4;
 `
 
 const StDiv = styled.div`
@@ -36,13 +59,53 @@ const StDiv = styled.div`
 
 const StContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  flex-direction: column;
 
   width: 50vw;
   height: 95vh;
+  padding: 0.4rem 0.5rem 0 0.5rem;
 
   border-radius: 20px;
   background: #fdfdfd;
   box-shadow: 6px 7px 20px 0px #d9d9d9, -7px -6px 20px 0px #d9d9d9;
+`
+
+const StContents = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const StInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+const StImg = styled.img`
+  width: 2rem;
+`
+
+const StHead = styled.div`
+  font-size: 1.3rem;
+  font-family: 'Hanna-Pro';
+`
+
+const StName = styled.div`
+  font-size: 1.1rem;
+`
+
+const StRule = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-direction: column;
+  margin-top: 3rem;
+`
+
+const StRuleItem = styled.div`
+  margin: 3px;
 `
