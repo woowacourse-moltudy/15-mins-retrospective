@@ -5,20 +5,10 @@ import Member from "./Member";
 class Enroll extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      time: this.props.time,
-      members: []
-    }
-  }
-
-  componentDidMount() {
-    this.setState({
-      members: ["웨지", "다니", "샐리", "손너잘", "피카", "현구막", "소롱", "파즈", "김김", "코다", "포모", "나봄", "에드", "삭정", "춘식", "파피", "오즈"]
-    })
   }
 
   render() {
-    const PrintMembers = this.state.members.map((member) => {
+    const PrintMembers = this.props.members.map((member) => {
       return (
         <Member name={member}/>
       )
@@ -26,7 +16,7 @@ class Enroll extends React.Component {
 
     return (
       <StContainer>
-        <StTime>{this.state.time}</StTime>
+        <StTime>{this.props.time}</StTime>
         <StMembers>
           {PrintMembers}
         </StMembers>
