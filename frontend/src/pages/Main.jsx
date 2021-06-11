@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Enroll from "../components/Enroll";
 
 class Main extends React.Component {
   constructor(props) {
@@ -17,14 +18,17 @@ class Main extends React.Component {
               <StName>닉네임</StName>
             </StInfo>
             <StRule>
-              <StRuleItem>✔️오후 6시, 10시 중 원하는 시간을 선택</StRuleItem>
-              <StRuleItem>✔️매칭된 페어와 줌 또는 오프라인 진행</StRuleItem>
-              <StRuleItem>✔️월요일 ~ 일요일 중 4일 이상 참여</StRuleItem>
-              <StRuleItem>✔️참여 횟수 미달일 경우 벌금 5천원!</StRuleItem>
+              <StRuleItem>✔ ️오후 6시, 10시 중 원하는 시간을 선택</StRuleItem>
+              <StRuleItem>✔ 매칭된 페어와 줌 또는 오프라인 진행</StRuleItem>
+              <StRuleItem>✔ 월요일 ~ 일요일 중 4일 이상 참여</StRuleItem>
+              <StRuleItem>✔ 참여 횟수 미달일 경우 벌금 5천원!</StRuleItem>
             </StRule>
             <div/>
           </StHeading>
-          <StContents></StContents>
+          <StContents>
+            <Enroll/>
+            <Enroll/>
+          </StContents>
         </StContainer>
       </StDiv>
     )
@@ -38,7 +42,7 @@ const StHeading = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  
+
   width: 90%;
   height: 30%;
   padding: 5%;
@@ -52,9 +56,6 @@ const StDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  width: 100vw;
-  height: 100vh;
 `
 
 const StContainer = styled.div`
@@ -74,8 +75,12 @@ const StContainer = styled.div`
 
 const StContents = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  
+  width: 90%;
+  height: 60%;
+  padding: 5%;
 `
 
 const StInfo = styled.div`
@@ -95,7 +100,7 @@ const StHead = styled.div`
 `
 
 const StName = styled.div`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 `
 
 const StRule = styled.div`
@@ -108,4 +113,5 @@ const StRule = styled.div`
 
 const StRuleItem = styled.div`
   margin: 3px;
+  font-size: 1.1rem;
 `
