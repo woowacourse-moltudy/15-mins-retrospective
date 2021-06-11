@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Enroll from "../components/Enroll";
+import EnrollButton from "../components/EnrollButton";
 
 class Main extends React.Component {
   constructor(props) {
@@ -26,8 +26,8 @@ class Main extends React.Component {
             <div/>
           </StHeading>
           <StContents>
-            <Enroll/>
-            <Enroll/>
+            <EnrollButton time={"6시"}/>
+            <EnrollButton time={"10시"}/>
           </StContents>
         </StContainer>
       </StDiv>
@@ -56,6 +56,8 @@ const StDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
+  height: 100vh;
 `
 
 const StContainer = styled.div`
