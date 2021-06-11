@@ -1,4 +1,4 @@
-package wooteco.retrospective.domain.time;
+package wooteco.retrospective.domain.attendance;
 
 import static org.assertj.core.api.Assertions.*;
 

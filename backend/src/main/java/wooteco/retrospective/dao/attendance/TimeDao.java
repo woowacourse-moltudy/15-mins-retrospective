@@ -1,4 +1,4 @@
-package wooteco.retrospective.dao.member;
+package wooteco.retrospective.dao.attendance;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.domain.time.Time;
+import wooteco.retrospective.domain.attendance.Time;
 
 @Repository
 public class TimeDao {

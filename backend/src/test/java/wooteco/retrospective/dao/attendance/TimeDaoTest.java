@@ -1,4 +1,4 @@
-package wooteco.retrospective.dao.member;
+package wooteco.retrospective.dao.attendance;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import wooteco.retrospective.domain.time.Time;
+import wooteco.retrospective.domain.attendance.Time;
 
 @JdbcTest
 class TimeDaoTest {
@@ -43,7 +43,7 @@ class TimeDaoTest {
     @Test
     void update() {
         Time newTime = new Time(7);
-        assertEquals(1,timeDao.update(1L, newTime));
+        assertEquals(1, timeDao.update(1L, newTime));
 
         Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
         assertEquals(newTime, time);

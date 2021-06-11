@@ -1,4 +1,4 @@
-package wooteco.retrospective.domain.time;
+package wooteco.retrospective.domain.attendance;
 
 import java.util.Objects;
 
@@ -18,9 +18,13 @@ public class Time {
     }
 
     private void validate(int time) {
-        if(time < 0 || time > 24) {
+        if (time < 0 || time > 24) {
             throw new IllegalArgumentException("옳지 않은 시간입니다.");
         }
+    }
+
+    public long getId() {
+        return id;
     }
 
     public int getTime() {
@@ -41,4 +45,5 @@ public class Time {
     public int hashCode() {
         return Objects.hash(time);
     }
+
 }

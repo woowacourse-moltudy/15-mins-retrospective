@@ -1,3 +1,7 @@
+drop table MEMBER if exists cascade;
+drop table CONFERENCE_TIME if exists cascade;
+drop table ATTENDANCE if exists cascade;
+
 create table if not exists MEMBER (
     id bigint auto_increment not null,
     name varchar(255) not null unique

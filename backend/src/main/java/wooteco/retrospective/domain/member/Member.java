@@ -41,17 +41,16 @@ public class Member {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Member)) return false;
-
-        Member member = (Member) o;
-
-        return getId() != null ? getId().equals(member.getId()) : member.getId() == null;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Member member = (Member)o;
+        return Objects.equals(name, member.name);
     }
 
     @Override
     public int hashCode() {
-        return getId() != null ? getId().hashCode() : 0;
+        return Objects.hash(name);
     }
-    
 }
