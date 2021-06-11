@@ -5,18 +5,33 @@ import Member from "./Member";
 class Enroll extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      time: 0
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.time > 12) {
+      this.setState({
+        time: this.props.time - 12
+      })
+    } else {
+      this.setState({
+        time: this.props.time
+      })
+    }
   }
 
   render() {
     const PrintMembers = this.props.members.map((member) => {
       return (
-        <Member name={member}/>
+        <Member name={member} key={member}/>
       )
     })
 
     return (
       <StContainer>
-        <StTime>{this.props.time}</StTime>
+        <StTime>{this.state.time}시</StTime>
         <StMembers>
           {PrintMembers}
         </StMembers>
@@ -46,7 +61,7 @@ const StTime = styled.div`
 const StMembers = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   grid-gap: 5px;
   justify-content: center;
   align-items: center;

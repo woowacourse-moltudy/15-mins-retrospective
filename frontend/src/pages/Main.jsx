@@ -26,8 +26,8 @@ class Main extends React.Component {
             <div/>
           </StHeading>
           <StContents>
-            <EnrollButton time={"6시"}/>
-            <EnrollButton time={"10시"}/>
+            <EnrollButton time={"18"}/>
+            <EnrollButton time={"22"}/>
           </StContents>
         </StContainer>
       </StDiv>
