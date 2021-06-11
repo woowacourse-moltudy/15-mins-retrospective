@@ -1,15 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
+import Enroll from './Enroll'
 
-class Enroll extends React.Component {
+class EnrollButton extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
-      <StContainer>여기서 참여할거야</StContainer>
+      <StContainer>
+        <Enroll time={this.props.time}/>
+      </StContainer>
     )
   }
 }
 
-export default Enroll
+export default EnrollButton
 
 const StContainer = styled.button`
   display: flex;
