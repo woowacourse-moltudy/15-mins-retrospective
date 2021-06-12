@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.dto.MemberLoginRequestDto;
 import wooteco.retrospective.application.dto.MemberLoginResponseDto;
 import wooteco.retrospective.application.member.MemberService;
@@ -31,6 +32,8 @@ class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+    @MockBean
+    private AttendanceService attendanceService;
 
     @DisplayName("로그인을 한다. - 정상")
     @Test

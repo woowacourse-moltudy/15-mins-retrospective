@@ -1,4 +1,4 @@
-package wooteco.retrospective.presentation;
+package wooteco.retrospective.presentation.attendance;
 
 import javax.validation.Valid;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import wooteco.retrospective.application.AttendanceService;
+import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.dto.AttendanceRequest;
 import wooteco.retrospective.dto.AttendanceResponse;
 
