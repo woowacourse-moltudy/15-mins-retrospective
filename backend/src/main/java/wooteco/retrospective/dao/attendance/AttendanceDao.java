@@ -30,7 +30,6 @@ public class AttendanceDao {
             timeDao.findById(resultSet.getLong("time_id")).orElseThrow(RuntimeException::new)
         );
 
-    @Autowired
     public AttendanceDao(JdbcTemplate jdbcTemplate, MemberDao memberDao,
         TimeDao timeDao) {
         this.jdbcTemplate = jdbcTemplate;
@@ -38,19 +37,24 @@ public class AttendanceDao {
         this.timeDao = timeDao;
     }
 
-    public long insert(Attendance attendance) {
+    public Attendance insert(Attendance attendance) {
         String query = "INSERT INTO ATTENDANCE(day, member_id, time_id) values (DEFAULT, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[] {"id"});
-            ps.setLong(1, attendance.getMember().getId());
-            ps.setLong(2, attendance.getTime().getId());
+            ps.setLong(1, attendance.getMemberId());
+            ps.setLong(2, attendance.getTimeId());
 
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Attendance(
+            keyHolder.getKey().longValue(),
+            attendance.getDate(),
+            attendance.getMember(),
+            attendance.getTime()
+        );
     }
 
     public Optional<Attendance> findById(long id) {
@@ -62,7 +66,8 @@ public class AttendanceDao {
     public boolean isExistSameTime(long memberId, long timeId) {
         String query = "SELECT * FROM ATTENDANCE WHERE member_id = ? AND time_id = ?";
 
-        return jdbcTemplate.query(query, rowMapper, memberId, timeId).size() > 0;
+        List<Attendance> attendances = jdbcTemplate.query(query, rowMapper, memberId, timeId);
+        return attendances.size() > 0;
     }
 
     public List<Attendance> findByDate(String date) {

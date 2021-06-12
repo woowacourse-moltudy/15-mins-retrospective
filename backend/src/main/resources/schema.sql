@@ -13,7 +13,9 @@ create table if not exists ATTENDANCE (
     day TIMESTAMP DEFAULT FORMATDATETIME(NOW(), 'yyyy-MM-dd'),
     member_id bigint not null,
     time_id bigint not null,
+
     primary key(id),
+
     foreign key(member_id) references MEMBER(id),
     foreign key(time_id) references CONFERENCE_TIME(id)
 );

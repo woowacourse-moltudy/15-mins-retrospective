@@ -19,6 +19,11 @@ public class Attendance {
         this.id = id;
     }
 
+    public Attendance(Long id, String date, Member member, Time time) {
+        this(date, member, time);
+        this.id = id;
+    }
+
     public Attendance(Timestamp timestamp, Member member, Time time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.date = simpleDateFormat.format(new Date(timestamp.getTime()));
@@ -50,6 +55,14 @@ public class Attendance {
 
     public Time getTime() {
         return time;
+    }
+
+    public long getMemberId() {
+        return member.getId();
+    }
+
+    public long getTimeId() {
+        return time.getId();
     }
 
     @Override

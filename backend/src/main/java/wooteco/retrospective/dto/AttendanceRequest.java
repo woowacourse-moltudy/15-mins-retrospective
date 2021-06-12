@@ -6,7 +6,6 @@ public class AttendanceRequest {
 
     @NotEmpty(message = "날짜를 입력해주세요.")
     private final String date;
-
     private final long timeId;
     private final long memberId;
 

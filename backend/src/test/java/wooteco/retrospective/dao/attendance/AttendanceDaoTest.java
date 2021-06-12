@@ -1,7 +1,6 @@
 package wooteco.retrospective.dao.attendance;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -23,15 +22,15 @@ import wooteco.retrospective.domain.member.Member;
 @JdbcTest
 @Sql("classpath:test-schema.sql")
 class AttendanceDaoTest {
-    private static final Member MEMBER = new Member("sally");
-    private static final Time TIME = new Time(6);
+    private static final Member MEMBER_SALLY = new Member("sally");
+    private static final Time TIME_SIX = new Time(6);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private AttendanceDao attendanceDao;
     private MemberDao memberDao;
     private TimeDao timeDao;
+    private AttendanceDao attendanceDao;
 
     @BeforeEach
     void setUp() {
@@ -43,44 +42,53 @@ class AttendanceDaoTest {
     @Test
     @DisplayName("출석부를 추가한다.")
     void insert() {
-        Member madeMember = memberDao.insert(MEMBER);
-        Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-
-        assertThat(attendanceDao.insert(new Attendance(madeMember, time))).isInstanceOf(Long.class);
+        Attendance newAttendance = insertAttendance();
+        assertThat(newAttendance.getMember()).isEqualTo(MEMBER_SALLY);
+        assertThat(newAttendance.getTime()).isEqualTo(TIME_SIX);
     }
 
     @Test
     @DisplayName("출석부를 조회한다.")
     void findById() {
-        insert();
-        Attendance expectedAttendance = new Attendance(1L, new Timestamp(System.currentTimeMillis()), MEMBER, TIME);
+        insertAttendance();
+        Attendance expectedAttendance = new Attendance(1L, new Timestamp(System.currentTimeMillis()), MEMBER_SALLY,
+            TIME_SIX);
         Attendance attendance = attendanceDao.findById(1L).orElseThrow(RuntimeException::new);
 
-        assertEquals(expectedAttendance, attendance);
+        assertThat(expectedAttendance).isEqualTo(attendance);
     }
 
     @Test
     @DisplayName("같은 시간에 같은 멤버가 있는지 조회한다.")
     void existSameTime() {
-        insert();
+        insertAttendance();
         Attendance attendance = attendanceDao.findById(1L).orElseThrow(RuntimeException::new);
 
-        assertTrue(
-            attendanceDao.isExistSameTime(attendance.getMember().getId(), attendance.getTime().getId()));
+        assertThat(attendanceDao.isExistSameTime(
+                    attendance.getMemberId(),
+                    attendance.getTimeId()
+                )).isTrue();
     }
 
     @Test
     @DisplayName("날짜에 따른 출석부를 조회한다.")
     void findByDate() {
-        insert();
+        insertAttendance();
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        Attendance expectedAttendance = new Attendance(1L, now, MEMBER, TIME);
+        Attendance expectedAttendance = new Attendance(1L, now, MEMBER_SALLY, TIME_SIX);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(now);
 
         List<Attendance> attendance = attendanceDao.findByDate(date);
 
-        assertTrue(attendance.contains(expectedAttendance));
+        assertThat(attendance.contains(expectedAttendance)).isTrue();
     }
 
+    private Attendance insertAttendance() {
+        Member madeMember = memberDao.insert(MEMBER_SALLY);
+        Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
+        Attendance attendance = new Attendance(madeMember, time);
+
+        return attendanceDao.insert(attendance);
+    }
 }

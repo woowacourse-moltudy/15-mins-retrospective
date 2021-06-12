@@ -45,8 +45,8 @@ public class MemberDao {
         String query = "SELECT * FROM MEMBER WHERE id = ?";
 
         return this.jdbcTemplate.query(query, rowMapper, id)
-            .stream()
-            .findAny();
+                .stream()
+                .findAny();
     }
 
     public int size() {

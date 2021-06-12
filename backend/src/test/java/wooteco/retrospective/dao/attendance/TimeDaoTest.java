@@ -46,6 +46,6 @@ class TimeDaoTest {
         assertEquals(1, timeDao.update(1L, newTime));
 
         Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-        assertEquals(newTime, time);
+        assertThat(newTime).isEqualTo(time);
     }
 }
