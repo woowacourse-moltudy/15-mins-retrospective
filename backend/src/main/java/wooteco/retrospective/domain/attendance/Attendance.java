@@ -1,9 +1,7 @@
 package wooteco.retrospective.domain.attendance;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import wooteco.retrospective.domain.member.Member;
@@ -15,7 +13,7 @@ public class Attendance {
     private final Member member;
     private final Time time;
 
-    public Attendance(long id, Timestamp timestamp, Member member, Time time) {
+    public Attendance(long id, LocalDateTime timestamp, Member member, Time time) {
         this(timestamp, member, time);
         this.id = id;
     }
@@ -25,9 +23,8 @@ public class Attendance {
         this.id = id;
     }
 
-    public Attendance(Timestamp timestamp, Member member, Time time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.date = simpleDateFormat.format(new Date(timestamp.getTime()));
+    public Attendance(LocalDateTime timestamp, Member member, Time time) {
+        this.date = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.member = member;
         this.time = time;
     }

@@ -2,8 +2,8 @@ package wooteco.retrospective.dao.attendance;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +53,7 @@ class AttendanceDaoTest {
         insertAttendance();
         Attendance expectedAttendance = new Attendance(
             1L,
-            new Timestamp(System.currentTimeMillis()),
+            LocalDateTime.now(),
             MEMBER_SALLY,
             TIME_SIX
         );
@@ -69,26 +69,27 @@ class AttendanceDaoTest {
         Attendance attendance = attendanceDao.findById(1L);
 
         assertThat(attendanceDao.isExistSameTime(
-                    attendance.getMemberId(),
-                    attendance.getTimeId()
-                )).isTrue();
+            attendance.getMemberId(),
+            attendance.getTimeId()
+        )).isTrue();
     }
 
     @Test
     @DisplayName("날짜에 따른 출석부를 조회한다.")
     void findByDate() {
         insertAttendance();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        LocalDateTime now = LocalDateTime.now();
         Attendance expectedAttendance = new Attendance(
             1L,
             now,
             MEMBER_SALLY,
             TIME_SIX
         );
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String date = simpleDateFormat.format(now);
 
-        List<Attendance> attendance = attendanceDao.findByDate(date);
+        List<Attendance> attendance = attendanceDao.findByDate(
+            now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        );
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }

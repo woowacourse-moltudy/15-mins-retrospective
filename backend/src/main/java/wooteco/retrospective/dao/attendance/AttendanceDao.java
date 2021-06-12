@@ -1,11 +1,10 @@
 package wooteco.retrospective.dao.attendance;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,7 +24,7 @@ public class AttendanceDao {
     private final RowMapper<Attendance> rowMapper = (resultSet, rowNumber) ->
         new Attendance(
             resultSet.getLong("id"),
-            resultSet.getTimestamp("day"),
+            resultSet.getObject("day", LocalDateTime.class),
             memberDao.findById(resultSet.getLong("member_id")).orElseThrow(RuntimeException::new),
             timeDao.findById(resultSet.getLong("time_id")).orElseThrow(RuntimeException::new)
         );
