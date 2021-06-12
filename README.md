@@ -1,7 +1,5 @@
 # 15-mins-retrospective season1
 
-🚀 [레포지토리 링크](https://github.com/woowacourse-moltudy/15-mins-retrospective)
-
 ## 구현해야 할 기능
 1. 시간을 선택하는 기능
 2. 페어매칭 기능
@@ -19,7 +17,7 @@
 ## 커밋 컨벤션
 
 - 기능 단위 별로 브랜치를 나누어 진행한다.
-> feature/member-login, feature/fare-matching
+> feature/member-login, feature/pair-matching
 
 ##  코드 컨벤션
 
