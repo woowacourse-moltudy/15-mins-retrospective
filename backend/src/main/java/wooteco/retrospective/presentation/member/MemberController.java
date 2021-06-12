@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.retrospective.application.dto.MemberLoginRequestDto;
-import wooteco.retrospective.application.dto.MemberLoginResponseDto;
+import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 import wooteco.retrospective.presentation.dto.member.MemberLoginResponse;
-import wooteco.retrospective.application.member.MemberService;
 
 import javax.validation.Valid;
 
