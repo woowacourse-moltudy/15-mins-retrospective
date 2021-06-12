@@ -43,17 +43,13 @@ public class MemberDao {
     public Optional<Member> findById(Long id) {
         String query = "SELECT * FROM MEMBER WHERE id = ?";
 
-        return this.jdbcTemplate.query(query, ROW_MAPPER, id)
-                .stream()
-                .findAny();
+        return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, id));
     }
 
     public Optional<Member> findByName(String name) {
         String query = "SELECT * FROM MEMBER WHERE name = ?";
 
-        return this.jdbcTemplate.query(query, ROW_MAPPER, name)
-                .stream()
-                .findAny();
+        return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, name));
     }
 
     public List<Member> findAll() {
