@@ -38,7 +38,7 @@ public class AttendanceDao {
     }
 
     public Attendance insert(Attendance attendance) {
-        String query = "INSERT INTO ATTENDANCE(day, member_id, time_id) values (DEFAULT, ?, ?)";
+        String query = "INSERT INTO ATTENDANCE(member_id, time_id) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -50,17 +50,17 @@ public class AttendanceDao {
         }, keyHolder);
 
         return new Attendance(
-            keyHolder.getKey().longValue(),
+            Objects.requireNonNull(keyHolder.getKey()).longValue(),
             attendance.getDate(),
             attendance.getMember(),
             attendance.getTime()
         );
     }
 
-    public Optional<Attendance> findById(long id) {
+    public Attendance findById(long id) {   //TODO: 예외처리
         String query = "SELECT * FROM ATTENDANCE WHERE id = ?";
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
+        return jdbcTemplate.queryForObject(query, rowMapper, id);
     }
 
     public boolean isExistSameTime(long memberId, long timeId) {

@@ -51,9 +51,13 @@ class AttendanceDaoTest {
     @DisplayName("출석부를 조회한다.")
     void findById() {
         insertAttendance();
-        Attendance expectedAttendance = new Attendance(1L, new Timestamp(System.currentTimeMillis()), MEMBER_SALLY,
-            TIME_SIX);
-        Attendance attendance = attendanceDao.findById(1L).orElseThrow(RuntimeException::new);
+        Attendance expectedAttendance = new Attendance(
+            1L,
+            new Timestamp(System.currentTimeMillis()),
+            MEMBER_SALLY,
+            TIME_SIX
+        );
+        Attendance attendance = attendanceDao.findById(1L);
 
         assertThat(expectedAttendance).isEqualTo(attendance);
     }
@@ -62,7 +66,7 @@ class AttendanceDaoTest {
     @DisplayName("같은 시간에 같은 멤버가 있는지 조회한다.")
     void existSameTime() {
         insertAttendance();
-        Attendance attendance = attendanceDao.findById(1L).orElseThrow(RuntimeException::new);
+        Attendance attendance = attendanceDao.findById(1L);
 
         assertThat(attendanceDao.isExistSameTime(
                     attendance.getMemberId(),
@@ -75,7 +79,12 @@ class AttendanceDaoTest {
     void findByDate() {
         insertAttendance();
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        Attendance expectedAttendance = new Attendance(1L, now, MEMBER_SALLY, TIME_SIX);
+        Attendance expectedAttendance = new Attendance(
+            1L,
+            now,
+            MEMBER_SALLY,
+            TIME_SIX
+        );
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(now);
 
