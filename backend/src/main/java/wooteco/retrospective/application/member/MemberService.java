@@ -26,5 +26,4 @@ public class MemberService {
         Member member = memberDao.insert(request.toMember());
         return MemberLoginResponse.of(member);
     }
-
 }

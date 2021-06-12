@@ -26,5 +26,4 @@ public class MemberController {
         MemberLoginResponse member = memberService.loginMember(request);
         return ResponseEntity.ok(member);
     }
-
 }

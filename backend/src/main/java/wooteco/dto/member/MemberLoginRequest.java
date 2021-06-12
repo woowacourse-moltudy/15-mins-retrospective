@@ -23,5 +23,4 @@ public class MemberLoginRequest {
     public Member toMember() {
         return new Member(null, name);
     }
-
 }

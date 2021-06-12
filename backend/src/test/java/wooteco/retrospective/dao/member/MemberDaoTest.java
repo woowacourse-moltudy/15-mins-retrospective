@@ -89,5 +89,4 @@ class MemberDaoTest {
 
         assertThat(memberDao.exists(insertMember.getName())).isFalse();
     }
-
 }

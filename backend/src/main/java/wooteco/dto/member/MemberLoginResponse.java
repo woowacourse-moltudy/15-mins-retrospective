@@ -20,5 +20,4 @@ public class MemberLoginResponse {
     public String getToken() {
         return token;
     }
-
 }
