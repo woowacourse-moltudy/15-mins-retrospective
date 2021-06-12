@@ -51,7 +51,6 @@ public class Member {
 
     @Override
     public int hashCode() {
-        return getId() != null ? getId().hashCode() : 0;
+        return Objects.hash(name);
     }
-    
 }
