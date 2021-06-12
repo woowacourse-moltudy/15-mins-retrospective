@@ -41,19 +41,19 @@ public class MemberDao {
     }
 
     public Optional<Member> findById(Long id) {
-        String query = "SELECT * FROM MEMBER WHERE id = ?";
+        String query = "SELECT id, name FROM MEMBER WHERE id = ?";
 
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, id));
     }
 
     public Optional<Member> findByName(String name) {
-        String query = "SELECT * FROM MEMBER WHERE name = ?";
+        String query = "SELECT id, name FROM MEMBER WHERE name = ?";
 
         return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, name));
     }
 
     public List<Member> findAll() {
-        String query = "SELECT * FROM MEMBER";
+        String query = "SELECT id, name FROM MEMBER";
 
         return this.jdbcTemplate.query(query, ROW_MAPPER);
     }
@@ -77,7 +77,7 @@ public class MemberDao {
     }
 
     public boolean exists(String name) {
-        String query = "SELECT EXISTS (SELECT * FROM MEMBER WHERE name = ?)";
+        String query = "SELECT EXISTS (SELECT id, name FROM MEMBER WHERE name = ?)";
 
         return this.jdbcTemplate.queryForObject(query, Boolean.class, name);
     }
