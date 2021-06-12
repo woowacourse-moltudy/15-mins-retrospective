@@ -46,5 +46,4 @@ public class AttendanceService {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }
     }
-
 }

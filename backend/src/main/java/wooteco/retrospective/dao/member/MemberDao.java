@@ -72,5 +72,4 @@ public class MemberDao {
 
         return this.jdbcTemplate.update(query, memberLion.getName(), id);
     }
-
 }

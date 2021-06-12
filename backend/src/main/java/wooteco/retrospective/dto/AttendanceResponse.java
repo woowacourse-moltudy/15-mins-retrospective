@@ -31,5 +31,4 @@ public class AttendanceResponse {
     public Time getTime() {
         return time;
     }
-
 }

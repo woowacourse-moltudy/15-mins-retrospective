@@ -26,5 +26,4 @@ public class AttendanceRequest {
     public long getMemberId() {
         return memberId;
     }
-
 }

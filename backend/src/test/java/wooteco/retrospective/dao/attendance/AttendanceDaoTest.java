@@ -20,7 +20,7 @@ import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 
 @JdbcTest
-@Sql("classpath:test-schema.sql")
+@Sql("classpath:recreate-schema.sql")
 class AttendanceDaoTest {
     private static final Member MEMBER_SALLY = new Member("sally");
     private static final Time TIME_SIX = new Time(6);

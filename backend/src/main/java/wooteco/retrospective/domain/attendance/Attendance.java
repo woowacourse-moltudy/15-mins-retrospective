@@ -77,5 +77,4 @@ public class Attendance {
     public int hashCode() {
         return Objects.hash(date, member, time);
     }
-
 }
