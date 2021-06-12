@@ -13,7 +13,7 @@ public class MemberLoginResponse {
         this.token = token;
     }
 
-    public static MemberLoginResponse of(Member member) {
+    public static MemberLoginResponse from(Member member) {
         return new MemberLoginResponse(member.getName());
     }
 

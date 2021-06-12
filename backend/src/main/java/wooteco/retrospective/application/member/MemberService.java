@@ -21,9 +21,9 @@ public class MemberService {
     public MemberLoginResponse loginMember(MemberLoginRequest request) {
         if (memberDao.exists(request.getName())) {
             Optional<Member> member = memberDao.findByName(request.getName());
-            return MemberLoginResponse.of(member.orElseThrow(MemberNotFoundException::new));
+            return MemberLoginResponse.from(member.orElseThrow(MemberNotFoundException::new));
         }
         Member member = memberDao.insert(request.toMember());
-        return MemberLoginResponse.of(member);
+        return MemberLoginResponse.from(member);
     }
 }
