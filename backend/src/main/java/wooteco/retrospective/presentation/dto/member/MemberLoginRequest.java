@@ -1,6 +1,4 @@
-package wooteco.dto.member;
-
-import wooteco.retrospective.domain.member.Member;
+package wooteco.retrospective.presentation.dto.member;
 
 import javax.validation.constraints.NotBlank;
 
@@ -18,9 +16,5 @@ public class MemberLoginRequest {
 
     public String getName() {
         return name;
-    }
-
-    public Member toMember() {
-        return new Member(null, name);
     }
 }

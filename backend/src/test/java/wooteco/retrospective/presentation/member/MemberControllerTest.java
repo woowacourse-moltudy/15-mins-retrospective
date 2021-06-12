@@ -8,9 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wooteco.dto.member.MemberLoginRequest;
-import wooteco.dto.member.MemberLoginResponse;
+import wooteco.retrospective.application.dto.MemberLoginRequestDto;
+import wooteco.retrospective.application.dto.MemberLoginResponseDto;
 import wooteco.retrospective.application.member.MemberService;
+import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -35,10 +36,10 @@ class MemberControllerTest {
     @Test
     void loginMember() throws Exception {
         MemberLoginRequest request = new MemberLoginRequest("dani");
-        MemberLoginResponse member = new MemberLoginResponse("dani");
+        MemberLoginResponseDto responseDto = new MemberLoginResponseDto("dani");
 
-        when(memberService.loginMember(any(MemberLoginRequest.class)))
-                .thenReturn(member);
+        when(memberService.loginMember(any(MemberLoginRequestDto.class)))
+                .thenReturn(responseDto);
 
         mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)

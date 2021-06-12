@@ -1,6 +1,4 @@
-package wooteco.dto.member;
-
-import wooteco.retrospective.domain.member.Member;
+package wooteco.retrospective.presentation.dto.member;
 
 public class MemberLoginResponse {
 
@@ -11,10 +9,6 @@ public class MemberLoginResponse {
 
     public MemberLoginResponse(String token) {
         this.token = token;
-    }
-
-    public static MemberLoginResponse from(Member member) {
-        return new MemberLoginResponse(member.getName());
     }
 
     public String getToken() {

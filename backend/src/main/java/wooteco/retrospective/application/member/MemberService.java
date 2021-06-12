@@ -1,9 +1,9 @@
 package wooteco.retrospective.application.member;
 
 import org.springframework.stereotype.Service;
-import wooteco.dto.member.MemberLoginRequest;
-import wooteco.dto.member.MemberLoginResponse;
 import wooteco.exception.member.MemberNotFoundException;
+import wooteco.retrospective.application.dto.MemberLoginRequestDto;
+import wooteco.retrospective.application.dto.MemberLoginResponseDto;
 import wooteco.retrospective.dao.member.MemberDao;
 import wooteco.retrospective.domain.member.Member;
 
@@ -16,21 +16,21 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public MemberLoginResponse loginMember(MemberLoginRequest request) {
-        if (memberDao.exists(request.getName())) {
-            return signInMember(request);
+    public MemberLoginResponseDto loginMember(MemberLoginRequestDto requestDto) {
+        if (memberDao.exists(requestDto.getName())) {
+            return signInMember(requestDto);
         }
-        return signUpMember(request);
+        return signUpMember(requestDto);
     }
 
-    private MemberLoginResponse signInMember(MemberLoginRequest request) {
-        Member member = memberDao.findByName(request.getName())
+    private MemberLoginResponseDto signInMember(MemberLoginRequestDto requestDto) {
+        Member member = memberDao.findByName(requestDto.getName())
                 .orElseThrow(MemberNotFoundException::new);
-        return MemberLoginResponse.from(member);
+        return MemberLoginResponseDto.from(member);
     }
 
-    private MemberLoginResponse signUpMember(MemberLoginRequest request) {
-        Member member = memberDao.insert(request.toMember());
-        return MemberLoginResponse.from(member);
+    private MemberLoginResponseDto signUpMember(MemberLoginRequestDto requestDto) {
+        Member member = memberDao.insert(requestDto.toMember());
+        return MemberLoginResponseDto.from(member);
     }
 }

@@ -1,4 +1,4 @@
-package wooteco.dto.exception;
+package wooteco.retrospective.presentation.dto.exception;
 
 public class RetrospectiveExceptionResponse {
 

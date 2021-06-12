@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import wooteco.dto.exception.RetrospectiveExceptionResponse;
+import wooteco.retrospective.presentation.dto.exception.RetrospectiveExceptionResponse;
 
 import java.util.Objects;
 
