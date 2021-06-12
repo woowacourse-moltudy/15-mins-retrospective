@@ -23,7 +23,6 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResponse> loginMember(@Valid @RequestBody MemberLoginRequest request) {
-        MemberLoginResponse member = memberService.loginMember(request);
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(memberService.loginMember(request));
     }
 }
