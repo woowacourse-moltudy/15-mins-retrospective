@@ -2,19 +2,13 @@ package wooteco.dto.exception;
 
 public class RetrospectiveExceptionResponse {
 
-    private int httpStatus;
     private String message;
 
     private RetrospectiveExceptionResponse() {
     }
 
-    public RetrospectiveExceptionResponse(int httpStatus, String message) {
-        this.httpStatus = httpStatus;
+    public RetrospectiveExceptionResponse(String message) {
         this.message = message;
-    }
-
-    public int getHttpStatus() {
-        return httpStatus;
     }
 
     public String getMessage() {
