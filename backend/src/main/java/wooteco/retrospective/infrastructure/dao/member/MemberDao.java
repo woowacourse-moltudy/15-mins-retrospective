@@ -1,4 +1,4 @@
-package wooteco.retrospective.dao.member;
+package wooteco.retrospective.infrastructure.dao.member;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

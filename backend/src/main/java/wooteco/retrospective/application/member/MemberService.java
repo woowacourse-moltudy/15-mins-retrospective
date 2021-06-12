@@ -1,10 +1,10 @@
 package wooteco.retrospective.application.member;
 
 import org.springframework.stereotype.Service;
-import wooteco.exception.member.MemberNotFoundException;
+import wooteco.retrospective.exception.member.MemberNotFoundException;
 import wooteco.retrospective.application.dto.MemberLoginRequestDto;
 import wooteco.retrospective.application.dto.MemberLoginResponseDto;
-import wooteco.retrospective.dao.member.MemberDao;
+import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 import wooteco.retrospective.domain.member.Member;
 
 @Service

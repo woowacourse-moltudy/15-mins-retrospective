@@ -1,6 +1,6 @@
-package wooteco.exception.member;
+package wooteco.retrospective.exception.member;
 
-import wooteco.exception.NotFoundException;
+import wooteco.retrospective.exception.NotFoundException;
 
 public class MemberNotFoundException extends NotFoundException {
 

@@ -1,4 +1,4 @@
-package wooteco.exception;
+package wooteco.retrospective.exception;
 
 public class RetrospectiveException extends RuntimeException {
 
