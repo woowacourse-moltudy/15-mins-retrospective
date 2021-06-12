@@ -47,10 +47,32 @@ class MemberControllerTest {
                 .andExpect(jsonPath("token").value("dani"));
     }
 
-    @DisplayName("로그인을 한다. - 400 예외")
+    @DisplayName("로그인을 한다. - 공백 이름, 400 예외")
     @Test
-    void loginMemberException() throws Exception {
+    void loginMemberFailWithBlankName() throws Exception {
         MemberLoginRequest request = new MemberLoginRequest(" ");
+
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("로그인을 한다. - 빈 이름, 400 예외")
+    @Test
+    void loginMemberFailWithEmptyName() throws Exception {
+        MemberLoginRequest request = new MemberLoginRequest("");
+
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("로그인을 한다. - null 이름, 400 예외")
+    @Test
+    void loginMemberFailWithNullName() throws Exception {
+        MemberLoginRequest request = new MemberLoginRequest(null);
 
         mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
