@@ -70,7 +70,7 @@ public class Attendance {
         if (o == null || getClass() != o.getClass())
             return false;
         Attendance that = (Attendance)o;
-        return date.equals(that.date) && member.equals(that.member) && time.equals(that.time);
+        return date.equals(that.date) && member.getName().equals(that.member.getName()) && time.equals(that.time);
     }
 
     @Override

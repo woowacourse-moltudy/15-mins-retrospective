@@ -43,7 +43,7 @@ class AttendanceDaoTest {
     @DisplayName("출석부를 추가한다.")
     void insert() {
         Attendance newAttendance = insertAttendance();
-        assertThat(newAttendance.getMember()).isEqualTo(MEMBER_SALLY);
+        assertThat(newAttendance.getMember().getName()).isEqualTo(MEMBER_SALLY.getName());
         assertThat(newAttendance.getTime()).isEqualTo(TIME_SIX);
     }
 
