@@ -7,8 +7,6 @@ import wooteco.exception.member.MemberNotFoundException;
 import wooteco.retrospective.dao.member.MemberDao;
 import wooteco.retrospective.domain.member.Member;
 
-import java.util.Optional;
-
 @Service
 public class MemberService {
 
@@ -26,8 +24,9 @@ public class MemberService {
     }
 
     private MemberLoginResponse signInMember(MemberLoginRequest request) {
-        Optional<Member> member = memberDao.findByName(request.getName());
-        return MemberLoginResponse.from(member.orElseThrow(MemberNotFoundException::new));
+        Member member = memberDao.findByName(request.getName())
+                .orElseThrow(MemberNotFoundException::new);
+        return MemberLoginResponse.from(member);
     }
 
     private MemberLoginResponse signUpMember(MemberLoginRequest request) {
