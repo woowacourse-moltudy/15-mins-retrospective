@@ -14,12 +14,13 @@ import java.util.Optional;
 @Repository
 public class MemberDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Member> rowMapper = (rs, rn) ->
+    private static final RowMapper<Member> ROW_MAPPER = (rs, rn) ->
             new Member(
                     rs.getLong("id"),
                     rs.getString("name")
             );
+
+    private final JdbcTemplate jdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -42,7 +43,7 @@ public class MemberDao {
     public Optional<Member> findById(Long id) {
         String query = "SELECT * FROM MEMBER WHERE id = ?";
 
-        return this.jdbcTemplate.query(query, rowMapper, id)
+        return this.jdbcTemplate.query(query, ROW_MAPPER, id)
                 .stream()
                 .findAny();
     }
@@ -50,7 +51,7 @@ public class MemberDao {
     public Optional<Member> findByName(String name) {
         String query = "SELECT * FROM MEMBER WHERE name = ?";
 
-        return this.jdbcTemplate.query(query, rowMapper, name)
+        return this.jdbcTemplate.query(query, ROW_MAPPER, name)
                 .stream()
                 .findAny();
     }
@@ -58,7 +59,7 @@ public class MemberDao {
     public List<Member> findAll() {
         String query = "SELECT * FROM MEMBER";
 
-        return this.jdbcTemplate.query(query, rowMapper);
+        return this.jdbcTemplate.query(query, ROW_MAPPER);
     }
 
     public int update(Long id, Member memberLion) {
@@ -84,5 +85,4 @@ public class MemberDao {
 
         return this.jdbcTemplate.queryForObject(query, Boolean.class, name);
     }
-
 }
