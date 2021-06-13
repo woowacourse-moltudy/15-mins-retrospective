@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.dto.AttendanceRequest;
-import wooteco.retrospective.dto.AttendanceResponse;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceResponse;
 
 @RestController
 @RequestMapping("/api")

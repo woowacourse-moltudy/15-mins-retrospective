@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.dto.AttendanceRequest;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
