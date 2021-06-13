@@ -139,33 +139,4 @@ public class PairDaoImpl implements PairDao {
             return attendance;
         }
     }
-
-    public List<Temp> findAll() {
-        String sql = "select * from PAIR";
-
-        return jdbcTemplate.query(sql, (rs, rn) -> {
-            Long gi = rs.getLong("group_id");
-            Long ai = rs.getLong("attendance_id");
-
-            return new Temp(gi, ai);
-        });
-    }
-
-    public static class Temp {
-        Long gi;
-        Long ai;
-
-        public Temp(Long gi, Long ai) {
-            this.gi = gi;
-            this.ai = ai;
-        }
-
-        public Long getGi() {
-            return gi;
-        }
-
-        public Long getAi() {
-            return ai;
-        }
-    }
 }
