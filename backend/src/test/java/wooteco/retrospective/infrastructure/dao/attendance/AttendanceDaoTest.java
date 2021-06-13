@@ -1,12 +1,4 @@
-package wooteco.retrospective.dao.attendance;
-
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+package wooteco.retrospective.infrastructure.dao.attendance;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,17 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-
-import wooteco.retrospective.dao.member.MemberDao;
+import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.infrastructure.dao.member.MemberDao;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Sql("classpath:recreate-schema.sql")
 class AttendanceDaoTest {
     private static final Member MEMBER_SALLY = new Member("sally");
-    private static final Time TIME_SIX =  new Time(1L, LocalTime.of(18, 0, 0));
+    private static final Time TIME_SIX = new Time(1L, LocalTime.of(18, 0, 0));
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -55,10 +54,10 @@ class AttendanceDaoTest {
     void findById() {
         insertAttendance();
         Attendance expectedAttendance = new Attendance(
-            1L,
-            LocalDate.now(),
-            MEMBER_SALLY,
-            TIME_SIX
+                1L,
+                LocalDate.now(),
+                MEMBER_SALLY,
+                TIME_SIX
         );
         Attendance attendance = attendanceDao.findById(1L);
 
@@ -72,8 +71,8 @@ class AttendanceDaoTest {
         Attendance attendance = attendanceDao.findById(1L);
 
         assertThat(attendanceDao.isExistSameTime(
-            attendance.getMemberId(),
-            attendance.getTimeId()
+                attendance.getMemberId(),
+                attendance.getTimeId()
         )).isTrue();
     }
 
@@ -84,14 +83,14 @@ class AttendanceDaoTest {
 
         LocalDate now = LocalDate.now();
         Attendance expectedAttendance = new Attendance(
-            1L,
-            now,
-            MEMBER_SALLY,
-            TIME_SIX
+                1L,
+                now,
+                MEMBER_SALLY,
+                TIME_SIX
         );
 
         List<Attendance> attendance = attendanceDao.findByDate(
-            now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         );
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();

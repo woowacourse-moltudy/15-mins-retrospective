@@ -23,7 +23,7 @@ public class DefaultMatchPolicy implements MatchPolicy {
     }
 
     private void validateNumberOfPairs(List<Member> pairs) {
-        if(pairs.size() < MINIMUM_PAIRS_SIZE) {
+        if (pairs.size() < MINIMUM_PAIRS_SIZE) {
             throw new IllegalArgumentException();
         }
     }

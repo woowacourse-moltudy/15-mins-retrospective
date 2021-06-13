@@ -23,6 +23,10 @@ class DefaultMatchPolicyTest {
 
     private static final MatchPolicy matchPolicy = new DefaultMatchPolicy();
 
+    private static Stream<Arguments> provideMemberList() {
+        return provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
+    }
+
     @DisplayName("사용자 리스트가 2보다 작으면 예외")
     @Test
     void apply_inFalseCase() {
@@ -62,10 +66,6 @@ class DefaultMatchPolicyTest {
                 .sum();
 
         assertThat(actual).isEqualTo(members.size());
-    }
-
-    private static Stream<Arguments> provideMemberList() {
-        return provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy();
     }
 
 }

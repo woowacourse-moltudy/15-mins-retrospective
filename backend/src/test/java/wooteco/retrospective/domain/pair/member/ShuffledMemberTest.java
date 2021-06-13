@@ -14,18 +14,6 @@ import static wooteco.retrospective.domain.pair.common.Fixture.*;
 
 class ShuffledMemberTest {
 
-    @DisplayName("셔플된 맴버를 반환한다.")
-    @ParameterizedTest
-    @MethodSource("provideShufflePolicies")
-    void value_returnShuffledMembers(UnaryOperator<List<Member>> shufflePolicy, List<Member> expected) {
-        Shuffled<Member> shuffledMembers = new ShuffledMembers(
-                List.of(neozal, whyguy, danijani),
-                shufflePolicy
-        );
-
-        assertThat(shuffledMembers.value()).containsExactlyElementsOf(expected);
-    }
-
     private static Stream<Arguments> provideShufflePolicies() {
         return Stream.of(
                 Arguments.of(
@@ -41,6 +29,18 @@ class ShuffledMemberTest {
                         List.of(danijani, whyguy, neozal)
                 )
         );
+    }
+
+    @DisplayName("셔플된 맴버를 반환한다.")
+    @ParameterizedTest
+    @MethodSource("provideShufflePolicies")
+    void value_returnShuffledMembers(UnaryOperator<List<Member>> shufflePolicy, List<Member> expected) {
+        Shuffled<Member> shuffledMembers = new ShuffledMembers(
+                List.of(neozal, whyguy, danijani),
+                shufflePolicy
+        );
+
+        assertThat(shuffledMembers.value()).containsExactlyElementsOf(expected);
     }
 
 }

@@ -1,16 +1,14 @@
-package wooteco.retrospective.application;
+package wooteco.retrospective.application.attendance;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import wooteco.retrospective.dao.attendance.AttendanceDao;
-import wooteco.retrospective.dao.attendance.TimeDao;
-import wooteco.retrospective.dao.member.MemberDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.dto.AttendanceRequest;
+import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
+import wooteco.retrospective.infrastructure.dao.member.MemberDao;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 @Service
 public class AttendanceService {
@@ -30,18 +28,18 @@ public class AttendanceService {
         validateTime(attendanceRequest);
 
         Member member = memberDao.findById(attendanceRequest.getMemberId())
-            .orElseThrow(RuntimeException::new);
+                .orElseThrow(RuntimeException::new);
         Time time = timeDao.findById(attendanceRequest.getTimeId())
-            .orElseThrow(RuntimeException::new);
+                .orElseThrow(RuntimeException::new);
         Attendance attendance = new Attendance(member, time);
 
         return attendanceDao.insert(attendance);
     }
 
     private void validateTime(AttendanceRequest attendanceRequest) {
-        if(attendanceDao.isExistSameTime(
-            attendanceRequest.getMemberId(),
-            attendanceRequest.getTimeId()
+        if (attendanceDao.isExistSameTime(
+                attendanceRequest.getMemberId(),
+                attendanceRequest.getTimeId()
         )) {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }

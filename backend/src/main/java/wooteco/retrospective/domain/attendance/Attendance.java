@@ -1,11 +1,9 @@
 package wooteco.retrospective.domain.attendance;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-
 import wooteco.retrospective.domain.member.Member;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class Attendance {
 
@@ -59,7 +57,7 @@ public class Attendance {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Attendance that = (Attendance)o;
+        Attendance that = (Attendance) o;
         return date.equals(that.date) && member.getName().equals(that.member.getName()) && time.equals(that.time);
     }
 

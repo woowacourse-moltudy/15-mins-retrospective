@@ -1,4 +1,4 @@
-package wooteco.retrospective.dto;
+package wooteco.retrospective.presentation.dto.attendance;
 
 public class AttendanceRequest {
 
