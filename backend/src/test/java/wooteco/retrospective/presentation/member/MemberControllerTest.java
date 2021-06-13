@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.application.dto.MemberLoginRequestDto;
-import wooteco.retrospective.application.dto.MemberLoginResponseDto;
+import wooteco.retrospective.application.dto.MemberLoginDto;
+import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 
@@ -39,9 +39,9 @@ class MemberControllerTest {
     @Test
     void loginMember() throws Exception {
         MemberLoginRequest request = new MemberLoginRequest("dani");
-        MemberLoginResponseDto responseDto = new MemberLoginResponseDto("dani");
+        MemberTokenDto responseDto = new MemberTokenDto("dani");
 
-        when(memberService.loginMember(any(MemberLoginRequestDto.class)))
+        when(memberService.loginMember(any(MemberLoginDto.class)))
                 .thenReturn(responseDto);
 
         mockMvc.perform(post("/api/login")

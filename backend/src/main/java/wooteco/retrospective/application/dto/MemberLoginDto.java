@@ -2,14 +2,14 @@ package wooteco.retrospective.application.dto;
 
 import wooteco.retrospective.domain.member.Member;
 
-public class MemberLoginRequestDto {
+public class MemberLoginDto {
 
     private String name;
 
-    private MemberLoginRequestDto() {
+    private MemberLoginDto() {
     }
 
-    public MemberLoginRequestDto(String name) {
+    public MemberLoginDto(String name) {
         this.name = name;
     }
 
