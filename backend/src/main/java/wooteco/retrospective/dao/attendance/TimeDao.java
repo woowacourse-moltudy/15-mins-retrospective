@@ -1,5 +1,6 @@
 package wooteco.retrospective.dao.attendance;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class TimeDao {
     private final RowMapper<Time> rowMapper = (resultSet, rowNumber) ->
         new Time(
             resultSet.getLong("id"),
-            resultSet.getInt("time")
+            resultSet.getObject("time", LocalTime.class)
         );
 
     public TimeDao(JdbcTemplate jdbcTemplate) {

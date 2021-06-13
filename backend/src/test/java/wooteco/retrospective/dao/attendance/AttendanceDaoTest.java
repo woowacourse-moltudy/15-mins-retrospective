@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import wooteco.retrospective.domain.member.Member;
 @Sql("classpath:recreate-schema.sql")
 class AttendanceDaoTest {
     private static final Member MEMBER_SALLY = new Member("sally");
-    private static final Time TIME_SIX = new Time(6);
+    private static final Time TIME_SIX =  new Time(1L, LocalTime.of(18, 0, 0));
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
