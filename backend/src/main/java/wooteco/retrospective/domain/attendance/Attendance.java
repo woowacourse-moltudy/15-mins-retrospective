@@ -8,33 +8,26 @@ import wooteco.retrospective.domain.member.Member;
 
 public class Attendance {
 
-    private long id;
-    private String date;
+    private final Long id;
+    private final String date;
     private final Member member;
     private final Time time;
 
-    public Attendance(long id, LocalDateTime timestamp, Member member, Time time) {
-        this(timestamp, member, time);
-        this.id = id;
-    }
-
-    public Attendance(Long id, String date, Member member, Time time) {
-        this(date, member, time);
-        this.id = id;
-    }
-
-    public Attendance(LocalDateTime timestamp, Member member, Time time) {
-        this.date = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.member = member;
-        this.time = time;
+    public Attendance(LocalDateTime localDateTime, Member member, Time time) {
+        this(null, localDateTime, member, time);
     }
 
     public Attendance(String date, Member member, Time time) {
-        this(member, time);
-        this.date = date;
+        this(null, date, member, time);
     }
 
-    public Attendance(Member member, Time time) {
+    public Attendance(Long id, LocalDateTime localDateTime, Member member, Time time) {
+        this(id, localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), member, time);
+    }
+
+    public Attendance(Long id, String date, Member member, Time time) {
+        this.id = id;
+        this.date = date;
         this.member = member;
         this.time = time;
     }

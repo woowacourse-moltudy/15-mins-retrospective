@@ -4,16 +4,16 @@ import java.util.Objects;
 
 public class Time {
 
-    private long id;
+    private final Long id;
     private final int time;
 
-    public Time(long id, int time) {
-        this(time);
-        this.id = id;
+    public Time(int time) {
+        this(null, time);
     }
 
-    public Time(int time) {
+    public Time(Long id, int time) {
         validate(time);
+        this.id = id;
         this.time = time;
     }
 
