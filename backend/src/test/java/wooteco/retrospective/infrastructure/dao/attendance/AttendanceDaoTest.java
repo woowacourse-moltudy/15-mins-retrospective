@@ -89,9 +89,7 @@ class AttendanceDaoTest {
                 TIME_SIX
         );
 
-        List<Attendance> attendance = attendanceDao.findByDate(
-                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        );
+        List<Attendance> attendance = attendanceDao.findByDate(now);
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }

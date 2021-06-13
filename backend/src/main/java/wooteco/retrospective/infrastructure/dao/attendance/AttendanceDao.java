@@ -71,7 +71,7 @@ public class AttendanceDao {
         return attendances.size() > 0;
     }
 
-    public List<Attendance> findByDate(String date) {
+    public List<Attendance> findByDate(LocalDate date) {
         String query = "SELECT * FROM ATTENDANCE WHERE date = ?";
 
         return jdbcTemplate.query(query, rowMapper, date);
