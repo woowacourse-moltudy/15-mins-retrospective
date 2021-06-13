@@ -69,6 +69,26 @@ class PairServiceTest {
                 ));
     }
 
+    @DisplayName("페어를 두번 요청해도 동일한 값이 반환된다.")
+    @Test
+    void getPairsByDateAndTimeWithTwice() {
+        List<PairResponseDto> once = pairService.getPairsByDateAndTime(
+                TODAY,
+                LocalTime.of(18, 0),
+                LocalTime.of(19, 0)
+        );
+
+        List<PairResponseDto> twice = pairService.getPairsByDateAndTime(
+                TODAY,
+                LocalTime.of(18, 0),
+                LocalTime.of(20, 0)
+        );
+
+        assertThat(once)
+                .usingRecursiveComparison()
+                .isEqualTo(twice);
+    }
+
     @DisplayName("미래 날짜를 요청하면 예외")
     @Test
     void getPairsByDateAndTimeFailWithBadDate() {
