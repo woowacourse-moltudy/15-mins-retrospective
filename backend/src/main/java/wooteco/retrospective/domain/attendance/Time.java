@@ -1,33 +1,27 @@
 package wooteco.retrospective.domain.attendance;
 
+import java.time.LocalTime;
 import java.util.Objects;
 
 public class Time {
 
-    private long id;
-    private final int time;
+    private final Long id;
+    private final LocalTime time;
 
-    public Time(long id, int time) {
-        this(time);
+    public Time(LocalTime time) {
+        this(null, time);
+    }
+
+    public Time(Long id, LocalTime time) {
         this.id = id;
-    }
-
-    public Time(int time) {
-        validate(time);
         this.time = time;
-    }
-
-    private void validate(int time) {
-        if (time < 0 || time > 24) {
-            throw new IllegalArgumentException("옳지 않은 시간입니다.");
-        }
     }
 
     public long getId() {
         return id;
     }
 
-    public int getTime() {
+    public LocalTime getTime() {
         return time;
     }
 

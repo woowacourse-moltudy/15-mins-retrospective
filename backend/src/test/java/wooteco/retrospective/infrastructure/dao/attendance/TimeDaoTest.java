@@ -3,6 +3,7 @@ package wooteco.retrospective.infrastructure.dao.attendance;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +34,8 @@ class TimeDaoTest {
     void findAll() {
         List<Time> times = timeDao.findAll();
 
-        Time time6 = new Time(1L, 6);
-        Time time10 = new Time(2L, 10);
+        Time time6 = new Time(1L, LocalTime.of(18, 0, 0));
+        Time time10 = new Time(1L, LocalTime.of(22, 0, 0));
 
         assertThat(times).containsAll(Arrays.asList(time6, time10));
     }
@@ -42,7 +43,7 @@ class TimeDaoTest {
     @DisplayName("저장된 시간을 변경한다.")
     @Test
     void update() {
-        Time newTime = new Time(7);
+        Time newTime = new Time(LocalTime.of(19, 0, 0));
         assertEquals(1, timeDao.update(1L, newTime));
 
         Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);

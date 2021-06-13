@@ -6,7 +6,7 @@ import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.dto.AttendanceRequest;
-import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
+import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
@@ -31,7 +31,7 @@ public class AttendanceService {
                 .orElseThrow(RuntimeException::new);
         Time time = timeDao.findById(attendanceRequest.getTimeId())
                 .orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(attendanceRequest.getDate(), member, time);
+        Attendance attendance = new Attendance(member, time);
 
         return attendanceDao.insert(attendance);
     }

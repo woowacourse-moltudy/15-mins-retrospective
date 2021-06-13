@@ -1,16 +1,18 @@
 package wooteco.retrospective.dto;
 
+import java.time.LocalDate;
+
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 
 public class AttendanceResponse {
 
-    private final String date;
+    private final LocalDate date;
     private final Member member;
     private final Time time;
 
-    public AttendanceResponse(String date, Member member, Time time) {
+    public AttendanceResponse(LocalDate date, Member member, Time time) {
         this.date = date;
         this.member = member;
         this.time = time;
@@ -20,7 +22,7 @@ public class AttendanceResponse {
         return new AttendanceResponse(attendance.getDate(), attendance.getMember(), attendance.getTime());
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
