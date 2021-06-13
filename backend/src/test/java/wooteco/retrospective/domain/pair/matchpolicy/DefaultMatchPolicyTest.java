@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
-import wooteco.retrospective.domain.pair.member.Member;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.retrospective.domain.pair.common.Fixture.neozal;
-import static wooteco.retrospective.domain.pair.common.Fixture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy;
+import static wooteco.retrospective.common.Fixture.neozal;
+import static wooteco.retrospective.common.Fixture.provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy;
 
 class DefaultMatchPolicyTest {
 

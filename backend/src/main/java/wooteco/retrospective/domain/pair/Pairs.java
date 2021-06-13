@@ -1,12 +1,13 @@
 package wooteco.retrospective.domain.pair;
 
+import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.matchpolicy.DefaultMatchPolicy;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
-import wooteco.retrospective.domain.pair.member.Member;
 import wooteco.retrospective.domain.pair.member.Shuffled;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Pairs {
     private static final MatchPolicy DEFAULT_MATCH_POLICY = new DefaultMatchPolicy();
@@ -26,9 +27,18 @@ public class Pairs {
         this(pairs.value(), matchPolicy);
     }
 
+    private Pairs(final List<Pair> pairs, List<Member> members, MatchPolicy matchPolicy) {
+        this(members, matchPolicy);
+        this.pairs = pairs;
+    }
+
     public Pairs(final List<Member> pairs, MatchPolicy matchPolicy) {
         this.members = pairs;
         this.matchPolicy = matchPolicy;
+    }
+
+    public static Pairs from(List<Pair> pairs) {
+        return new Pairs(pairs, Collections.emptyList(), null);
     }
 
     public synchronized List<Pair> getPairs() {
@@ -39,4 +49,16 @@ public class Pairs {
         return Collections.unmodifiableList(this.pairs);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pairs pairs1 = (Pairs) o;
+        return pairs.equals(pairs1.pairs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pairs);
+    }
 }

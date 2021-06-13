@@ -4,9 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import wooteco.retrospective.domain.pair.common.Fixture;
+import wooteco.retrospective.common.Fixture;
+import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
-import wooteco.retrospective.domain.pair.member.Member;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,11 +73,13 @@ class PairsTest {
     @ParameterizedTest
     @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
     void getPairs_withCustomPolicy(List<Member> members) {
-        final MatchPolicy matchPolicy = memberList -> Collections.singletonList(new Pair(memberList));
+        final MatchPolicy matchPolicy = memberList -> Collections.singletonList(
+                new Pair(1L, memberList)
+        );
 
         List<Pair> actual = new Pairs(members, matchPolicy).getPairs();
 
-        assertThat(actual).isEqualTo(Collections.singletonList(new Pair(members)));
+        assertThat(actual).isEqualTo(Collections.singletonList(new Pair(1L, members)));
     }
 
 }

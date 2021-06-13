@@ -1,7 +1,7 @@
-package wooteco.retrospective.domain.pair.common;
+package wooteco.retrospective.common;
 
 import org.junit.jupiter.params.provider.Arguments;
-import wooteco.retrospective.domain.pair.member.Member;
+import wooteco.retrospective.domain.member.Member;
 
 import java.util.List;
 import java.util.stream.Stream;

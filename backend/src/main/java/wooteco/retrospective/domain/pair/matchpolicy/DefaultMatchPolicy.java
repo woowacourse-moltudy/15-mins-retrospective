@@ -1,10 +1,12 @@
 package wooteco.retrospective.domain.pair.matchpolicy;
 
+import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
-import wooteco.retrospective.domain.pair.member.Member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.stream.Collectors.toList;
 
@@ -12,13 +14,16 @@ public class DefaultMatchPolicy implements MatchPolicy {
 
     private static final int NUMBER_OF_PAIR = 3;
     private static final int MINIMUM_PAIRS_SIZE = 2;
+    public static final int FIRST_GROUP_ID = 1;
 
     @Override
     public List<Pair> apply(List<Member> members) {
         validateNumberOfPairs(members);
 
+        AtomicLong groupId = new AtomicLong(FIRST_GROUP_ID);
+
         return createPairs(members).stream()
-                .map(Pair::new)
+                .map(pair -> new Pair(groupId.getAndIncrement(), pair))
                 .collect(toList());
     }
 

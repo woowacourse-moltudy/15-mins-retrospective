@@ -1,6 +1,6 @@
 package wooteco.retrospective.domain.pair;
 
-import wooteco.retrospective.domain.pair.member.Member;
+import wooteco.retrospective.domain.member.Member;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,10 +8,16 @@ import java.util.Objects;
 
 public class Pair {
 
+    private final Long groupId;
     private final List<Member> members;
 
-    public Pair(List<Member> members) {
+    public Pair(Long groupId, List<Member> members) {
+        this.groupId = groupId;
         this.members = members;
+    }
+
+    public Long getGroupId() {
+        return groupId;
     }
 
     public List<Member> getMembers() {
