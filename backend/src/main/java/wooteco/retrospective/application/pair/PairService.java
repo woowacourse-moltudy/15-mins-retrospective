@@ -33,9 +33,11 @@ public class PairService {
     }
 
     @Transactional
-    public List<PairResponseDto> getPairsByDateAndTime(LocalDate date, LocalTime requestedTime) {
+    public List<PairResponseDto> getPairsByDateAndTime(LocalDate date,
+                                                       LocalTime requestedTime,
+                                                       LocalTime currentTime) {
         Time time = getTime(requestedTime);
-        validateIsRightTime(time);
+        validateIsRightTime(time, currentTime);
         validateIsRightDate(date);
 
         return pairDao.findByDateAndTime(date, time)
@@ -50,9 +52,9 @@ public class PairService {
                 .orElseThrow(RuntimeException::new);
     }
 
-    private void validateIsRightTime(Time requestedTime) {
+    private void validateIsRightTime(Time requestedTime, LocalTime currentTime) {
         timeDao.findAll().stream()
-                .filter(time -> time.getTime().isBefore(LocalTime.now()))
+                .filter(time -> time.getTime().isBefore(currentTime))
                 .filter(time -> time.getTime().equals(requestedTime.getTime()))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
@@ -70,7 +72,8 @@ public class PairService {
                 .collect(toList());
     }
 
-    private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDate date, Time time) {
+    private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDate date,
+                                                                          Time time) {
         List<Attendance> attendances = getAttendancesOf(date, time);
 
         Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendances));

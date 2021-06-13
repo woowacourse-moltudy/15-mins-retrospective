@@ -5,19 +5,21 @@ import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Fixture {
+    public static final LocalTime TIME_SIX = LocalTime.of(18, 0);
 
-    public static final Attendance neozal = new Attendance(new Member("손너잘"), new Time(LocalTime.now()));
-    public static final Attendance whyguy = new Attendance(new Member("웨지"), new Time(LocalTime.now()));
-    public static final Attendance danijani = new Attendance(new Member("다니"), new Time(LocalTime.now()));
-    public static final Attendance soulg = new Attendance(new Member("솔지"), new Time(LocalTime.now()));
-    public static final Attendance chu = new Attendance(new Member("피카"), new Time(LocalTime.now()));
-    public static final Attendance spring = new Attendance(new Member("나봄"), new Time(LocalTime.now()));
-    public static final Attendance duck = new Attendance(new Member("조연우"), new Time(LocalTime.now()));
+    public static final Attendance neozal = new Attendance(new Member("손너잘"), new Time(TIME_SIX));
+    public static final Attendance whyguy = new Attendance(new Member("웨지"), new Time(TIME_SIX));
+    public static final Attendance danijani = new Attendance(new Member("다니"), new Time(TIME_SIX));
+    public static final Attendance soulg = new Attendance(new Member("솔지"), new Time(TIME_SIX));
+    public static final Attendance chu = new Attendance(new Member("피카"), new Time(TIME_SIX));
+    public static final Attendance spring = new Attendance(new Member("나봄"), new Time(TIME_SIX));
+    public static final Attendance duck = new Attendance(new Member("조연우"), new Time(TIME_SIX));
 
     public static Stream<Arguments> provideAttendanceListAndMatchedPairSizesOnDefaultMatchPolicy() {
         return Stream.of(
