@@ -1,4 +1,4 @@
-package wooteco.retrospective.dao.pair;
+package wooteco.retrospective.infrastructure.dao.pair;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +13,6 @@ import wooteco.retrospective.domain.pair.Pairs;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

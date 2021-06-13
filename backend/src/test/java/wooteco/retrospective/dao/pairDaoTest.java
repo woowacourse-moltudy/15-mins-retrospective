@@ -11,14 +11,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import wooteco.retrospective.common.Fixture;
 import wooteco.retrospective.dao.attendance.AttendanceDao;
-import wooteco.retrospective.dao.attendance.TimeDao;
-import wooteco.retrospective.dao.member.MemberDao;
-import wooteco.retrospective.dao.pair.PairDaoImpl;
+import wooteco.retrospective.infrastructure.dao.pair.PairDaoImpl;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
+import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
+import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
