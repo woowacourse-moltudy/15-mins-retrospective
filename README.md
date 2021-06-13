@@ -21,11 +21,26 @@
 
 ##  코드 컨벤션
 
+### 패키지
+1. View-Controller / Controller-Service 간 DTO를 별도로 분리
+2. View-Controller 패키지 위치는 presentation/{domain}/dto
+   - dto 네이밍 : {domain}Request, {domain}Response
+3. Controller-Service 패키지 위치는 application/{domain}/dto
+   - dto 네이밍 : {domain}Dto
+  
+### 테스트
+- 테스트 메소드명 컨벤션
+  1. 성공 케이스는 메소드만
+     ex) insert
+  2. 실패케이스는 뒤에 fail, 상황을 명시해줘도 됨
+     ex) insertFail
+     
+### 스타일
 - 클래스 내부 첫 줄과 마지막 줄을 개행
 - 주 생성자는 부 생성자 보다 밑에 위치
 - 패키지 구조는 레이어 별로 구성
 - 문서화는 controller 레이어를 기준으로  
-- 예외는 공통 예외를 활용하도록 노력  
+- 예외는 공통 예외를 활용하도록 노력
 - 세로 정렬시 첫 줄 같은 요소 왼쪽 끝에 맞출 것
     ```java
     private static String test(Map<String, Object> model, 
