@@ -42,9 +42,10 @@ class AttendanceDaoTest {
     @Test
     @DisplayName("출석부를 추가한다.")
     void insert() {
+        Attendance expectedAttendance = new Attendance(LocalDateTime.now(), MEMBER_SALLY, TIME_SIX);
         Attendance newAttendance = insertAttendance();
-        assertThat(newAttendance.getMember().getName()).isEqualTo(MEMBER_SALLY.getName());
-        assertThat(newAttendance.getTime()).isEqualTo(TIME_SIX);
+
+        assertThat(expectedAttendance).isEqualTo(newAttendance);
     }
 
     @Test
@@ -97,7 +98,7 @@ class AttendanceDaoTest {
     private Attendance insertAttendance() {
         Member madeMember = memberDao.insert(MEMBER_SALLY);
         Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(madeMember, time);
+        Attendance attendance = new Attendance(LocalDateTime.now(), madeMember, time);
 
         return attendanceDao.insert(attendance);
     }
