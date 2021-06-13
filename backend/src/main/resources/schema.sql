@@ -14,7 +14,7 @@ create table if not exists CONFERENCE_TIME (
 
 create table if not exists ATTENDANCE (
     id bigint auto_increment not null,
-    date timestamp,
+    date date,
     member_id bigint not null,
     time_id bigint not null,
 

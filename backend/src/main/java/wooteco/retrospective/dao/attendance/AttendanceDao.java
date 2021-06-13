@@ -1,10 +1,8 @@
 package wooteco.retrospective.dao.attendance;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +43,7 @@ public class AttendanceDao {
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[] {"id"});
-            ps.setTimestamp(1, Timestamp.valueOf(attendance.getDate().atStartOfDay()));
+            ps.setDate(1, Date.valueOf(attendance.getDate()));
             ps.setLong(2, attendance.getMemberId());
             ps.setLong(3, attendance.getTimeId());
 
