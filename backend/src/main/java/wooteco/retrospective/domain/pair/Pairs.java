@@ -1,5 +1,6 @@
 package wooteco.retrospective.domain.pair;
 
+import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.matchpolicy.DefaultMatchPolicy;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
@@ -14,28 +15,28 @@ public class Pairs {
 
     private List<Pair> pairs;
 
-    private Pairs(final List<Member> members, MatchPolicy matchPolicy) {
-        this.pairs = matchPolicy.apply(members);
+    private Pairs(final List<Attendance> attendances, MatchPolicy matchPolicy) {
+        this.pairs = matchPolicy.apply(attendances);
     }
 
     private Pairs(final List<Pair> pairs) {
         this.pairs = pairs;
     }
 
-    public static Pairs withDefaultMatchPolicy(final List<Member> members) {
-        return new Pairs(members, DEFAULT_MATCH_POLICY);
+    public static Pairs withDefaultMatchPolicy(final List<Attendance> attendances) {
+        return new Pairs(attendances, DEFAULT_MATCH_POLICY);
     }
 
-    public static Pairs withDefaultMatchPolicy(final Shuffled<Member> members) {
-        return new Pairs(members.value(), DEFAULT_MATCH_POLICY);
+    public static Pairs withDefaultMatchPolicy(final Shuffled<Attendance> attendances) {
+        return new Pairs(attendances.value(), DEFAULT_MATCH_POLICY);
     }
 
-    public static Pairs from(final List<Member> members, MatchPolicy matchPolicy) {
-        return new Pairs(members, matchPolicy);
+    public static Pairs from(final List<Attendance> attendances, MatchPolicy matchPolicy) {
+        return new Pairs(attendances, matchPolicy);
     }
 
-    public static Pairs from(final Shuffled<Member> members, MatchPolicy matchPolicy) {
-        return new Pairs(members.value(),matchPolicy);
+    public static Pairs from(final Shuffled<Attendance> attendances, MatchPolicy matchPolicy) {
+        return new Pairs(attendances.value(),matchPolicy);
     }
 
     public static Pairs from(List<Pair> pairs) {

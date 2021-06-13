@@ -1,5 +1,6 @@
 package wooteco.retrospective.application.dto;
 
+import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.pair.Pair;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public class PairResponseDto {
     private PairResponseDto() {}
 
     public PairResponseDto(Pair pair) {
-        this.members = pair.getMembers().stream()
+        this.members = pair.getAttendances().stream()
+                .map(Attendance::getMember)
                 .map(MemberResponseDto::new)
                 .collect(toList());
     }

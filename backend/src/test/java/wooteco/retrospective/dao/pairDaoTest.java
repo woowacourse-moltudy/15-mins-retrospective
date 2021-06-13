@@ -18,10 +18,10 @@ import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pairs;
-import wooteco.retrospective.domain.pair.member.ShuffledMembers;
+import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -45,20 +45,20 @@ public class pairDaoTest {
         attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
         pairDao = new PairDaoImpl(jdbcTemplate);
 
-        Member neozal = memberDao.insert(Fixture.neozal);
-        Member whyguy = memberDao.insert(Fixture.whyguy);
-        Member danijani = memberDao.insert(Fixture.danijani);
-        Member duck = memberDao.insert(Fixture.duck);
+        Member neozal = memberDao.insert(Fixture.neozal.getMember());
+        Member whyguy = memberDao.insert(Fixture.whyguy.getMember());
+        Member danijani = memberDao.insert(Fixture.danijani.getMember());
+        Member duck = memberDao.insert(Fixture.duck.getMember());
 
         Time timeSix = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), neozal, timeSix));
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), whyguy, timeSix));
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), danijani, timeSix));
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), duck, timeSix));
+        attendanceDao.insert(new Attendance(LocalDate.now(), neozal, timeSix));
+        attendanceDao.insert(new Attendance(LocalDate.now(), whyguy, timeSix));
+        attendanceDao.insert(new Attendance(LocalDate.now(), danijani, timeSix));
+        attendanceDao.insert(new Attendance(LocalDate.now(), duck, timeSix));
 
         Time timeTen = timeDao.findById(2L).orElseThrow(RuntimeException::new);
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), neozal, timeTen));
-        attendanceDao.insert(new Attendance(LocalDateTime.now(), whyguy, timeTen));
+        attendanceDao.insert(new Attendance(LocalDate.now(), neozal, timeTen));
+        attendanceDao.insert(new Attendance(LocalDate.now(), whyguy, timeTen));
     }
 
     @AfterEach
@@ -74,7 +74,7 @@ public class pairDaoTest {
     @DisplayName("페어를 저장한다.")
     @Test
     void insert() {
-        Pairs pairs = getPairsAt(6);
+        Pairs pairs = getPairsAt(LocalTime.of(18, 0));
         pairDao.insert(pairs);
 
         Long count = jdbcTemplate.queryForObject("SELECT count(*) FROM PAIR", Long.class);
@@ -83,27 +83,27 @@ public class pairDaoTest {
 
     @DisplayName("날짜와 시간으로 페어를 검색한다.")
     @ParameterizedTest
-    @CsvSource({"1, 6", "2, 10"})
-    void findByDateAndTime(long id, int time) {
+    @CsvSource({"1, 18, 0", "2, 22, 0"})
+    void findByDateAndTime(long id, int hour, int minute) {
+        LocalTime time = LocalTime.of(hour, minute);
         Pairs pairs = getPairsAt(time);
         pairDao.insert(pairs);
 
-        Pairs actual = pairDao.findByDateAndTime(LocalDateTime.now(), new Time(id, 6))
+        Pairs actual = pairDao.findByDateAndTime(LocalDate.now(), new Time(id, time))
                 .orElseThrow(RuntimeException::new);
+
         assertThat(actual.getPairs()).isEqualTo(pairs.getPairs());
     }
 
-    private Pairs getPairsAt(int time) {
+    private Pairs getPairsAt(LocalTime time) {
         List<Attendance> attendances = attendanceDao.findByDate(
-                LocalDateTime.now()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                LocalDate.now()
         );
 
-        List<Member> members = attendances.stream()
+        List<Attendance> attendancesAtTime = attendances.stream()
                 .filter(attendance -> attendance.getTime().equals(new Time(time)))
-                .map(Attendance::getMember)
                 .collect(toList());
 
-        return Pairs.withDefaultMatchPolicy(new ShuffledMembers(members, i -> i));
+        return Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendancesAtTime, i -> i));
     }
 }

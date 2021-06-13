@@ -4,14 +4,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.dao.PairDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,14 +23,6 @@ import static java.util.stream.Collectors.toList;
 
 @Repository
 public class PairDaoImpl implements PairDao {
-
-    public static final RowMapper<MemberWithGroupId> MEMBER_WITH_GROUP_ID_ROW_MAPPER = (rs, rn) -> {
-        Long groupId = rs.getLong("group_id");
-        Long id = rs.getLong("id");
-        String name = rs.getString("name");
-
-        return new MemberWithGroupId(groupId, new Member(id, name));
-    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -48,33 +42,33 @@ public class PairDaoImpl implements PairDao {
     }
 
     private List<Object[]> getValuesForEachPair(Pair pair) {
-        return pair.getMembers().stream().map(
-                member -> new Object[]{pair.getGroupId(), member.getId()}
+        return pair.getAttendances().stream().map(
+                attendance -> new Object[]{pair.getGroupId(), attendance.getId()}
         ).collect(toList());
     }
 
-    private List<Pair> membersToPairs(List<MemberWithGroupId> members) {
-        Map<Long, List<MemberWithGroupId>> membersWithGroupId = members.stream()
-                .collect(groupingBy(MemberWithGroupId::getGroupId));
+    private List<Pair> membersToPairs(List<AttendanceWithGroupId> members) {
+        Map<Long, List<AttendanceWithGroupId>> membersWithGroupId = members.stream()
+                .collect(groupingBy(AttendanceWithGroupId::getGroupId));
 
         return membersWithGroupId.entrySet().stream()
                 .map(this::toPair)
                 .collect(toList());
     }
 
-    private Pair toPair(Map.Entry<Long, List<MemberWithGroupId>> entry) {
+    private Pair toPair(Map.Entry<Long, List<AttendanceWithGroupId>> entry) {
         return new Pair(
                 entry.getKey(), entry.getValue().stream()
-                .map(MemberWithGroupId::getMember)
+                .map(AttendanceWithGroupId::getAttendance)
                 .collect(toList())
         );
     }
 
-    public Optional<Pairs> findByDateAndTime(LocalDateTime date, Time time) {
-        List<MemberWithGroupId> members = jdbcTemplate.query(
+    public Optional<Pairs> findByDateAndTime(LocalDate date, Time time) {
+        List<AttendanceWithGroupId> members = jdbcTemplate.query(
                 getFindByDateAndTimeSql(),
-                MEMBER_WITH_GROUP_ID_ROW_MAPPER,
-                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                rowMapperForFindByDateAndTime(time),
+                date,
                 time.getTime()
         );
 
@@ -87,33 +81,92 @@ public class PairDaoImpl implements PairDao {
         return Optional.of(Pairs.from(pairs));
     }
 
+    private RowMapper<AttendanceWithGroupId> rowMapperForFindByDateAndTime(Time time) {
+        return (rs, rn) -> {
+            Long groupId = rs.getLong("group_id");
+            Attendance attendance = createAttendance(time, rs);
+
+            return new AttendanceWithGroupId(groupId, attendance);
+        };
+    }
+
+    private Attendance createAttendance(Time time, java.sql.ResultSet rs) throws SQLException {
+        Long attendanceId = rs.getLong("attendance_id");
+        LocalDate date = rs.getObject("date", LocalDate.class);
+
+        return new Attendance(attendanceId, date, createMember(rs), time);
+    }
+
+    private Member createMember(java.sql.ResultSet rs) throws SQLException {
+        String name = rs.getString("name");
+        Long memberId = rs.getLong("member_id");
+
+        return new Member(memberId, name);
+    }
+
     private String getFindByDateAndTimeSql() {
-        return "SELECT P.group_id AS group_id, M.id AS id, M.name AS name " +
+        return "SELECT " +
+
+                "P.group_id AS group_id, " +
+                "M.id AS member_id, " +
+                "M.name AS name, " +
+                "A.id AS attendance_id, " +
+                "A.date AS date " +
+
                 "FROM PAIR P " +
                 "INNER JOIN ATTENDANCE A " +
                 "ON P.attendance_id = A.id " +
                 "INNER JOIN MEMBER M " +
                 "ON M.id = A.member_id " +
-                "WHERE A.day=? and A.time_id = " +
-                "(SELECT id FROM CONFERENCE_TIME WHERE time = ?);";
+                "WHERE A.date=? and A.time_id = " +
+                "(SELECT id FROM CONFERENCE_TIME WHERE time = ?)";
     }
 
-    private static class MemberWithGroupId {
+    private static class AttendanceWithGroupId {
 
         private final Long groupId;
-        private final Member member;
+        private final Attendance attendance;
 
-        public MemberWithGroupId(Long groupId, Member member) {
+        public AttendanceWithGroupId(Long groupId, Attendance attendance) {
             this.groupId = groupId;
-            this.member = member;
+            this.attendance = attendance;
         }
 
         public Long getGroupId() {
             return groupId;
         }
 
-        public Member getMember() {
-            return member;
+        public Attendance getAttendance() {
+            return attendance;
+        }
+    }
+
+    public List<Temp> findAll() {
+        String sql = "select * from PAIR";
+
+        return jdbcTemplate.query(sql, (rs, rn) -> {
+            Long gi = rs.getLong("group_id");
+            Long ai = rs.getLong("attendance_id");
+
+            return new Temp(gi, ai);
+        });
+    }
+
+    public static class Temp {
+        Long gi;
+        Long ai;
+
+        public Temp(Long gi, Long ai) {
+            this.gi = gi;
+            this.ai = ai;
+        }
+
+        public Long getGi() {
+            return gi;
+        }
+
+        public Long getAi() {
+            return ai;
         }
     }
 }

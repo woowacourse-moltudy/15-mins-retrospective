@@ -8,13 +8,11 @@ import wooteco.retrospective.dao.attendance.TimeDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.dao.PairDao;
-import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pairs;
-import wooteco.retrospective.domain.pair.member.ShuffledMembers;
+import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
 
@@ -35,7 +33,7 @@ public class PairService {
     }
 
     @Transactional
-    public List<PairResponseDto> getPairsByDateAndTime(LocalDateTime date, int requestedTime) {
+    public List<PairResponseDto> getPairsByDateAndTime(LocalDate date, LocalTime requestedTime) {
         Time time = getTime(requestedTime);
         validateIsRightTime(time);
         validateIsRightDate(date);
@@ -45,23 +43,23 @@ public class PairService {
                 .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, time));
     }
 
-    private Time getTime(int time) {
+    private Time getTime(LocalTime time) {
         return timeDao.findAll().stream()
-                .filter(t -> t.getTime() == time)
+                .filter(t -> t.getTime().equals(time))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }
 
     private void validateIsRightTime(Time requestedTime) {
         timeDao.findAll().stream()
-                .filter(time -> time.getTime() <= LocalTime.now().getHour())
-                .filter(time -> time.getTime() == requestedTime.getTime())
+                .filter(time -> time.getTime().isBefore(LocalTime.now()))
+                .filter(time -> time.getTime().equals(requestedTime.getTime()))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }
 
-    private void validateIsRightDate(LocalDateTime date) {
-        if (date.isAfter(LocalDateTime.now())) {
+    private void validateIsRightDate(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
             throw new RuntimeException();
         }
     }
@@ -72,20 +70,19 @@ public class PairService {
                 .collect(toList());
     }
 
-    private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDateTime date, Time time) {
-        List<Member> members = getMembersOf(date, time);
+    private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDate date, Time time) {
+        List<Attendance> attendances = getAttendancesOf(date, time);
 
-        Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledMembers(members));
+        Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendances));
 
         return pairDao.insert(pairs).getPairs().stream()
                 .map(PairResponseDto::new)
                 .collect(toList());
     }
 
-    private List<Member> getMembersOf(LocalDateTime date, Time time) {
-        return attendanceDao.findByDate(date.format(DateTimeFormatter.ofPattern("yyyy-DD-mm"))).stream()
+    private List<Attendance> getAttendancesOf(LocalDate date, Time time) {
+        return attendanceDao.findByDate(date).stream()
                 .filter(attendance -> attendance.getTime().equals(time))
-                .map(Attendance::getMember)
                 .collect(toList());
     }
 }

@@ -1,22 +1,25 @@
 package wooteco.retrospective.common;
 
 import org.junit.jupiter.params.provider.Arguments;
+import wooteco.retrospective.domain.attendance.Attendance;
+import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Fixture {
 
-    public static final Member neozal = new Member("손너잘");
-    public static final Member whyguy = new Member("웨지");
-    public static final Member danijani = new Member("다니");
-    public static final Member soulg = new Member("솔지");
-    public static final Member chu = new Member("피카");
-    public static final Member spring = new Member("나봄");
-    public static final Member duck = new Member("조연우");
+    public static final Attendance neozal = new Attendance(new Member("손너잘"), new Time(LocalTime.now()));
+    public static final Attendance whyguy = new Attendance(new Member("웨지"), new Time(LocalTime.now()));
+    public static final Attendance danijani = new Attendance(new Member("다니"), new Time(LocalTime.now()));
+    public static final Attendance soulg = new Attendance(new Member("솔지"), new Time(LocalTime.now()));
+    public static final Attendance chu = new Attendance(new Member("피카"), new Time(LocalTime.now()));
+    public static final Attendance spring = new Attendance(new Member("나봄"), new Time(LocalTime.now()));
+    public static final Attendance duck = new Attendance(new Member("조연우"), new Time(LocalTime.now()));
 
-    public static Stream<Arguments> provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy() {
+    public static Stream<Arguments> provideAttendanceListAndMatchedPairSizesOnDefaultMatchPolicy() {
         return Stream.of(
                 Arguments.of(List.of(neozal, whyguy), List.of(2)),
                 Arguments.of(List.of(neozal, whyguy, danijani, soulg), List.of(2, 2)),

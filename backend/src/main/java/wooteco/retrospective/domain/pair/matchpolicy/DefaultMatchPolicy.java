@@ -1,11 +1,12 @@
 package wooteco.retrospective.domain.pair.matchpolicy;
 
+import wooteco.retrospective.dao.attendance.AttendanceDao;
+import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.stream.Collectors.toList;
@@ -17,40 +18,40 @@ public class DefaultMatchPolicy implements MatchPolicy {
     public static final int FIRST_GROUP_ID = 1;
 
     @Override
-    public List<Pair> apply(List<Member> members) {
-        validateNumberOfPairs(members);
+    public List<Pair> apply(List<Attendance> attendances) {
+        validateNumberOfPairs(attendances);
 
         AtomicLong groupId = new AtomicLong(FIRST_GROUP_ID);
 
-        return createPairs(members).stream()
+        return createPairs(attendances).stream()
                 .map(pair -> new Pair(groupId.getAndIncrement(), pair))
                 .collect(toList());
     }
 
-    private void validateNumberOfPairs(List<Member> pairs) {
-        if (pairs.size() < MINIMUM_PAIRS_SIZE) {
+    private void validateNumberOfPairs(List<Attendance> pairs) {
+        if(pairs.size() < MINIMUM_PAIRS_SIZE) {
             throw new IllegalArgumentException();
         }
     }
 
-    private List<List<Member>> createPairs(final List<Member> members) {
+    private List<List<Attendance>> createPairs(final List<Attendance> members) {
         if (members.isEmpty()) {
             return new ArrayList<>();
         }
 
         int numberOfPair = setNumberOfPair(members);
 
-        List<List<Member>> pairs = createPairs(
+        List<List<Attendance>> pairs = createPairs(
                 members.subList(Math.min(numberOfPair, members.size()), members.size())
         );
 
-        List<Member> pair = new ArrayList<>(members.subList(0, Math.min(numberOfPair, members.size())));
+        List<Attendance> pair = new ArrayList<>(members.subList(0, Math.min(numberOfPair, members.size())));
         pairs.add(pair);
 
         return pairs;
     }
 
-    private int setNumberOfPair(List<Member> members) {
+    private int setNumberOfPair(List<Attendance> members) {
         int numberOfPair = NUMBER_OF_PAIR;
         if (members.size() % NUMBER_OF_PAIR == 1 || members.size() % 3 == MINIMUM_PAIRS_SIZE) {
             numberOfPair = MINIMUM_PAIRS_SIZE;

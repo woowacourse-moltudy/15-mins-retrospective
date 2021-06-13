@@ -1,6 +1,6 @@
 package wooteco.retrospective.domain.pair;
 
-import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.domain.attendance.Attendance;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.Objects;
 public class Pair {
 
     private final Long groupId;
-    private final List<Member> members;
+    private final List<Attendance> attendances;
 
-    public Pair(Long groupId, List<Member> members) {
+    public Pair(Long groupId, List<Attendance> attendances) {
         this.groupId = groupId;
-        this.members = members;
+        this.attendances = attendances;
     }
 
     public Long getGroupId() {
         return groupId;
     }
 
-    public List<Member> getMembers() {
-        return Collections.unmodifiableList(members);
+    public List<Attendance> getAttendances() {
+        return Collections.unmodifiableList(attendances);
     }
 
     @Override
@@ -29,12 +29,11 @@ public class Pair {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair pair = (Pair) o;
-        return Objects.equals(members, pair.members);
+        return Objects.equals(groupId, pair.groupId) && Objects.equals(attendances, pair.attendances);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(members);
+        return Objects.hash(groupId, attendances);
     }
-
 }

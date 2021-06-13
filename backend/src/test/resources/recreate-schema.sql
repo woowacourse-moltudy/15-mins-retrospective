@@ -36,5 +36,6 @@ create table if not exists PAIR (
     attendance_id bigint not null,
 
     primary key(group_id, attendance_id),
-    foreign key(attendance_id) references ATTENDACE(id),
+
+    foreign key(attendance_id) references ATTENDANCE(id)
 );
