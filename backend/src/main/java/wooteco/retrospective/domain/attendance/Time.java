@@ -31,7 +31,7 @@ public class Time {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Time time1 = (Time)o;
+        Time time1 = (Time) o;
         return time == time1.time;
     }
 

@@ -1,10 +1,10 @@
 package wooteco.retrospective.presentation.dto.attendance;
 
-import java.time.LocalDate;
-
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
+
+import java.time.LocalDate;
 
 public class AttendanceResponse {
 

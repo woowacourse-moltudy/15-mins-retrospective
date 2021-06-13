@@ -1,24 +1,23 @@
 package wooteco.retrospective.infrastructure.dao.attendance;
 
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import wooteco.retrospective.domain.attendance.Time;
+
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Time> rowMapper = (resultSet, rowNumber) ->
-        new Time(
-            resultSet.getLong("id"),
-            resultSet.getObject("time", LocalTime.class)
-        );
+            new Time(
+                    resultSet.getLong("id"),
+                    resultSet.getObject("time", LocalTime.class)
+            );
 
     public TimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
