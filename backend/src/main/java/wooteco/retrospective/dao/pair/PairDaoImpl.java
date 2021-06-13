@@ -1,35 +1,38 @@
 package wooteco.retrospective.dao.pair;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import wooteco.retrospective.dao.attendance.AttendanceDao;
-import wooteco.retrospective.dao.member.MemberDao;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.PairDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
-import wooteco.retrospective.domain.pair.matchpolicy.DefaultMatchPolicy;
-import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Repository
-public class PairDao {
+public class PairDaoImpl implements PairDao {
 
-    private final AttendanceDao attendanceDao;
-    private final MemberDao memberDao;
+    public static final RowMapper<MemberWithGroupId> MEMBER_WITH_GROUP_ID_ROW_MAPPER = (rs, rn) -> {
+        Long groupId = rs.getLong("group_id");
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+
+        return new MemberWithGroupId(groupId, new Member(id, name));
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
-
-    public PairDao(AttendanceDao attendanceDao, MemberDao memberDao, JdbcTemplate jdbcTemplate) {
-        this.attendanceDao = attendanceDao;
-        this.memberDao = memberDao;
+    public PairDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -38,9 +41,7 @@ public class PairDao {
         String sql = "INSERT INTO PAIR (group_id, attendance_id) VALUES (?, ?)";
 
         pairs.getPairs().forEach(
-                pair -> {
-                    jdbcTemplate.batchUpdate(sql, getValuesForEachPair(pair));
-                }
+                pair -> jdbcTemplate.batchUpdate(sql, getValuesForEachPair(pair))
         );
 
         return pairs;
@@ -56,17 +57,38 @@ public class PairDao {
         Map<Long, List<MemberWithGroupId>> membersWithGroupId = members.stream()
                 .collect(groupingBy(MemberWithGroupId::getGroupId));
 
-        return membersWithGroupId.entrySet().stream().map(
-                entry -> new Pair(
-                        entry.getKey(), entry.getValue().stream()
-                        .map(MemberWithGroupId::getMember)
-                        .collect(toList())
-                )
-        ).collect(toList());
+        return membersWithGroupId.entrySet().stream()
+                .map(this::toPair)
+                .collect(toList());
     }
 
-    public Pairs findByDateAndTime(LocalDateTime date, Time time) {
-        final String sql = "SELECT P.group_id AS group_id, M.id AS id, M.name AS name " +
+    private Pair toPair(Map.Entry<Long, List<MemberWithGroupId>> entry) {
+        return new Pair(
+                entry.getKey(), entry.getValue().stream()
+                .map(MemberWithGroupId::getMember)
+                .collect(toList())
+        );
+    }
+
+    public Optional<Pairs> findByDateAndTime(LocalDateTime date, Time time) {
+        List<MemberWithGroupId> members = jdbcTemplate.query(
+                getFindByDateAndTimeSql(),
+                MEMBER_WITH_GROUP_ID_ROW_MAPPER,
+                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                time.getTime()
+        );
+
+        if (members.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<Pair> pairs = membersToPairs(members);
+
+        return Optional.of(Pairs.from(pairs));
+    }
+
+    private String getFindByDateAndTimeSql() {
+        return "SELECT P.group_id AS group_id, M.id AS id, M.name AS name " +
                 "FROM PAIR P " +
                 "INNER JOIN ATTENDANCE A " +
                 "ON P.attendance_id = A.id " +
@@ -74,18 +96,6 @@ public class PairDao {
                 "ON M.id = A.member_id " +
                 "WHERE A.day=? and A.time_id = " +
                 "(SELECT id FROM CONFERENCE_TIME WHERE time = ?);";
-
-        List<MemberWithGroupId> members = jdbcTemplate.query(sql, (rs, rn) -> {
-            Long groupId = rs.getLong("group_id");
-            Long id = rs.getLong("id");
-            String name = rs.getString("name");
-
-            return new MemberWithGroupId(groupId, new Member(id, name));
-        }, date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), time.getTime());
-
-        List<Pair> pairs = membersToPairs(members);
-
-        return Pairs.from(pairs);
     }
 
     private static class MemberWithGroupId {

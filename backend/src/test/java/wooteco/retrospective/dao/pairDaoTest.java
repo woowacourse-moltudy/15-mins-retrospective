@@ -13,7 +13,7 @@ import wooteco.retrospective.common.Fixture;
 import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.dao.attendance.TimeDao;
 import wooteco.retrospective.dao.member.MemberDao;
-import wooteco.retrospective.dao.pair.PairDao;
+import wooteco.retrospective.dao.pair.PairDaoImpl;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.member.Member;
@@ -33,7 +33,7 @@ public class pairDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private PairDao pairDao;
+    private PairDaoImpl pairDao;
     private MemberDao memberDao;
     private AttendanceDao attendanceDao;
     private TimeDao timeDao;
@@ -43,7 +43,7 @@ public class pairDaoTest {
         memberDao = new MemberDao(jdbcTemplate);
         timeDao = new TimeDao(jdbcTemplate);
         attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
-        pairDao = new PairDao(attendanceDao, memberDao, jdbcTemplate);
+        pairDao = new PairDaoImpl(jdbcTemplate);
 
         Member neozal = memberDao.insert(Fixture.neozal);
         Member whyguy = memberDao.insert(Fixture.whyguy);
@@ -88,7 +88,8 @@ public class pairDaoTest {
         Pairs pairs = getPairsAt(time);
         pairDao.insert(pairs);
 
-        Pairs actual = pairDao.findByDateAndTime(LocalDateTime.now(), new Time(id, 6));
+        Pairs actual = pairDao.findByDateAndTime(LocalDateTime.now(), new Time(id, 6))
+                .orElseThrow(RuntimeException::new);
         assertThat(actual.getPairs()).isEqualTo(pairs.getPairs());
     }
 
