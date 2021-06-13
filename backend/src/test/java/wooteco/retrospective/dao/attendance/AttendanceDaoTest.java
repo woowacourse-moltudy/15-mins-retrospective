@@ -2,6 +2,7 @@ package wooteco.retrospective.dao.attendance;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -42,7 +43,7 @@ class AttendanceDaoTest {
     @Test
     @DisplayName("출석부를 추가한다.")
     void insert() {
-        Attendance expectedAttendance = new Attendance(LocalDateTime.now(), MEMBER_SALLY, TIME_SIX);
+        Attendance expectedAttendance = new Attendance(LocalDate.now(), MEMBER_SALLY, TIME_SIX);
         Attendance newAttendance = insertAttendance();
 
         assertThat(expectedAttendance).isEqualTo(newAttendance);
@@ -54,7 +55,7 @@ class AttendanceDaoTest {
         insertAttendance();
         Attendance expectedAttendance = new Attendance(
             1L,
-            LocalDateTime.now(),
+            LocalDate.now(),
             MEMBER_SALLY,
             TIME_SIX
         );
@@ -80,7 +81,7 @@ class AttendanceDaoTest {
     void findByDate() {
         insertAttendance();
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Attendance expectedAttendance = new Attendance(
             1L,
             now,
@@ -98,7 +99,7 @@ class AttendanceDaoTest {
     private Attendance insertAttendance() {
         Member madeMember = memberDao.insert(MEMBER_SALLY);
         Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(LocalDateTime.now(), madeMember, time);
+        Attendance attendance = new Attendance(LocalDate.now(), madeMember, time);
 
         return attendanceDao.insert(attendance);
     }
