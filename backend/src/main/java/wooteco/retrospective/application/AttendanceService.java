@@ -33,7 +33,7 @@ public class AttendanceService {
             .orElseThrow(RuntimeException::new);
         Time time = timeDao.findById(attendanceRequest.getTimeId())
             .orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(attendanceRequest.getDate(), member, time);
+        Attendance attendance = new Attendance(member, time);
 
         return attendanceDao.insert(attendance);
     }

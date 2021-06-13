@@ -1,7 +1,8 @@
 package wooteco.retrospective.dao.attendance;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class AttendanceDao {
     private final RowMapper<Attendance> rowMapper = (resultSet, rowNumber) ->
         new Attendance(
             resultSet.getLong("id"),
-            resultSet.getObject("day", LocalDateTime.class),
+            resultSet.getObject("date", LocalDate.class),
             memberDao.findById(resultSet.getLong("member_id")).orElseThrow(RuntimeException::new),
             timeDao.findById(resultSet.getLong("time_id")).orElseThrow(RuntimeException::new)
         );
@@ -37,13 +38,14 @@ public class AttendanceDao {
     }
 
     public Attendance insert(Attendance attendance) {
-        String query = "INSERT INTO ATTENDANCE(member_id, time_id) values (?, ?)";
+        String query = "INSERT INTO ATTENDANCE(date, member_id, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[] {"id"});
-            ps.setLong(1, attendance.getMemberId());
-            ps.setLong(2, attendance.getTimeId());
+            ps.setDate(1, Date.valueOf(attendance.getDate()));
+            ps.setLong(2, attendance.getMemberId());
+            ps.setLong(3, attendance.getTimeId());
 
             return ps;
         }, keyHolder);
@@ -70,7 +72,7 @@ public class AttendanceDao {
     }
 
     public List<Attendance> findByDate(String date) {
-        String query = "SELECT * FROM ATTENDANCE WHERE day = ?";
+        String query = "SELECT * FROM ATTENDANCE WHERE date = ?";
 
         return jdbcTemplate.query(query, rowMapper, date);
     }

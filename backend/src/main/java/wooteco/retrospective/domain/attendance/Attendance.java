@@ -1,5 +1,6 @@
 package wooteco.retrospective.domain.attendance;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -8,33 +9,22 @@ import wooteco.retrospective.domain.member.Member;
 
 public class Attendance {
 
-    private long id;
-    private String date;
+    private final Long id;
+    private final LocalDate date;
     private final Member member;
     private final Time time;
 
-    public Attendance(long id, LocalDateTime timestamp, Member member, Time time) {
-        this(timestamp, member, time);
-        this.id = id;
-    }
-
-    public Attendance(Long id, String date, Member member, Time time) {
-        this(date, member, time);
-        this.id = id;
-    }
-
-    public Attendance(LocalDateTime timestamp, Member member, Time time) {
-        this.date = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.member = member;
-        this.time = time;
-    }
-
-    public Attendance(String date, Member member, Time time) {
-        this(member, time);
-        this.date = date;
-    }
-
     public Attendance(Member member, Time time) {
+        this(LocalDate.now(), member, time);
+    }
+
+    public Attendance(LocalDate localDate, Member member, Time time) {
+        this(null, localDate, member, time);
+    }
+
+    public Attendance(Long id, LocalDate date, Member member, Time time) {
+        this.id = id;
+        this.date = date;
         this.member = member;
         this.time = time;
     }
@@ -43,7 +33,7 @@ public class Attendance {
         return id;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -70,7 +60,7 @@ public class Attendance {
         if (o == null || getClass() != o.getClass())
             return false;
         Attendance that = (Attendance)o;
-        return date.equals(that.date) && member.equals(that.member) && time.equals(that.time);
+        return date.equals(that.date) && member.getName().equals(that.member.getName()) && time.equals(that.time);
     }
 
     @Override
