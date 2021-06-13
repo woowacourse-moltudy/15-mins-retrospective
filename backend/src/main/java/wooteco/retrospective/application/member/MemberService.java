@@ -18,9 +18,7 @@ public class MemberService {
     public MemberTokenDto loginMember(MemberLoginDto requestDto) {
         return memberDao.findByName(requestDto.getName())
                 .map(MemberTokenDto::from)
-                .orElseGet(() -> {
-                    return signUpMember(requestDto);
-                });
+                .orElseGet(() -> signUpMember(requestDto));
     }
 
     private MemberTokenDto signUpMember(MemberLoginDto requestDto) {
