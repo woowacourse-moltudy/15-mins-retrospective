@@ -28,5 +28,5 @@ create table if not exists ATTENDANCE (
     foreign key(time_id) references CONFERENCE_TIME(id)
 );
 
-insert into CONFERENCE_TIME(time) values (PARSEDATETIME('18:00:00', 'HH:mm:ss'));
-insert into CONFERENCE_TIME(time) values (PARSEDATETIME('22:00:00', 'HH:mm:ss'));
+insert into CONFERENCE_TIME(time) values (6);
+insert into CONFERENCE_TIME(time) values (10);
