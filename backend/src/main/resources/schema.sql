@@ -5,7 +5,7 @@ create table if not exists MEMBER (
 
 create table if not exists CONFERENCE_TIME (
     id bigint auto_increment not null,
-    time int(24) not null unique
+    time time not null unique
 );
 
 create table if not exists ATTENDANCE (
@@ -20,5 +20,5 @@ create table if not exists ATTENDANCE (
     foreign key(time_id) references CONFERENCE_TIME(id)
 );
 
-insert into CONFERENCE_TIME(time) values (6);
-insert into CONFERENCE_TIME(time) values (10);
+insert into CONFERENCE_TIME(time) values (PARSEDATETIME('18:00:00', 'HH:mm:ss'));
+insert into CONFERENCE_TIME(time) values (PARSEDATETIME('22:00:00', 'HH:mm:ss'));
