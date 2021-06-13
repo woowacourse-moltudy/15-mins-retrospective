@@ -25,7 +25,7 @@ class PairsTest {
     @ParameterizedTest
     @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
     void getPairs_pairMatchWithDefaultPolicy(List<Member> members, List<Integer> expected) {
-        List<Pair> pairs = new Pairs(members).getPairs();
+        List<Pair> pairs = Pairs.withDefaultMatchPolicy(members).getPairs();
 
         List<List<Member>> pairMembers = pairs.stream()
                 .map(Pair::getMembers)
@@ -42,7 +42,7 @@ class PairsTest {
     @ParameterizedTest
     @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
     void getPairs_cannotAllowDuplicatedMemberForAllPairs(List<Member> members) {
-        List<Pair> pairs = new Pairs(members).getPairs();
+        List<Pair> pairs = Pairs.withDefaultMatchPolicy(members).getPairs();
 
         long actual = pairs.stream()
                 .distinct()
@@ -56,7 +56,7 @@ class PairsTest {
     @ParameterizedTest
     @MethodSource("provideMemberListAndMatchedPairSizesOnDefaultMatchPolicy")
     void getPairs_inTrueCase(List<Member> members, List<Integer> expected) {
-        List<Pair> pairs = new Pairs(members).getPairs();
+        List<Pair> pairs = Pairs.withDefaultMatchPolicy(members).getPairs();
 
         List<List<Member>> pairMembers = pairs.stream()
                 .map(Pair::getMembers)
@@ -77,7 +77,7 @@ class PairsTest {
                 new Pair(1L, memberList)
         );
 
-        List<Pair> actual = new Pairs(members, matchPolicy).getPairs();
+        List<Pair> actual = Pairs.from(members, matchPolicy).getPairs();
 
         assertThat(actual).isEqualTo(Collections.singletonList(new Pair(1L, members)));
     }

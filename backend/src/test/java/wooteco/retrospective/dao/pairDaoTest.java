@@ -103,6 +103,6 @@ public class pairDaoTest {
                 .map(Attendance::getMember)
                 .collect(toList());
 
-        return new Pairs(new ShuffledMembers(members, i -> i));
+        return Pairs.withDefaultMatchPolicy(new ShuffledMembers(members, i -> i));
     }
 }

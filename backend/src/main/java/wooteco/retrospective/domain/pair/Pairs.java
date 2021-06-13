@@ -11,41 +11,38 @@ import java.util.Objects;
 
 public class Pairs {
     private static final MatchPolicy DEFAULT_MATCH_POLICY = new DefaultMatchPolicy();
-    private final List<Member> members;
-    private final MatchPolicy matchPolicy;
+
     private List<Pair> pairs;
 
-    public Pairs(final List<Member> pairs) {
-        this(pairs, DEFAULT_MATCH_POLICY);
+    private Pairs(final List<Member> members, MatchPolicy matchPolicy) {
+        this.pairs = matchPolicy.apply(members);
     }
 
-    public Pairs(final Shuffled<Member> pairs) {
-        this(pairs.value(), DEFAULT_MATCH_POLICY);
-    }
-
-    public Pairs(final Shuffled<Member> pairs, MatchPolicy matchPolicy) {
-        this(pairs.value(), matchPolicy);
-    }
-
-    private Pairs(final List<Pair> pairs, List<Member> members, MatchPolicy matchPolicy) {
-        this(members, matchPolicy);
+    private Pairs(final List<Pair> pairs) {
         this.pairs = pairs;
     }
 
-    public Pairs(final List<Member> pairs, MatchPolicy matchPolicy) {
-        this.members = pairs;
-        this.matchPolicy = matchPolicy;
+    public static Pairs withDefaultMatchPolicy(final List<Member> members) {
+        return new Pairs(members, DEFAULT_MATCH_POLICY);
+    }
+
+    public static Pairs withDefaultMatchPolicy(final Shuffled<Member> members) {
+        return new Pairs(members.value(), DEFAULT_MATCH_POLICY);
+    }
+
+    public static Pairs from(final List<Member> members, MatchPolicy matchPolicy) {
+        return new Pairs(members, matchPolicy);
+    }
+
+    public static Pairs from(final Shuffled<Member> members, MatchPolicy matchPolicy) {
+        return new Pairs(members.value(),matchPolicy);
     }
 
     public static Pairs from(List<Pair> pairs) {
-        return new Pairs(pairs, Collections.emptyList(), null);
+        return new Pairs(pairs);
     }
 
     public synchronized List<Pair> getPairs() {
-        if (pairs == null) {
-            this.pairs = matchPolicy.apply(this.members);
-        }
-
         return Collections.unmodifiableList(this.pairs);
     }
 

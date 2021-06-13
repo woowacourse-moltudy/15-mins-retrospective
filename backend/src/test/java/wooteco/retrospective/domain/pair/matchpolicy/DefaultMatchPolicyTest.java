@@ -30,10 +30,10 @@ class DefaultMatchPolicyTest {
     @DisplayName("사용자 리스트가 2보다 작으면 예외")
     @Test
     void apply_inFalseCase() {
-        assertThatThrownBy(() -> new Pairs(Collections.singletonList(neozal)).getPairs())
+        assertThatThrownBy(() -> Pairs.withDefaultMatchPolicy(Collections.singletonList(neozal)).getPairs())
                 .isInstanceOf(IllegalArgumentException.class);
 
-        assertThatThrownBy(() -> new Pairs(Collections.emptyList()).getPairs())
+        assertThatThrownBy(() -> Pairs.withDefaultMatchPolicy(Collections.emptyList()).getPairs())
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
