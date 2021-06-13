@@ -1,8 +1,6 @@
 package wooteco.retrospective.domain.pair.matchpolicy;
 
-import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 
 import java.util.ArrayList;

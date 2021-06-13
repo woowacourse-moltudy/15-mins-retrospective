@@ -1,4 +1,4 @@
-package wooteco.retrospective.dao.attendance;
+package wooteco.retrospective.infrastructure.dao.attendance;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -6,7 +6,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
+import wooteco.retrospective.domain.dao.AttendanceDao;
+import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 import java.sql.Date;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class AttendanceDao {
+public class AttendanceDaoImpl implements AttendanceDao {
 
     private final JdbcTemplate jdbcTemplate;
     private MemberDao memberDao;
@@ -30,7 +31,7 @@ public class AttendanceDao {
                     timeDao.findById(resultSet.getLong("time_id")).orElseThrow(RuntimeException::new)
             );
 
-    public AttendanceDao(JdbcTemplate jdbcTemplate, MemberDao memberDao,
+    public AttendanceDaoImpl(JdbcTemplate jdbcTemplate, MemberDao memberDao,
                          TimeDao timeDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.memberDao = memberDao;

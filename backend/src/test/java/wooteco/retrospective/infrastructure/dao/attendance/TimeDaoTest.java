@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.TimeDao;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ class TimeDaoTest {
 
     @BeforeEach
     void setUp() {
-        timeDao = new TimeDao(jdbcTemplate);
+        timeDao = new TimeDaoImpl(jdbcTemplate);
     }
 
     @DisplayName("모든 시간을 조회한다.")

@@ -10,15 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import wooteco.retrospective.common.Fixture;
-import wooteco.retrospective.dao.attendance.AttendanceDao;
-import wooteco.retrospective.infrastructure.dao.pair.PairDaoImpl;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.AttendanceDao;
+import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
-import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
+import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDaoImpl;
+import wooteco.retrospective.infrastructure.dao.attendance.TimeDaoImpl;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
+import wooteco.retrospective.infrastructure.dao.pair.PairDaoImpl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,8 +43,8 @@ public class pairDaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
-        timeDao = new TimeDao(jdbcTemplate);
-        attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
+        timeDao = new TimeDaoImpl(jdbcTemplate);
+        attendanceDao = new AttendanceDaoImpl(jdbcTemplate, memberDao, timeDao);
         pairDao = new PairDaoImpl(jdbcTemplate);
 
         Member neozal = memberDao.insert(Fixture.neozal.getMember());

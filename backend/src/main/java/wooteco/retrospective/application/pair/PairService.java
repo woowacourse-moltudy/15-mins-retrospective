@@ -3,13 +3,13 @@ package wooteco.retrospective.application.pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.retrospective.application.dto.PairResponseDto;
-import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.dao.PairDao;
+import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
-import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
