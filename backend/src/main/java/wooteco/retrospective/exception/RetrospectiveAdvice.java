@@ -11,11 +11,6 @@ import java.util.Objects;
 @RestControllerAdvice
 public class RetrospectiveAdvice {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity.HeadersBuilder notFoundException() {
-        return ResponseEntity.notFound();
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RetrospectiveExceptionResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         RetrospectiveExceptionResponse response =
