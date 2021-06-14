@@ -1,0 +1,15 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Pair(페어)
+=== 페어 가져오기
+==== Request
+include::{snippets}/pair/getPairs/http-request.adoc[]
+==== Response
+include::{snippets}/pair/getPairs/http-response.adoc[]

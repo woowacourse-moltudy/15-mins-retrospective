@@ -110,7 +110,7 @@ class PairServiceTest {
         );
 
         List<String> actual = pairs.stream()
-                .flatMap(p -> p.getMembers().stream())
+                .flatMap(p -> p.getPair().stream())
                 .map(MemberResponseDto::getName)
                 .sorted()
                 .collect(toList());

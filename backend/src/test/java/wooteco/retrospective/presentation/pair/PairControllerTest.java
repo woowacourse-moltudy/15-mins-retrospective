@@ -1,112 +1,91 @@
 package wooteco.retrospective.presentation.pair;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import wooteco.retrospective.application.dto.MemberTokenDto;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceResponse;
-import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
-import wooteco.retrospective.presentation.dto.pair.PairResponse;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import wooteco.config.RestDocsConfiguration;
+import wooteco.retrospective.application.dto.PairResponseDto;
+import wooteco.retrospective.application.pair.PairService;
+import wooteco.retrospective.domain.pair.Pair;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PairControllerTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wooteco.retrospective.common.Fixture.*;
 
-    @LocalServerPort
-    private int port;
+@Import(RestDocsConfiguration.class)
+@AutoConfigureRestDocs
+@WebMvcTest(PairController.class)
+public class PairControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @MockBean
+    private PairService pairService;
 
-    @BeforeEach
-    void setUp() throws JsonProcessingException {
-        RestAssured.port = port;
-
-        insertPairs("손너잘");
-        insertPairs("다니");
-        insertPairs("웨지");
-        insertPairs("연우");
-
-        attend(1L, 1L);
-        attend(1L, 2L);
-        attend(1L, 3L);
-        attend(1L, 4L);
-
-        attend(2L, 1L);
-        attend(2L, 2L);
-    }
-
-    @AfterEach
-    void clean() {
-        jdbcTemplate.update("DELETE FROM PAIR");
-        jdbcTemplate.update("DELETE FROM ATTENDANCE");
-        jdbcTemplate.update("DELETE FROM MEMBER");
-
-        jdbcTemplate.update("ALTER TABLE MEMBER ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("ALTER TABLE ATTENDANCE ALTER COLUMN id RESTART WITH 1");
-    }
-
-    private MemberTokenDto insertPairs(String name) throws JsonProcessingException {
-        MemberLoginRequest request = new MemberLoginRequest(name);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.ALL_VALUE)
-                .body(objectMapper.writeValueAsString(request))
-                .when()
-                .post("/api/login")
-                .then().log().all()
-                .extract().as(MemberTokenDto.class);
-    }
-
-    private AttendanceResponse attend(Long timeId, Long memberId) throws JsonProcessingException {
-        AttendanceRequest request = new AttendanceRequest(timeId, memberId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.ALL_VALUE)
-                .body(objectMapper.writeValueAsString(request))
-                .when()
-                .post("/api/time")
-                .then().log().all()
-                .extract().as(AttendanceResponse.class);
-    }
-
+    @DisplayName("페어를 요청하면 페어를 반환한다.")
     @Test
-    void getPairs() {
-        Map<String, Long> params = new HashMap<>();
-        params.put("date", LocalDate.of(2020,6, 14).toEpochDay());
-        params.put("conferenceTime", LocalDate.of(2020,6, 14).toEpochDay());
+    void getPairs() throws Exception {
+        List<PairResponseDto> result = List.of(
+                new PairResponseDto(new Pair(1L, List.of(neozal, whyguy, duck))),
+                new PairResponseDto(new Pair(1L, List.of(neozal, whyguy, duck)))
+        );
 
-        ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .body(params)
-                .when()
-                .get("/pairs")
-                .then().log().all()
-                .extract();
+        given(result);
 
+        ResultActions resultActions = mockMvc.perform(get(
+                "/pairs?date={date}&conferenceTime={conferenceTime}",
+                "2021-06-15", "18:00:00"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        objectMapper.writeValueAsString(result)
+                ));
 
-        List<PairResponse> as = extract.as(List.class);
+        createDocumentForGetPairs(resultActions);
+    }
+
+    private void given(List<PairResponseDto> result) {
+        BDDMockito.given(pairService.getPairsByDateAndTime(
+                any(LocalDate.class),
+                any(LocalTime.class),
+                any(LocalTime.class))
+        ).willReturn(result);
+    }
+
+    private void createDocumentForGetPairs(ResultActions resultActions) throws Exception {
+        resultActions.andDo(document("pair/getPairs",
+                requestParameters(
+                        parameterWithName("date").description("회의 날짜"),
+                        parameterWithName("conferenceTime").description("회의 시간")
+                ),
+                responseFields(
+                        fieldWithPath("[].pair").type(ARRAY).description("페어 정보"),
+                        fieldWithPath("[].pair[].id").type(NUMBER).description("멤버 아이디"),
+                        fieldWithPath("[].pair[].name").type(STRING).description("멤버 이름")
+                ))
+        );
     }
 }

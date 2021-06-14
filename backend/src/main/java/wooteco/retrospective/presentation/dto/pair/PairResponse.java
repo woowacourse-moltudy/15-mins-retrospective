@@ -9,18 +9,18 @@ import static java.util.stream.Collectors.toList;
 
 public class PairResponse {
 
-    private List<MemberResponse> members;
+    private List<MemberResponse> pair;
 
     private PairResponse() {
     }
 
     public PairResponse(PairResponseDto pairResponseDto) {
-        this.members = pairResponseDto.getMembers().stream()
+        this.pair = pairResponseDto.getPair().stream()
                 .map(MemberResponse::new)
                 .collect(toList());
     }
 
-    public List<MemberResponse> getMembers() {
-        return members;
+    public List<MemberResponse> getPair() {
+        return pair;
     }
 }
