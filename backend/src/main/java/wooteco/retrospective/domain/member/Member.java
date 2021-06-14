@@ -16,15 +16,13 @@ public class Member {
     public Member(Long id, String name) {
         validateMember(name);
         this.id = id;
-        this.name = name;
+        this.name = name.replaceAll(" ", "");
     }
 
     private void validateMember(String name) {
         if (Objects.isNull(name)) {
             throw new IllegalArgumentException();
         }
-
-        name = name.replaceAll(" ", "");
 
         if (name.length() <= 0 || name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException();
