@@ -1,0 +1,15 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Member(멤버)
+=== 멤버 로그인 / 회원가입
+==== Request
+include::{snippets}/member/login/http-request.adoc[]
+==== Response
+include::{snippets}/member/login/http-response.adoc[]
