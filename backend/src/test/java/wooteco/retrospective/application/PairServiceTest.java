@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.convert.DataSizeUnit;
+import wooteco.retrospective.application.dto.MemberResponseDto;
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.application.pair.PairService;
 import wooteco.retrospective.domain.attendance.Attendance;
@@ -14,6 +15,7 @@ import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.dao.PairDao;
 import wooteco.retrospective.domain.dao.TimeDao;
+import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
 
@@ -21,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.retrospective.common.Fixture.*;
@@ -28,11 +31,19 @@ import static wooteco.retrospective.common.Fixture.*;
 
 class PairServiceTest {
     private static final LocalDate TODAY = LocalDate.of(2021, 6, 14);
+    private static final LocalDate YESTERDAY = LocalDate.of(2021, 6, 13);
 
     private static PairService pairService;
     private static TimeDao timeDao;
     private static PairDao pairDao;
     private static AttendanceDao attendanceDao;
+
+    private static List<Attendance> yesterdayAttendances = List.of(
+            new Attendance(1L, YESTERDAY, neozal.getMember(), new Time(TIME_SIX)),
+            new Attendance(2L, YESTERDAY, danijani.getMember(), new Time(TIME_SIX)),
+            new Attendance(3L, YESTERDAY, whyguy.getMember(), new Time(TIME_SIX))
+    );
+    private static Pair yesterdayPair = new Pair(1L ,yesterdayAttendances);
 
     private static Pair pairOne = new Pair(1L, List.of(neozal, whyguy, duck));
     private static Pair pairTwo = new Pair(2L, List.of(danijani, soulg, chu));
@@ -50,6 +61,8 @@ class PairServiceTest {
                         pairTwo
                 ))
         );
+
+        yesterdayAttendances.forEach(attendanceDao::insert);
     }
 
     @DisplayName("페어를 반환한다.")
@@ -87,6 +100,30 @@ class PairServiceTest {
         assertThat(once)
                 .usingRecursiveComparison()
                 .isEqualTo(twice);
+    }
+
+    @DisplayName("날짜가 지난 회고의 페어를 요청하면 반환한다.")
+    @Test
+    void getPairsByDateAndTimeWithBeforeDays() {
+        List<PairResponseDto> pairs = pairService.getPairsByDateAndTime(
+                YESTERDAY,
+                LocalTime.of(18, 0),
+                LocalTime.of(19, 0)
+        );
+
+        List<String> actual = pairs.stream()
+                .flatMap(p -> p.getMembers().stream())
+                .map(MemberResponseDto::getName)
+                .sorted()
+                .collect(toList());
+
+        List<String> expected = yesterdayPair.getAttendances().stream()
+                .map(Attendance::getMember)
+                .map(Member::getName)
+                .sorted()
+                .collect(toList());
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("미래 날짜를 요청하면 예외")
