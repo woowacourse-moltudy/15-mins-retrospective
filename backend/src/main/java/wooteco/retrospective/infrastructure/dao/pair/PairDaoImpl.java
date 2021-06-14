@@ -75,9 +75,7 @@ public class PairDaoImpl implements PairDao {
             return Optional.empty();
         }
 
-        List<Pair> pairs = membersToPairs(members);
-
-        return Optional.of(Pairs.from(pairs));
+        return Optional.of(Pairs.from(membersToPairs(members)));
     }
 
     private RowMapper<AttendanceWithGroupId> rowMapperForFindByDateAndTime(Time time) {
