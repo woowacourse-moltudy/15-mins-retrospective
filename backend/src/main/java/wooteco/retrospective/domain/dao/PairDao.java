@@ -1,12 +1,14 @@
 package wooteco.retrospective.domain.dao;
 
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
 
 import java.time.LocalDate;
-import java.util.*;
-
-import static java.util.stream.Collectors.toList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public interface PairDao {
     Pairs insert(Pairs pairs);
@@ -26,14 +28,19 @@ public interface PairDao {
         @Override
         public Optional<Pairs> findByDateAndTime(LocalDate date, Time time) {
             return cache.stream()
-                    .filter(
-                            pairs -> pairs.getPairs().stream()
-                                    .anyMatch(
-                                            pair -> pair.getAttendances().stream()
-                                                    .filter(attendance -> attendance.getDate().equals(date))
-                                                    .anyMatch(attendance -> attendance.getTime().equals(time))
-                                    )
-                    ).findAny();
+                    .filter(isContainsAnyMatchedPairWith(date, time))
+                    .findAny();
+        }
+
+        private Predicate<Pairs> isContainsAnyMatchedPairWith(LocalDate date, Time time) {
+            return pairs -> pairs.getPairs().stream()
+                    .anyMatch(isExistsAnyMatchedPairWith(date, time));
+        }
+
+        private Predicate<Pair> isExistsAnyMatchedPairWith(LocalDate date, Time time) {
+            return pair -> pair.getAttendances().stream()
+                    .filter(attendance -> attendance.getDate().equals(date))
+                    .anyMatch(attendance -> attendance.getTime().equals(time));
         }
     }
 }
