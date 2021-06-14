@@ -75,4 +75,10 @@ public class AttendanceDao {
 
         return jdbcTemplate.query(query, rowMapper, date);
     }
+
+    public int delete(Attendance attendance) {
+        String query = "DELETE FROM ATTENDANCE WHERE member_id = ? AND time_id = ?";
+
+        return jdbcTemplate.update(query, attendance.getMemberId(), attendance.getTimeId());
+    }
 }

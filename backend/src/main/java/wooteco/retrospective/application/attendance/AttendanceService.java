@@ -30,13 +30,17 @@ public class AttendanceService {
     public Attendance postAttendance(AttendanceRequest attendanceRequest) {
         validateTime(attendanceRequest);
 
-        Member member = memberDao.findById(attendanceRequest.getMemberId())
-            .orElseThrow(RuntimeException::new);
-        Time time = timeDao.findById(attendanceRequest.getTimeId())
-            .orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(member, time);
+        Attendance attendance = getAttendance(attendanceRequest);
 
         return attendanceDao.insert(attendance);
+    }
+
+    public void deleteAttendance(AttendanceRequest attendanceRequest) {
+        Attendance attendance = getAttendance(attendanceRequest);
+
+        if(attendanceDao.delete(attendance) != 1) {
+            throw new RuntimeException();
+        }
     }
 
     private void validateTime(AttendanceRequest attendanceRequest) {
@@ -47,5 +51,13 @@ public class AttendanceService {
         )) {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }
+    }
+
+    private Attendance getAttendance(AttendanceRequest attendanceRequest) {
+        Member member = memberDao.findById(attendanceRequest.getMemberId())
+            .orElseThrow(RuntimeException::new);
+        Time time = timeDao.findById(attendanceRequest.getTimeId())
+            .orElseThrow(RuntimeException::new);
+        return new Attendance(member, time);
     }
 }

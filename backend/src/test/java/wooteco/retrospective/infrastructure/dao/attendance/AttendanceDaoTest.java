@@ -39,8 +39,8 @@ class AttendanceDaoTest {
         attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
     }
 
-    @Test
     @DisplayName("출석부를 추가한다.")
+    @Test
     void insert() {
         Attendance expectedAttendance = new Attendance(LocalDate.now(), MEMBER_SALLY, TIME_SIX);
         Attendance newAttendance = insertAttendance();
@@ -48,8 +48,8 @@ class AttendanceDaoTest {
         assertThat(expectedAttendance).isEqualTo(newAttendance);
     }
 
-    @Test
     @DisplayName("출석부를 조회한다.")
+    @Test
     void findById() {
         insertAttendance();
         Attendance expectedAttendance = new Attendance(
@@ -63,8 +63,8 @@ class AttendanceDaoTest {
         assertThat(expectedAttendance).isEqualTo(attendance);
     }
 
-    @Test
     @DisplayName("같은 시간에 같은 멤버가 있는지 조회한다.")
+    @Test
     void existSameTime() {
         insertAttendance();
         Attendance attendance = attendanceDao.findById(1L);
@@ -76,8 +76,8 @@ class AttendanceDaoTest {
         )).isTrue();
     }
 
-    @Test
     @DisplayName("다른 날짜에 같은 멤버가 같은 시간에 있는지 조회한다.")
+    @Test
     void existSameTimeException() {
         insertAttendance();
         Attendance attendance = attendanceDao.findById(1L);
@@ -89,8 +89,8 @@ class AttendanceDaoTest {
         )).isFalse();
     }
 
-    @Test
     @DisplayName("날짜에 따른 출석부를 조회한다.")
+    @Test
     void findByDate() {
         insertAttendance();
 
@@ -105,6 +105,15 @@ class AttendanceDaoTest {
         List<Attendance> attendance = attendanceDao.findByDate(now);
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
+    }
+
+    @DisplayName("멤버, 시간대에 따른 출석부를 삭제한다.")
+    @Test
+    void delete() {
+        Attendance attendance = insertAttendance();
+
+        int deleteCount = attendanceDao.delete(attendance);
+        assertThat(deleteCount).isEqualTo(1);
     }
 
     private Attendance insertAttendance() {

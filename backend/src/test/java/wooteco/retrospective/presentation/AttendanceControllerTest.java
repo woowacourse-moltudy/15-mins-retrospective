@@ -46,6 +46,19 @@ class AttendanceControllerTest {
     @DisplayName("회고 시간을 등록한다.")
     @Test
     void postTime() throws Exception {
+        AttendanceRequest attendanceRequest = insertAttendance();
+
+        mockMvc.perform(post("/api/time")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(attendanceRequest)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("date").value(LocalDate.now().toString()))
+            .andExpect(jsonPath("member.name").value("dani"))
+            .andExpect(jsonPath("time.time").value("18:00:00"));
+    }
+
+    private AttendanceRequest insertAttendance() {
         Time newTime = new Time(1L, LocalTime.of(18, 0, 0));
 
         given(timeDao.insert(any(Time.class)))
@@ -63,14 +76,18 @@ class AttendanceControllerTest {
 
         given(attendanceService.postAttendance(any(AttendanceRequest.class)))
             .willReturn(attendance);
+        return attendanceRequest;
+    }
 
-        mockMvc.perform(post("/api/time")
+    @DisplayName("회고 시간을 삭제한다.")
+    @Test
+    void deleteTime() throws Exception {
+        AttendanceRequest attendanceRequest = insertAttendance();
+
+        mockMvc.perform(delete("/api/time")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("date").value(LocalDate.now().toString()))
-            .andExpect(jsonPath("member.name").value("dani"))
-            .andExpect(jsonPath("time.time").value("18:00:00"));
+            .andExpect(status().isOk());
     }
 }
