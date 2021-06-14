@@ -11,15 +11,17 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Fixture {
+    public static final LocalDate TODAY = LocalDate.of(2021, 6, 14);
+    public static final LocalDate YESTERDAY = LocalDate.of(2021, 6, 13);
     public static final LocalTime TIME_SIX = LocalTime.of(18, 0);
 
-    public static final Attendance neozal = new Attendance(new Member("손너잘"), new Time(TIME_SIX));
-    public static final Attendance whyguy = new Attendance(new Member("웨지"), new Time(TIME_SIX));
-    public static final Attendance danijani = new Attendance(new Member("다니"), new Time(TIME_SIX));
-    public static final Attendance soulg = new Attendance(new Member("솔지"), new Time(TIME_SIX));
-    public static final Attendance chu = new Attendance(new Member("피카"), new Time(TIME_SIX));
-    public static final Attendance spring = new Attendance(new Member("나봄"), new Time(TIME_SIX));
-    public static final Attendance duck = new Attendance(new Member("조연우"), new Time(TIME_SIX));
+    public static final Attendance neozal = new Attendance(TODAY, new Member("손너잘"), new Time(TIME_SIX));
+    public static final Attendance whyguy = new Attendance(TODAY, new Member("웨지"), new Time(TIME_SIX));
+    public static final Attendance danijani = new Attendance(TODAY, new Member("다니"), new Time(TIME_SIX));
+    public static final Attendance soulg = new Attendance(TODAY, new Member("솔지"), new Time(TIME_SIX));
+    public static final Attendance chu = new Attendance(TODAY, new Member("피카"), new Time(TIME_SIX));
+    public static final Attendance spring = new Attendance(TODAY, new Member("나봄"), new Time(TIME_SIX));
+    public static final Attendance duck = new Attendance(TODAY, new Member("조연우"), new Time(TIME_SIX));
 
     public static Stream<Arguments> provideAttendanceListAndMatchedPairSizesOnDefaultMatchPolicy() {
         return Stream.of(

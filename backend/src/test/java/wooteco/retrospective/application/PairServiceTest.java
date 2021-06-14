@@ -30,8 +30,6 @@ import static wooteco.retrospective.common.Fixture.*;
 
 
 class PairServiceTest {
-    private static final LocalDate TODAY = LocalDate.of(2021, 6, 14);
-    private static final LocalDate YESTERDAY = LocalDate.of(2021, 6, 13);
 
     private static PairService pairService;
     private static TimeDao timeDao;
