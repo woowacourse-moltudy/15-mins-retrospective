@@ -107,6 +107,24 @@ class AttendanceDaoTest {
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }
 
+    @DisplayName("날짜, 시간에 따른 출석부를 조회한다.")
+    @Test
+    void findByTime() {
+        insertAttendance();
+
+        LocalDate now = LocalDate.now();
+        Attendance expectedAttendance = new Attendance(
+            1L,
+            now,
+            MEMBER_SALLY,
+            TIME_SIX
+        );
+
+        List<Attendance> attendance = attendanceDao.findByTime(now, 1L);
+
+        assertThat(attendance.contains(expectedAttendance)).isTrue();
+    }
+
     @DisplayName("멤버, 시간대에 따른 출석부를 삭제한다.")
     @Test
     void delete() {

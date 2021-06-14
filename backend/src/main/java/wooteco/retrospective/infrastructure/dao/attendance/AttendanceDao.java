@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import wooteco.retrospective.domain.attendance.Attendance;
+import wooteco.retrospective.domain.attendance.Time;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 @Repository
@@ -74,6 +75,12 @@ public class AttendanceDao {
         String query = "SELECT * FROM ATTENDANCE WHERE date = ?";
 
         return jdbcTemplate.query(query, rowMapper, date);
+    }
+
+    public List<Attendance> findByTime(LocalDate date, long timeId) {
+        String query = "SELECT * FROM ATTENDANCE WHERE date = ? AND time_id = ?";
+
+        return jdbcTemplate.query(query, rowMapper, date, timeId);
     }
 
     public int delete(Attendance attendance) {

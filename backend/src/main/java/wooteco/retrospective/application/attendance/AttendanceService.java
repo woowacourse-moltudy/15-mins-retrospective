@@ -1,6 +1,8 @@
 package wooteco.retrospective.application.attendance;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +37,26 @@ public class AttendanceService {
         return attendanceDao.insert(attendance);
     }
 
+    @Transactional
     public void deleteAttendance(AttendanceRequest attendanceRequest) {
         Attendance attendance = getAttendance(attendanceRequest);
 
-        if(attendanceDao.delete(attendance) != 1) {
+        if (attendanceDao.delete(attendance) != 1) {
             throw new RuntimeException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Time findTimeById(long timeId) {
+        return timeDao.findById(timeId)
+            .orElseThrow(RuntimeException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> findAttendanceByTime(Time time) {
+        return attendanceDao.findByTime(LocalDate.now(), time.getId()).stream()
+            .map(Attendance::getMember)
+            .collect(Collectors.toList());
     }
 
     private void validateTime(AttendanceRequest attendanceRequest) {
