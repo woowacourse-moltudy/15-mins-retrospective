@@ -36,8 +36,8 @@ public class PairService {
     public List<PairResponseDto> getPairsByDateAndTime(LocalDate date,
                                                        LocalTime conferenceTime,
                                                        LocalTime currentTime) {
-        Time time = getTime(conferenceTime);
-        validateIsRightTime(time, currentTime);
+        Time time = getTime(new Time(conferenceTime));
+        validateIsRightTime(time, new Time(currentTime));
         validateIsRightDate(date);
 
         return pairDao.findByDateAndTime(date, time)
@@ -45,17 +45,17 @@ public class PairService {
                 .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, time));
     }
 
-    private Time getTime(LocalTime conferenceTime) {
+    private Time getTime(Time conferenceTime) {
         return timeDao.findAll().stream()
-                .filter(time -> time.getTime().equals(conferenceTime))
+                .filter(time -> time.equals(conferenceTime))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }
 
-    private void validateIsRightTime(Time conferenceTime, LocalTime currentTime) {
+    private void validateIsRightTime(Time conferenceTime, Time currentTime) {
         timeDao.findAll().stream()
-                .filter(time -> time.getTime().isBefore(currentTime))
-                .filter(time -> time.getTime().equals(conferenceTime.getTime()))
+                .filter(time -> time.isBefore(currentTime))
+                .filter(time -> time.equals(conferenceTime))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }
@@ -85,7 +85,7 @@ public class PairService {
 
     private List<Attendance> getAttendancesOf(LocalDate date, Time conferenceTime) {
         return attendanceDao.findByDate(date).stream()
-                .filter(attendance -> attendance.getTime().equals(conferenceTime))
+                .filter(attendance -> attendance.isAttendAt(conferenceTime))
                 .collect(toList());
     }
 }

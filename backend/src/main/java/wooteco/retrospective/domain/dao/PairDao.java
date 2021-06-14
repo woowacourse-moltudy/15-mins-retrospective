@@ -39,8 +39,8 @@ public interface PairDao {
 
         private Predicate<Pair> isExistsAnyMatchedPairWith(LocalDate date, Time time) {
             return pair -> pair.getAttendances().stream()
-                    .filter(attendance -> attendance.getDate().equals(date))
-                    .anyMatch(attendance -> attendance.getTime().equals(time));
+                    .filter(attendance -> attendance.isAttendAt(date))
+                    .anyMatch(attendance -> attendance.isAttendAt(time));
         }
     }
 }

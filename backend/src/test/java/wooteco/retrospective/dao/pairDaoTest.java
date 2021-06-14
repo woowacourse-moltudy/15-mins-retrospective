@@ -103,7 +103,7 @@ public class pairDaoTest {
         );
 
         List<Attendance> attendancesAtTime = attendances.stream()
-                .filter(attendance -> attendance.getTime().equals(new Time(time)))
+                .filter(attendance -> attendance.isAttendAt(new Time(time)))
                 .collect(toList());
 
         return Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendancesAtTime, i -> i));

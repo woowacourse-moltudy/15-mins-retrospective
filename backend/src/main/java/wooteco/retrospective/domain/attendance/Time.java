@@ -25,6 +25,10 @@ public class Time {
         return time;
     }
 
+    public boolean isBefore(Time time) {
+        return this.time.isBefore(time.getTime());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
