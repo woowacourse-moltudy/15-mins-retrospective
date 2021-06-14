@@ -11,51 +11,55 @@ import static java.util.stream.Collectors.toList;
 
 public class DefaultMatchPolicy implements MatchPolicy {
 
-    private static final int NUMBER_OF_PAIR = 3;
+    private static final int NUMBER_OF_ATTENDANCE_FOR_PAIR = 3;
     private static final int MINIMUM_PAIRS_SIZE = 2;
     public static final int FIRST_GROUP_ID = 1;
 
     @Override
     public List<Pair> apply(List<Attendance> attendances) {
-        validateNumberOfPairs(attendances);
+        validateNumberOfAttendances(attendances);
 
         AtomicLong groupId = new AtomicLong(FIRST_GROUP_ID);
 
-        return createPairs(attendances).stream()
+        return createCandidatesOfPairs(attendances).stream()
                 .map(pair -> new Pair(groupId.getAndIncrement(), pair))
                 .collect(toList());
     }
 
-    private void validateNumberOfPairs(List<Attendance> pairs) {
+    private void validateNumberOfAttendances(List<Attendance> pairs) {
         if(pairs.size() < MINIMUM_PAIRS_SIZE) {
             throw new IllegalArgumentException();
         }
     }
 
-    private List<List<Attendance>> createPairs(final List<Attendance> members) {
-        if (members.isEmpty()) {
+    private List<List<Attendance>> createCandidatesOfPairs(final List<Attendance> attendances) {
+        if (attendances.isEmpty()) {
             return new ArrayList<>();
         }
 
-        int numberOfPair = setNumberOfPair(members);
+        int numberOfPair = setNumberOfAttendanceForPair(attendances);
 
-        List<List<Attendance>> pairs = createPairs(
-                members.subList(Math.min(numberOfPair, members.size()), members.size())
+        List<List<Attendance>> pairs = createCandidatesOfPairs(
+                attendances.subList(Math.min(numberOfPair, attendances.size()), attendances.size())
         );
 
-        List<Attendance> pair = new ArrayList<>(members.subList(0, Math.min(numberOfPair, members.size())));
+        List<Attendance> pair = new ArrayList<>(
+                attendances.subList(0, Math.min(numberOfPair, attendances.size()))
+        );
         pairs.add(pair);
 
         return pairs;
     }
 
-    private int setNumberOfPair(List<Attendance> members) {
-        int numberOfPair = NUMBER_OF_PAIR;
-        if (members.size() % NUMBER_OF_PAIR == 1 || members.size() % 3 == MINIMUM_PAIRS_SIZE) {
+    private int setNumberOfAttendanceForPair(List<Attendance> members) {
+        int numberOfPair = NUMBER_OF_ATTENDANCE_FOR_PAIR;
+        if (
+                members.size() % NUMBER_OF_ATTENDANCE_FOR_PAIR == 1 ||
+                members.size() % 3 == MINIMUM_PAIRS_SIZE
+        ) {
             numberOfPair = MINIMUM_PAIRS_SIZE;
         }
 
         return numberOfPair;
     }
-
 }
