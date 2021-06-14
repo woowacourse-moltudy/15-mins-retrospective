@@ -115,6 +115,7 @@ public class PairDaoImpl implements PairDao {
                 "ON P.attendance_id = A.id " +
                 "INNER JOIN MEMBER M " +
                 "ON M.id = A.member_id " +
+
                 "WHERE A.date=? and A.time_id = " +
                 "(SELECT id FROM CONFERENCE_TIME WHERE time = ?)";
     }
