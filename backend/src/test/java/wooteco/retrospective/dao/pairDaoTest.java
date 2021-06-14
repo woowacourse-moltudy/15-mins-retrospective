@@ -1,6 +1,5 @@
 package wooteco.retrospective.dao;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.retrospective.common.Fixture;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
@@ -29,6 +29,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @JdbcTest
 public class pairDaoTest {
 
@@ -61,16 +62,6 @@ public class pairDaoTest {
         Time timeTen = timeDao.findById(2L).orElseThrow(RuntimeException::new);
         attendanceDao.insert(new Attendance(LocalDate.now(), neozal, timeTen));
         attendanceDao.insert(new Attendance(LocalDate.now(), whyguy, timeTen));
-    }
-
-    @AfterEach
-    void cleanUp() {
-        jdbcTemplate.update("DELETE FROM PAIR");
-        jdbcTemplate.update("DELETE FROM ATTENDANCE");
-        jdbcTemplate.update("DELETE FROM MEMBER");
-
-        jdbcTemplate.update("ALTER TABLE MEMBER ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("ALTER TABLE ATTENDANCE ALTER COLUMN id RESTART WITH 1");
     }
 
     @DisplayName("페어를 저장한다.")
