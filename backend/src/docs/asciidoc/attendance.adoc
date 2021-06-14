@@ -1,0 +1,25 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Attendance(출석부)
+=== 회고 시간 등록
+==== Request
+include::{snippets}/attendance/post/http-request.adoc[]
+==== Response
+include::{snippets}/attendance/post/http-response.adoc[]
+=== 회고 시간 삭제
+==== Request
+include::{snippets}/attendance/delete/http-request.adoc[]
+==== Response
+include::{snippets}/attendance/delete/http-response.adoc[]
+=== 회고 목록 조회
+==== Request
+include::{snippets}/attendance/get/http-request.adoc[]
+==== Response
+include::{snippets}/attendance/get/http-response.adoc[]

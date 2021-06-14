@@ -1,10 +1,12 @@
 package wooteco.retrospective.presentation;
 
+import static com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +17,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,7 +33,9 @@ import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
 import wooteco.retrospective.presentation.attendance.AttendanceController;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
+@DisplayName("출석부 - Controller 테스트")
 @WebMvcTest(controllers = {AttendanceController.class})
+@AutoConfigureRestDocs
 class AttendanceControllerTest {
     public static final Time TIME_SIX = new Time(1L, LocalTime.of(18, 0, 0));
     public static final Member DANI = new Member(1L, "dani");
@@ -55,11 +60,12 @@ class AttendanceControllerTest {
         mockMvc.perform(post("/api/time")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("date").value(LocalDate.now().toString()))
             .andExpect(jsonPath("member.name").value("dani"))
-            .andExpect(jsonPath("time.time").value("18:00:00"));
+            .andExpect(jsonPath("time.time").value("18:00:00"))
+            .andDo(print())
+            .andDo(document("attendance/post"));
     }
 
     @DisplayName("회고 시간을 삭제한다.")
@@ -70,8 +76,9 @@ class AttendanceControllerTest {
         mockMvc.perform(delete("/api/time")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
+            .andExpect(status().isOk())
             .andDo(print())
-            .andExpect(status().isOk());
+            .andDo(document("attendance/delete"));
     }
 
     @DisplayName("회고 목록을 조회한다.")
@@ -88,11 +95,12 @@ class AttendanceControllerTest {
 
         mockMvc.perform(get("/api/time/1")
             .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("time").value(TIME_SIX.getId()))
             .andExpect(jsonPath("members[0].id").value(DANI.getId()))
-            .andExpect(jsonPath("members[0].name").value(DANI.getName()));
+            .andExpect(jsonPath("members[0].name").value(DANI.getName()))
+            .andDo(print())
+            .andDo(document("attendance/get"));
     }
 
     private AttendanceRequest insertAttendance() {
