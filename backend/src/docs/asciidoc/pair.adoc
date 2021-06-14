@@ -11,5 +11,7 @@ endif::[]
 === 페어 가져오기
 ==== Request
 include::{snippets}/pair/getPairs/http-request.adoc[]
+==== Parameters
+include::{snippets}/pair/getPairs/request-parameters.adoc[]
 ==== Response
 include::{snippets}/pair/getPairs/http-response.adoc[]
