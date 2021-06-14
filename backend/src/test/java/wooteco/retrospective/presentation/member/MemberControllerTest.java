@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("회원 - Controller 테스트")
-@WebMvcTest
+@WebMvcTest(MemberController.class)
 @AutoConfigureRestDocs
 class MemberControllerTest {
 
@@ -36,8 +36,6 @@ class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
-    @MockBean
-    private AttendanceService attendanceService;
 
     @DisplayName("로그인을 한다. - 정상")
     @Test
