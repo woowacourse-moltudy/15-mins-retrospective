@@ -30,5 +30,4 @@ public class Fixture {
                 Arguments.of(List.of(neozal, whyguy, danijani, soulg, chu, spring, duck), List.of(3, 2, 2))
         );
     }
-
 }
