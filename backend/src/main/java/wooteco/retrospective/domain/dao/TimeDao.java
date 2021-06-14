@@ -34,11 +34,7 @@ public interface TimeDao {
                 return 0;
             }
 
-            Time oldValue = cache.get(timeId);
-
-            if (!cache.replace(timeId, oldValue, time)) {
-                return 0;
-            }
+            cache.replace(timeId, time);
 
             return 1;
         }
