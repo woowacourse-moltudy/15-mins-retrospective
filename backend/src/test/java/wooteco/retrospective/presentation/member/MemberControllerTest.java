@@ -1,5 +1,6 @@
 package wooteco.retrospective.presentation.member;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,17 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
+import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
+import wooteco.retrospective.presentation.dto.member.MemberResponse;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,12 +44,14 @@ class MemberControllerTest {
     private MemberService memberService;
     @MockBean
     private AttendanceService attendanceService;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
 
     @DisplayName("로그인을 한다. - 정상")
     @Test
     void loginMember() throws Exception {
         MemberLoginRequest request = new MemberLoginRequest("dani");
-        MemberTokenDto responseDto = new MemberTokenDto("dani");
+        MemberTokenDto responseDto = new MemberTokenDto("This_is_JWT_token");
 
         when(memberService.loginMember(any(MemberLoginDto.class)))
                 .thenReturn(responseDto);
@@ -52,7 +60,7 @@ class MemberControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("token").value("dani"))
+                .andExpect(jsonPath("token").value("This_is_JWT_token"))
                 .andDo(print())
                 .andDo(document("member/login"));
     }
@@ -88,5 +96,24 @@ class MemberControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void findMember() throws Exception {
+        Member member = new Member(1L, "pika");
+
+        when(memberService.findMemberByToken(any(String.class)))
+                .thenReturn(member);
+        when(jwtTokenProvider.validateToken(any(String.class)))
+                .thenReturn(true);
+
+        mockMvc.perform(get("/api/member")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer token")
+                .content(objectMapper.writeValueAsString(member)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("pika"))
+                .andDo(print())
+                .andDo(document("member/find"));
     }
 }
