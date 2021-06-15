@@ -24,6 +24,8 @@ public class Member {
             throw new IllegalArgumentException();
         }
 
+        name = name.replaceAll(" ", "");
+
         if (name.length() <= 0 || name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException();
         }
