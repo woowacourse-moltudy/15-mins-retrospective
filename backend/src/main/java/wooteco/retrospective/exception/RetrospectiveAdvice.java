@@ -1,5 +1,6 @@
 package wooteco.retrospective.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,5 +17,10 @@ public class RetrospectiveAdvice {
         RetrospectiveExceptionResponse response =
                 new RetrospectiveExceptionResponse(Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<String> authException(AuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }

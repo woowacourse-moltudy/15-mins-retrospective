@@ -1,6 +1,5 @@
 package wooteco.retrospective.presentation.member;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wooteco.retrospective.application.attendance.AttendanceService;
@@ -18,7 +16,6 @@ import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
-import wooteco.retrospective.presentation.dto.member.MemberResponse;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -98,6 +95,7 @@ class MemberControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("멤버를 찾는다 - 정상")
     @Test
     void findMember() throws Exception {
         Member member = new Member(1L, "pika");
@@ -113,6 +111,23 @@ class MemberControllerTest {
                 .content(objectMapper.writeValueAsString(member)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("pika"))
+                .andDo(print())
+                .andDo(document("member/find"));
+    }
+
+    @DisplayName("멤버를 찾는다 - 유효하지 않는 토큰, 401 예외")
+    @Test
+    void findMemberWithInvalidToken() throws Exception {
+        Member member = new Member(1L, "pika");
+
+        when(jwtTokenProvider.validateToken(any(String.class)))
+                .thenReturn(false);
+
+        mockMvc.perform(get("/api/member")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer token")
+                .content(objectMapper.writeValueAsString(member)))
+                .andExpect(status().isUnauthorized())
                 .andDo(print())
                 .andDo(document("member/find"));
     }
