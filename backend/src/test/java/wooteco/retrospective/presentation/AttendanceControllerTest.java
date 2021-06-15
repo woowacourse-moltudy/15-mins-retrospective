@@ -1,6 +1,5 @@
 package wooteco.retrospective.presentation;
 
-import static com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,9 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
+import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
 import wooteco.retrospective.presentation.attendance.AttendanceController;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
@@ -37,7 +36,7 @@ import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 @WebMvcTest(controllers = {AttendanceController.class})
 @AutoConfigureRestDocs
 class AttendanceControllerTest {
-    public static final Time TIME_SIX = new Time(1L, LocalTime.of(18, 0, 0));
+    public static final ConferenceTime CONFERENCE_TIME_SIX = new ConferenceTime(1L, LocalTime.of(18, 0, 0));
     public static final Member DANI = new Member(1L, "dani");
 
     @Autowired
@@ -50,7 +49,7 @@ class AttendanceControllerTest {
     private AttendanceService attendanceService;
 
     @MockBean
-    private TimeDao timeDao;
+    private ConferenceTimeDao conferenceTimeDao;
 
     @DisplayName("회고 시간을 등록한다.")
     @Test
@@ -63,7 +62,7 @@ class AttendanceControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("date").value(LocalDate.now().toString()))
             .andExpect(jsonPath("member.name").value("dani"))
-            .andExpect(jsonPath("time.time").value("18:00:00"))
+            .andExpect(jsonPath("conferenceTime.conferenceTime").value("18:00:00"))
             .andDo(print())
             .andDo(document("attendance/post"));
     }
@@ -87,16 +86,16 @@ class AttendanceControllerTest {
         insertAttendance();
         List<Member> members = Collections.singletonList(DANI);
 
-        given(attendanceService.findTimeById(TIME_SIX.getId()))
-            .willReturn(TIME_SIX);
+        given(attendanceService.findTimeById(CONFERENCE_TIME_SIX.getId()))
+            .willReturn(CONFERENCE_TIME_SIX);
 
-        given(attendanceService.findAttendanceByTime(TIME_SIX))
+        given(attendanceService.findAttendanceByTime(CONFERENCE_TIME_SIX))
             .willReturn(members);
 
         mockMvc.perform(get("/api/time/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("time").value(TIME_SIX.getId()))
+            .andExpect(jsonPath("conferenceTimeId").value(CONFERENCE_TIME_SIX.getId()))
             .andExpect(jsonPath("members[0].id").value(DANI.getId()))
             .andExpect(jsonPath("members[0].name").value(DANI.getName()))
             .andDo(print())
@@ -105,21 +104,21 @@ class AttendanceControllerTest {
 
     private AttendanceRequest insertAttendance() {
 
-        given(timeDao.insert(any(Time.class)))
-            .willReturn(TIME_SIX);
+        given(conferenceTimeDao.insert(any(ConferenceTime.class)))
+            .willReturn(CONFERENCE_TIME_SIX);
 
-        given(timeDao.findById(any(Long.class)))
-            .willReturn(Optional.of(TIME_SIX));
+        given(conferenceTimeDao.findById(any(Long.class)))
+            .willReturn(Optional.of(CONFERENCE_TIME_SIX));
 
         AttendanceRequest attendanceRequest = new AttendanceRequest(
-            TIME_SIX.getId(),
+            CONFERENCE_TIME_SIX.getId(),
             DANI.getId()
         );
 
         Attendance attendance = new Attendance(
             LocalDate.now(),
             DANI,     //TODO: db로부터 가져오기
-            timeDao.findById(TIME_SIX.getId()).orElseThrow(RuntimeException::new)
+            conferenceTimeDao.findById(CONFERENCE_TIME_SIX.getId()).orElseThrow(RuntimeException::new)
         );
 
         given(attendanceService.postAttendance(any(AttendanceRequest.class)))

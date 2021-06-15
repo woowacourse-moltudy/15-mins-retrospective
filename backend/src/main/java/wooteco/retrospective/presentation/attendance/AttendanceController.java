@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceByTimeResponse;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
@@ -45,13 +45,13 @@ public class AttendanceController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/time/{time}")
-    public ResponseEntity<AttendanceByTimeResponse> getTime(@PathVariable("time") long timeId) {
-        Time time = attendanceService.findTimeById(timeId);
-        List<Member> members = attendanceService.findAttendanceByTime(time);
+    @GetMapping("/time/{conferenceTime}")
+    public ResponseEntity<AttendanceByTimeResponse> getTime(@PathVariable("conferenceTime") long conferenceTimeId) {
+        ConferenceTime conferenceTime = attendanceService.findTimeById(conferenceTimeId);
+        List<Member> members = attendanceService.findAttendanceByTime(conferenceTime);
 
         AttendanceByTimeResponse attendanceByTimeResponse = AttendanceByTimeResponse.of(
-            time, members
+            conferenceTime, members
         );
 
         return ResponseEntity.ok().body(attendanceByTimeResponse);

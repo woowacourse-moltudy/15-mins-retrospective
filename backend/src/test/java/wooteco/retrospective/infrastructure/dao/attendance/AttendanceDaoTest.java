@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
@@ -23,26 +23,26 @@ import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 @Sql("classpath:recreate-schema.sql")
 class AttendanceDaoTest {
     private static final Member MEMBER_SALLY = new Member("sally");
-    private static final Time TIME_SIX = new Time(1L, LocalTime.of(18, 0, 0));
+    private static final ConferenceTime CONFERENCE_TIME_SIX = new ConferenceTime(1L, LocalTime.of(18, 0, 0));
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private MemberDao memberDao;
-    private TimeDao timeDao;
+    private ConferenceTimeDao conferenceTimeDao;
     private AttendanceDao attendanceDao;
 
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
-        timeDao = new TimeDao(jdbcTemplate);
-        attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
+        conferenceTimeDao = new ConferenceTimeDao(jdbcTemplate);
+        attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, conferenceTimeDao);
     }
 
     @DisplayName("출석부를 추가한다.")
     @Test
     void insert() {
-        Attendance expectedAttendance = new Attendance(LocalDate.now(), MEMBER_SALLY, TIME_SIX);
+        Attendance expectedAttendance = new Attendance(LocalDate.now(), MEMBER_SALLY, CONFERENCE_TIME_SIX);
         Attendance newAttendance = insertAttendance();
 
         assertThat(expectedAttendance).isEqualTo(newAttendance);
@@ -56,7 +56,7 @@ class AttendanceDaoTest {
             1L,
             LocalDate.now(),
             MEMBER_SALLY,
-            TIME_SIX
+            CONFERENCE_TIME_SIX
         );
         Attendance attendance = attendanceDao.findById(1L);
 
@@ -72,7 +72,7 @@ class AttendanceDaoTest {
         assertThat(attendanceDao.isExistSameTime(
             LocalDate.now(),
             attendance.getMemberId(),
-            attendance.getTimeId()
+            attendance.getConferenceTimeId()
         )).isTrue();
     }
 
@@ -85,7 +85,7 @@ class AttendanceDaoTest {
         assertThat(attendanceDao.isExistSameTime(
             LocalDate.now().minusDays(1),
             attendance.getMemberId(),
-            attendance.getTimeId()
+            attendance.getConferenceTimeId()
         )).isFalse();
     }
 
@@ -99,7 +99,7 @@ class AttendanceDaoTest {
             1L,
             now,
             MEMBER_SALLY,
-            TIME_SIX
+            CONFERENCE_TIME_SIX
         );
 
         List<Attendance> attendance = attendanceDao.findByDate(now);
@@ -117,7 +117,7 @@ class AttendanceDaoTest {
             1L,
             now,
             MEMBER_SALLY,
-            TIME_SIX
+            CONFERENCE_TIME_SIX
         );
 
         List<Attendance> attendance = attendanceDao.findByTime(now, 1L);
@@ -136,8 +136,8 @@ class AttendanceDaoTest {
 
     private Attendance insertAttendance() {
         Member madeMember = memberDao.insert(MEMBER_SALLY);
-        Time time = timeDao.findById(1L).orElseThrow(RuntimeException::new);
-        Attendance attendance = new Attendance(LocalDate.now(), madeMember, time);
+        ConferenceTime conferenceTime = conferenceTimeDao.findById(1L).orElseThrow(RuntimeException::new);
+        Attendance attendance = new Attendance(LocalDate.now(), madeMember, conferenceTime);
 
         return attendanceDao.insert(attendance);
     }

@@ -2,16 +2,16 @@ package wooteco.retrospective.presentation.dto.attendance;
 
 public class AttendanceRequest {
 
-    private final long timeId;
+    private final long conferenceTimeId;
     private final long memberId;
 
-    public AttendanceRequest(long timeId, long memberId) {
-        this.timeId = timeId;
+    public AttendanceRequest(long conferenceTimeId, long memberId) {
+        this.conferenceTimeId = conferenceTimeId;
         this.memberId = memberId;
     }
 
-    public long getTimeId() {
-        return timeId;
+    public long getConferenceTimeId() {
+        return conferenceTimeId;
     }
 
     public long getMemberId() {

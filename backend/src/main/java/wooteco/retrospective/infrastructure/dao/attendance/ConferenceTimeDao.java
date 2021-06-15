@@ -12,54 +12,54 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 
 @Repository
-public class TimeDao {
+public class ConferenceTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Time> rowMapper = (resultSet, rowNumber) ->
-        new Time(
+    private final RowMapper<ConferenceTime> rowMapper = (resultSet, rowNumber) ->
+        new ConferenceTime(
             resultSet.getLong("id"),
-            resultSet.getObject("time", LocalTime.class)
+            resultSet.getObject("conference_time", LocalTime.class)
         );
 
-    public TimeDao(JdbcTemplate jdbcTemplate) {
+    public ConferenceTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Time> findAll() {
+    public List<ConferenceTime> findAll() {
         String query = "SELECT * FROM CONFERENCE_TIME";
 
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public int update(Long timeId, Time time) {
-        String query = "UPDATE CONFERENCE_TIME SET time = ? WHERE id = ?";
+    public int update(Long conferenceTimeId, ConferenceTime conferenceTime) {
+        String query = "UPDATE CONFERENCE_TIME SET conference_time = ? WHERE id = ?";
 
-        return jdbcTemplate.update(query, time.getTime(), timeId);
+        return jdbcTemplate.update(query, conferenceTime.getConferenceTime(), conferenceTimeId);
     }
 
-    public Optional<Time> findById(long id) {
+    public Optional<ConferenceTime> findById(long id) {
         String query = "SELECT * FROM CONFERENCE_TIME WHERE id = ?";
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
     }
 
-    public Time insert(Time time) {
-        String query = "INSERT INTO TIME(time) values(?)";
+    public ConferenceTime insert(ConferenceTime conferenceTime) {
+        String query = "INSERT INTO CONFERENCE_TIME(conference_time) values(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[] {"id"});
-            ps.setTime(1, java.sql.Time.valueOf(time.getTime()));
+            ps.setTime(1, java.sql.Time.valueOf(conferenceTime.getConferenceTime()));
 
             return ps;
         }, keyHolder);
 
-        return new Time(
+        return new ConferenceTime(
             Objects.requireNonNull(keyHolder.getKey()).longValue(),
-            time.getTime()
+            conferenceTime.getConferenceTime()
         );
     }
 }
