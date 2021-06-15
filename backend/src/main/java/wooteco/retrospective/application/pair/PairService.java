@@ -34,25 +34,25 @@ public class PairService {
 
     @Transactional
     public List<PairResponseDto> getPairsByDateAndTime(LocalDate date,
-                                                       LocalTime conferenceTime,
+                                                       LocalTime requestedConferenceTime,
                                                        LocalTime currentTime) {
-        Time time = getTime(new Time(conferenceTime));
-        validateIsRightTime(time, new Time(currentTime));
+        Time conferenceTime = getConferenceTimeIfValid(new Time(requestedConferenceTime));
+        validateIsCallableTime(conferenceTime, new Time(currentTime));
         validateIsRightDate(date);
 
-        return pairDao.findByDateAndTime(date, time)
+        return pairDao.findByDateAndTime(date, conferenceTime)
                 .map(toPairResponseDtos())
-                .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, time));
+                .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, conferenceTime));
     }
 
-    private Time getTime(Time conferenceTime) {
+    private Time getConferenceTimeIfValid(Time conferenceTime) {
         return timeDao.findAll().stream()
                 .filter(time -> time.equals(conferenceTime))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }
 
-    private void validateIsRightTime(Time conferenceTime, Time currentTime) {
+    private void validateIsCallableTime(Time conferenceTime, Time currentTime) {
         timeDao.findAll().stream()
                 .filter(time -> time.isBefore(currentTime))
                 .filter(time -> time.equals(conferenceTime))
