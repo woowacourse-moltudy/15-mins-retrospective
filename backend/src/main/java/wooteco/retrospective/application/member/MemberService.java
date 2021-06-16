@@ -26,8 +26,8 @@ public class MemberService {
                 .orElseGet(() -> signUpMember(requestDto));
     }
 
-    private MemberTokenDto signUpMember(MemberLoginDto requestDto) {
-        Member member = memberDao.insert(requestDto.toMember());
+    private MemberTokenDto signUpMember(MemberLoginDto memberLoginDto) {
+        Member member = memberDao.insert(memberLoginDto.toMember());
         String token = jwtTokenProvider.createToken(member.getName());
         return MemberTokenDto.from(token);
     }
