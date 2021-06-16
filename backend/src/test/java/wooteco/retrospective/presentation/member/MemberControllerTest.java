@@ -100,10 +100,10 @@ class MemberControllerTest {
     void findMember() throws Exception {
         Member member = new Member(1L, "pika");
 
-        when(memberService.findMemberByToken(any(String.class)))
-                .thenReturn(member);
         when(jwtTokenProvider.validateToken(any(String.class)))
                 .thenReturn(true);
+        when(memberService.findMemberByToken(any(String.class)))
+                .thenReturn(member);
 
         mockMvc.perform(get("/api/member")
                 .contentType(MediaType.APPLICATION_JSON)
