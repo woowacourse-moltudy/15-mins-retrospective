@@ -21,7 +21,7 @@ import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/time")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -30,7 +30,7 @@ public class AttendanceController {
         this.attendanceService = attendanceService;
     }
 
-    @PostMapping("/time")
+    @PostMapping
     public ResponseEntity<AttendanceResponse> postTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
         AttendanceResponse attendanceResponse = AttendanceResponse.of(
             attendanceService.postAttendance(attendanceRequest));
@@ -38,21 +38,20 @@ public class AttendanceController {
         return ResponseEntity.ok().body(attendanceResponse);
     }
 
-    @DeleteMapping("/time")
+    @DeleteMapping
     public ResponseEntity<Void> deleteTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
         attendanceService.deleteAttendance(attendanceRequest);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/time/{conferenceTime}")
-    public ResponseEntity<AttendanceByTimeResponse> getTime(@PathVariable("conferenceTime") long conferenceTimeId) {
+    @GetMapping("/{conferenceTimeId}")
+    public ResponseEntity<AttendanceByTimeResponse> getTime(@PathVariable("conferenceTimeId") long conferenceTimeId) {
         ConferenceTime conferenceTime = attendanceService.findTimeById(conferenceTimeId);
         List<Member> members = attendanceService.findAttendanceByTime(conferenceTime);
 
-        AttendanceByTimeResponse attendanceByTimeResponse = AttendanceByTimeResponse.of(
-            conferenceTime, members
-        );
+        AttendanceByTimeResponse attendanceByTimeResponse
+            = AttendanceByTimeResponse.of(conferenceTime, members);
 
         return ResponseEntity.ok().body(attendanceByTimeResponse);
     }
