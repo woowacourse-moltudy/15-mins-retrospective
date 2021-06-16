@@ -16,7 +16,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalConfig(MemberService memberService, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalConfig(MemberService memberService,
+                                         JwtTokenProvider jwtTokenProvider) {
         this.memberService = memberService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
