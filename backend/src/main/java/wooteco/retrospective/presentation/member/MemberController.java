@@ -23,11 +23,11 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberLoginResponse> loginMember(@Valid @RequestBody MemberLoginRequest request) {
-        MemberLoginDto requestDto = new MemberLoginDto(request.getName());
-        MemberLoginResponse response = new MemberLoginResponse(memberService.loginMember(requestDto).getToken());
+    public ResponseEntity<MemberLoginResponse> loginMember(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
+        MemberLoginDto requestDto = new MemberLoginDto(memberLoginRequest.getName());
+        String token = memberService.loginMember(requestDto).getToken();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new MemberLoginResponse(token));
     }
 
     @GetMapping("/member")
