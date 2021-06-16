@@ -20,7 +20,7 @@ public class RetrospectiveAdvice {
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<String> authException(AuthorizationException e) {
+    public ResponseEntity<String> invalidTokenException(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }
