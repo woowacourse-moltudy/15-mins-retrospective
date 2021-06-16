@@ -16,7 +16,7 @@ public class Member {
     public Member(Long id, String name) {
         validateMember(name);
         this.id = id;
-        this.name = name.replaceAll(" ", "");
+        this.name = name;
     }
 
     private void validateMember(String name) {
@@ -24,9 +24,7 @@ public class Member {
             throw new IllegalArgumentException();
         }
 
-        name = name.replaceAll(" ", "");
-
-        if (name.length() <= 0 || name.length() > MAX_LENGTH) {
+        if (name.length() <= 0 || name.length() > MAX_LENGTH || name.contains(" ")) {
             throw new IllegalArgumentException();
         }
     }
