@@ -1,4 +1,4 @@
-package wooteco.retrospective.infrastructure.auth;
+package wooteco.retrospective.utils.auth;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;

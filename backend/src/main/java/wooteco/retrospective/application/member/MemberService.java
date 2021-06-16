@@ -5,7 +5,8 @@ import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.exception.NotFoundMemberException;
-import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
+import wooteco.retrospective.presentation.dto.member.MemberResponse;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 @Service
@@ -32,11 +33,9 @@ public class MemberService {
         return MemberTokenDto.from(token);
     }
 
-    public Member findMemberByToken(String token) {
-        String name = jwtTokenProvider.getPayload(token);
-
-        return memberDao.findByName(name)
+    public MemberResponse findMemberByName(String name) {
+        Member member = memberDao.findByName(name)
                 .orElseThrow(NotFoundMemberException::new);
+        return MemberResponse.from(member);
     }
-
 }

@@ -3,8 +3,8 @@ package wooteco.retrospective.config;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import wooteco.retrospective.exception.AuthorizationException;
-import wooteco.retrospective.infrastructure.auth.AuthorizationExtractor;
-import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
+import wooteco.retrospective.utils.auth.AuthorizationExtractor;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

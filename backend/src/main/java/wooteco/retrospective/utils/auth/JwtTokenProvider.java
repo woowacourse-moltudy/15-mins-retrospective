@@ -1,4 +1,4 @@
-package wooteco.retrospective.infrastructure.auth;
+package wooteco.retrospective.utils.auth;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;

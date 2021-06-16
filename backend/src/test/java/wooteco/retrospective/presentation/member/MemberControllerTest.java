@@ -14,7 +14,8 @@ import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
+import wooteco.retrospective.presentation.dto.member.MemberResponse;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -100,10 +101,12 @@ class MemberControllerTest {
     void findMember() throws Exception {
         Member member = new Member(1L, "pika");
 
+        when(jwtTokenProvider.getPayload(any(String.class)))
+                .thenReturn("pika");
         when(jwtTokenProvider.validateToken(any(String.class)))
                 .thenReturn(true);
-        when(memberService.findMemberByToken(any(String.class)))
-                .thenReturn(member);
+        when(memberService.findMemberByName(any(String.class)))
+                .thenReturn(MemberResponse.from(member));
 
         mockMvc.perform(get("/api/member")
                 .contentType(MediaType.APPLICATION_JSON)
