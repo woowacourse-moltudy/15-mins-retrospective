@@ -3,6 +3,7 @@ package wooteco.retrospective.application.member;
 import org.springframework.stereotype.Service;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
+import wooteco.retrospective.domain.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.presentation.dto.member.MemberResponse;
@@ -33,9 +34,9 @@ public class MemberService {
         return MemberTokenDto.from(token);
     }
 
-    public MemberResponse findMemberByName(String name) {
+    public MemberDTO findMemberByName(String name) {
         Member member = memberDao.findByName(name)
                 .orElseThrow(NotFoundMemberException::new);
-        return MemberResponse.from(member);
+        return MemberDTO.from(member);
     }
 }

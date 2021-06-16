@@ -1,6 +1,7 @@
 package wooteco.retrospective.presentation.dto.member;
 
 
+import wooteco.retrospective.domain.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
 
 public class MemberResponse {
@@ -16,8 +17,8 @@ public class MemberResponse {
         this.name = name;
     }
 
-    public static MemberResponse from(Member member) {
-        return new MemberResponse(member.getId(), member.getName());
+    public static MemberResponse from(MemberDTO memberDTO) {
+        return new MemberResponse(memberDTO.getId(), memberDTO.getName());
     }
 
     public Long getId() {

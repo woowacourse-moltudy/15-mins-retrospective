@@ -15,6 +15,7 @@ import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
+import wooteco.retrospective.domain.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.presentation.dto.member.MemberResponse;
 import wooteco.retrospective.utils.auth.JwtTokenProvider;
@@ -109,7 +110,7 @@ class MemberControllerTest {
         when(jwtTokenProvider.validateToken(any(String.class)))
                 .thenReturn(true);
         when(memberService.findMemberByName(any(String.class)))
-                .thenReturn(MemberResponse.from(member));
+                .thenReturn(MemberDTO.from(member));
 
         mockMvc.perform(get("/api/member")
                 .contentType(MediaType.APPLICATION_JSON)

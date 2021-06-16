@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.domain.auth.TokenToName;
+import wooteco.retrospective.domain.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 import wooteco.retrospective.presentation.dto.member.MemberLoginResponse;
@@ -32,6 +33,7 @@ public class MemberController {
 
     @GetMapping("/member")
     public ResponseEntity<MemberResponse> findMember(@TokenToName String name) {
-        return ResponseEntity.ok(memberService.findMemberByName(name));
+        MemberDTO memberDTO = memberService.findMemberByName(name);
+        return ResponseEntity.ok(MemberResponse.from(memberDTO));
     }
 }
