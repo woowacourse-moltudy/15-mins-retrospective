@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.infrastructure.auth.JwtTokenProvider;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
@@ -34,7 +35,8 @@ public class MemberService {
     public Member findMemberByToken(String token) {
         String name = jwtTokenProvider.getPayload(token);
 
-        return memberDao.findByName(name).orElseThrow(IllegalArgumentException::new);
+        return memberDao.findByName(name)
+                .orElseThrow(NotFoundMemberException::new);
     }
 
 }
