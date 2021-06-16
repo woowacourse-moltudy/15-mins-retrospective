@@ -17,10 +17,6 @@ public class MemberTokenDto {
         return new MemberTokenDto(token);
     }
 
-    public static MemberTokenDto from(Member member) {
-        return new MemberTokenDto(member.getName());
-    }
-
     public String getToken() {
         return token;
     }
