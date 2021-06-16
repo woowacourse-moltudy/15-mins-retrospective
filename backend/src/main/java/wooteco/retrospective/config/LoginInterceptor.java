@@ -1,5 +1,6 @@
 package wooteco.retrospective.config;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import wooteco.retrospective.exception.AuthorizationException;
@@ -8,6 +9,7 @@ import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -24,11 +26,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String accessToken = request.getHeader("Authorization");
-
-        if (accessToken == null) {
-            throw new AuthorizationException("유효하지 않은 토큰입니다.");
-        }
+        Optional.ofNullable( request.getHeader(HttpHeaders.AUTHORIZATION))
+                .orElseThrow(() -> new AuthorizationException("존재하지 않는 토큰입니다."));
 
         String extractor = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(extractor)) {
