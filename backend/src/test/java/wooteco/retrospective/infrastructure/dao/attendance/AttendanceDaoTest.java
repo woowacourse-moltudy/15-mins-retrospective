@@ -69,11 +69,11 @@ class AttendanceDaoTest {
         insertAttendance();
         Attendance attendance = attendanceDao.findById(1L);
 
-        assertThat(attendanceDao.isExistSameTime(
-            LocalDate.now(),
-            attendance.getMemberId(),
-            attendance.getConferenceTimeId()
-        )).isTrue();
+        LocalDate now = LocalDate.now();
+        long memberId = attendance.getMemberId();
+        long conferenceTimeId = attendance.getConferenceTimeId();
+
+        assertThat(attendanceDao.isExistSameTime(now, memberId, conferenceTimeId)).isTrue();
     }
 
     @DisplayName("다른 날짜에 같은 멤버가 같은 시간에 있는지 조회한다.")
@@ -82,11 +82,11 @@ class AttendanceDaoTest {
         insertAttendance();
         Attendance attendance = attendanceDao.findById(1L);
 
-        assertThat(attendanceDao.isExistSameTime(
-            LocalDate.now().minusDays(1),
-            attendance.getMemberId(),
-            attendance.getConferenceTimeId()
-        )).isFalse();
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        long memberId = attendance.getMemberId();
+        long conferenceTimeId = attendance.getConferenceTimeId();
+
+        assertThat(attendanceDao.isExistSameTime(yesterday, memberId, conferenceTimeId)).isFalse();
     }
 
     @DisplayName("날짜에 따른 출석부를 조회한다.")

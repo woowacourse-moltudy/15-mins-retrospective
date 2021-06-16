@@ -18,8 +18,7 @@ public class AttendanceByTimeResponse {
         this.members = members;
     }
 
-    public static AttendanceByTimeResponse of(ConferenceTime conferenceTime,
-        List<Member> members) {
+    public static AttendanceByTimeResponse of(ConferenceTime conferenceTime, List<Member> members) {
         return new AttendanceByTimeResponse(conferenceTime.getId(), members);
     }
 

@@ -2,10 +2,10 @@ package wooteco.retrospective.presentation;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,22 +19,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
-import wooteco.retrospective.presentation.attendance.AttendanceController;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 @DisplayName("출석부 - Controller 테스트")
-@WebMvcTest(controllers = {AttendanceController.class})
+@WebMvcTest
 @AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
 class AttendanceControllerTest {
     public static final ConferenceTime CONFERENCE_TIME_SIX = new ConferenceTime(1L, LocalTime.of(18, 0, 0));
     public static final Member DANI = new Member(1L, "dani");

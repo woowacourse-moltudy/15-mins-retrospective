@@ -32,8 +32,8 @@ public class AttendanceController {
 
     @PostMapping
     public ResponseEntity<AttendanceResponse> postTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
-        AttendanceResponse attendanceResponse = AttendanceResponse.of(
-            attendanceService.postAttendance(attendanceRequest));
+        AttendanceResponse attendanceResponse =
+            AttendanceResponse.of(attendanceService.postAttendance(attendanceRequest));
 
         return ResponseEntity.ok().body(attendanceResponse);
     }
