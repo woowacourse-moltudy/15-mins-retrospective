@@ -3,10 +3,12 @@ package wooteco.retrospective.presentation.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wooteco.retrospective.application.attendance.AttendanceService;
@@ -19,6 +21,7 @@ import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -123,12 +126,12 @@ class MemberControllerTest {
     void findMemberWithInvalidToken() throws Exception {
         Member member = new Member(1L, "pika");
 
-        when(jwtTokenProvider.validateToken(any(String.class)))
-                .thenReturn(false);
+        given(jwtTokenProvider.validateToken(any(String.class)))
+                .willReturn(false);
 
         mockMvc.perform(get("/api/member")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer token")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .content(objectMapper.writeValueAsString(member)))
                 .andExpect(status().isUnauthorized())
                 .andDo(print())
