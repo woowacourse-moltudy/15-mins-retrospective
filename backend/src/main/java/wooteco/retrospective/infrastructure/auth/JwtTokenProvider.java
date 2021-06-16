@@ -4,6 +4,9 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -33,12 +36,21 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token);
 
-            return !claims.getBody().getExpiration().before(new Date());
+            return !Instant.ofEpochMilli(expirationTime(claims))
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime()
+                    .isBefore(LocalDateTime.now());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    private long expirationTime(Jws<Claims> claims) {
+        return claims.getBody().getExpiration().getTime();
     }
 
 }
