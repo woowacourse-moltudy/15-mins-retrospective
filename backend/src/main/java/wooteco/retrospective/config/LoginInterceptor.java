@@ -20,7 +20,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+        if (HttpMethod.OPTIONS.name().equals(request.getMethod())) {
             return true;
         }
 
