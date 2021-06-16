@@ -130,7 +130,7 @@ class AttendanceDaoTest {
     void delete() {
         Attendance attendance = insertAttendance();
 
-        int deleteCount = attendanceDao.delete(attendance);
+        int deleteCount = attendanceDao.delete(attendance.getMemberId(), attendance.getConferenceTimeId());
         assertThat(deleteCount).isEqualTo(1);
     }
 
