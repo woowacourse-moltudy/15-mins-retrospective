@@ -43,6 +43,9 @@ class MemberControllerTest {
     @MockBean
     private MemberService memberService;
 
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
     @DisplayName("로그인을 한다. - 정상")
     @Test
     void loginMember() throws Exception {
