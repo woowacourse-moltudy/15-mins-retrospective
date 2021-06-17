@@ -10,21 +10,21 @@ import wooteco.retrospective.presentation.auth.TokenToNameArgumentResolver;
 import java.util.List;
 
 @Configuration
-public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+public class TokenToNamelConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
+    public TokenToNamelConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public void addArgumentResolvers(List argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+        argumentResolvers.add(createTokenToNameArgumentResolver());
     }
 
     @Bean
-    public TokenToNameArgumentResolver createAuthenticationPrincipalArgumentResolver() {
+    public TokenToNameArgumentResolver createTokenToNameArgumentResolver() {
         return new TokenToNameArgumentResolver(jwtTokenProvider);
     }
 
