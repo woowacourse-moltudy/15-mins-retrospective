@@ -5,6 +5,7 @@ import java.util.List;
 import wooteco.retrospective.domain.member.Member;
 
 public class MembersResponse {
+
     private final List<Member> members;
 
     public MembersResponse(List<Member> members) {

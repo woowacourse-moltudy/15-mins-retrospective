@@ -6,13 +6,13 @@ import wooteco.retrospective.presentation.dto.member.MembersResponse;
 
 public class AttendanceByTimeResponse {
 
-    private Long conferenceTimeId;
+    private long conferenceTimeId;
     private MembersResponse members;
 
     public AttendanceByTimeResponse() {
     }
 
-    public AttendanceByTimeResponse(Long conferenceTimeId, MembersResponse members) {
+    public AttendanceByTimeResponse(long conferenceTimeId, MembersResponse members) {
         this.conferenceTimeId = conferenceTimeId;
         this.members = members;
     }

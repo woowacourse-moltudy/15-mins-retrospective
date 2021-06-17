@@ -19,8 +19,8 @@ import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
-@Transactional
 @Repository
+@Transactional
 public class AttendanceDao {
 
     private final JdbcTemplate jdbcTemplate;

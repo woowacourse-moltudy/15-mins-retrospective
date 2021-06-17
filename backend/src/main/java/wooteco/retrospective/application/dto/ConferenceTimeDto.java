@@ -3,6 +3,7 @@ package wooteco.retrospective.application.dto;
 import java.time.LocalTime;
 
 public class ConferenceTimeDto {
+
     private final Long id;
     private final LocalTime conferenceTime;
 

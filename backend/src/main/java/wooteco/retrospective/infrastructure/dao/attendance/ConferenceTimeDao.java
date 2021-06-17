@@ -11,10 +11,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 
 @Repository
+@Transactional
 public class ConferenceTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
