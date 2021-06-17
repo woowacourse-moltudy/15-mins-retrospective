@@ -1,5 +1,7 @@
 package wooteco.retrospective.domain.member;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class Member {
@@ -24,9 +26,8 @@ public class Member {
             throw new IllegalArgumentException();
         }
 
-        name = name.replaceAll(" ", "");
-
-        if (name.length() <= 0 || name.length() > MAX_LENGTH) {
+        if (name.length() <= 0 || name.length() > MAX_LENGTH ||
+                StringUtils.containsWhitespace(name)) {
             throw new IllegalArgumentException();
         }
     }

@@ -43,11 +43,12 @@ class Login extends React.Component {
     try {
       const _res = await axios({
         method: 'post',
-        url: 'http://localhost:3000/login',
+        url: `${process.env.REACT_APP_BASE_URL}/login`,
         data: _data
       })
       if (_res.status < 300) {
         localStorage.setItem('token', _res.data.token)
+        this.props.history.push('/')
       }
     } catch (err) {
       this.toggleValid(false)
@@ -55,7 +56,6 @@ class Login extends React.Component {
         validMessage: err.message
       })
     }
-
   }
 
   render() {
