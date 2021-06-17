@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 public interface TimeDao {
+
     List<Time> findAll();
 
     int update(Long timeId, Time time);

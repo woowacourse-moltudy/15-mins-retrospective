@@ -10,6 +10,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public interface AttendanceDao {
+
     Attendance insert(Attendance attendance);
 
     Attendance findById(long id);

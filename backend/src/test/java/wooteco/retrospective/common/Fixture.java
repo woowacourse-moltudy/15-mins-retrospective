@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Fixture {
+
     public static final LocalDate TODAY = LocalDate.of(2021, 6, 14);
     public static final LocalDate YESTERDAY = LocalDate.of(2021, 6, 13);
     public static final LocalTime TIME_SIX = LocalTime.of(18, 0);

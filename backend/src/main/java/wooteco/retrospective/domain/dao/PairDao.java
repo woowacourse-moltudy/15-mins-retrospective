@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public interface PairDao {
+
     Pairs insert(Pairs pairs);
 
     Optional<Pairs> findByDateAndTime(LocalDate date, Time time);
