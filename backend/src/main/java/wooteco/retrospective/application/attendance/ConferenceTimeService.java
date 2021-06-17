@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
 
 @Transactional(readOnly = true)
@@ -18,7 +19,7 @@ public class ConferenceTimeService {
 
     public ConferenceTimeDto findConferenceTimeById(long conferenceTimeId) {
         ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
-            .orElseThrow(RuntimeException::new);
+            .orElseThrow(NotFoundTimeException::new);
 
         return new ConferenceTimeDto(conferenceTime.getId(), conferenceTime.getConferenceTime());
     }

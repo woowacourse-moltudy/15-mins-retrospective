@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.exception.NotFoundMemberException;
+import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 @Transactional
@@ -29,8 +31,8 @@ public class AttendanceDao {
         new Attendance(
             resultSet.getLong("id"),
             resultSet.getObject("date", LocalDate.class),
-            memberDao.findById(resultSet.getLong("member_id")).orElseThrow(RuntimeException::new),
-            conferenceTimeDao.findById(resultSet.getLong("conference_time_id")).orElseThrow(RuntimeException::new)
+            memberDao.findById(resultSet.getLong("member_id")).orElseThrow(NotFoundMemberException::new),
+            conferenceTimeDao.findById(resultSet.getLong("conference_time_id")).orElseThrow(NotFoundTimeException::new)
         );
 
     public AttendanceDao(JdbcTemplate jdbcTemplate, MemberDao memberDao,
@@ -89,7 +91,7 @@ public class AttendanceDao {
         String query = "DELETE FROM ATTENDANCE WHERE member_id = ? AND conference_time_id = ?";
 
         if (jdbcTemplate.update(query, attendance.getMemberId(), attendance.getConferenceTimeId()) != 1) {
-            throw new RuntimeException();
+            throw new NotFoundTimeException();
         }
     }
 }

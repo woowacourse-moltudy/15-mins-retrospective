@@ -12,6 +12,8 @@ import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.exception.AlreadyExistTimeException;
+import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 import wooteco.retrospective.application.dto.MembersDto;
@@ -43,7 +45,7 @@ public class AttendanceService {
         Attendance attendance = createAttendance(attendanceRequest, ConferenceTime.of(conferenceTimeDto));
 
         if (attendanceDao.isExistSameTime(LocalDate.now(), attendance)) {
-            throw new IllegalArgumentException("이미 등록된 시간입니다.");
+            throw new AlreadyExistTimeException();
         }
     }
 
@@ -56,7 +58,7 @@ public class AttendanceService {
 
     private Attendance createAttendance(AttendanceRequest attendanceRequest, ConferenceTime conferenceTime) {
         Member member = memberDao.findById(attendanceRequest.getMemberId())
-            .orElseThrow(RuntimeException::new);
+            .orElseThrow(NotFoundMemberException::new);
 
         return new Attendance(member, conferenceTime);
     }

@@ -18,12 +18,14 @@ import org.springframework.test.context.jdbc.Sql;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.exception.NotFoundMemberException;
+import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 @JdbcTest
 @Sql("classpath:recreate-schema.sql")
 class AttendanceDaoTest {
-    private static final Member MEMBER_SALLY = new Member("sally");
+    private static final Member MEMBER_SALLY = new Member(1L, "sally");
     private static final ConferenceTime CONFERENCE_TIME_SIX = new ConferenceTime(1L, LocalTime.of(18, 0, 0));
 
     @Autowired
@@ -130,17 +132,17 @@ class AttendanceDaoTest {
         assertDoesNotThrow(() -> attendanceDao.delete(attendance));
     }
 
-    @DisplayName("존재하지 않는 멤버, 시간대에 따른 출석부를 삭제한다.")
+    @DisplayName("존재하지 않는 시간대에 따른 출석부를 삭제한다.")
     @Test
-    void deleteException() {
+    void deleteExceptionInvalidTime() {
         Attendance fakeAttendance = new Attendance(
-            new Member("fake"),
-            new ConferenceTime(LocalTime.of(10, 0))
+            MEMBER_SALLY,
+            new ConferenceTime(3L, LocalTime.of(10, 0))
         );
 
         assertThatThrownBy(() ->
             attendanceDao.delete(fakeAttendance)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(NotFoundTimeException.class);
     }
 
     private Attendance insertAttendance() {
