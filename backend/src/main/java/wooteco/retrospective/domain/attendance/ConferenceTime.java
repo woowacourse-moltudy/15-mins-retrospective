@@ -3,6 +3,8 @@ package wooteco.retrospective.domain.attendance;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
+
 public class ConferenceTime {
 
     private final Long id;
@@ -15,6 +17,10 @@ public class ConferenceTime {
     public ConferenceTime(Long id, LocalTime conferenceTime) {
         this.id = id;
         this.conferenceTime = conferenceTime;
+    }
+
+    public static ConferenceTime of(ConferenceTimeDto conferenceTimeDto) {
+        return new ConferenceTime(conferenceTimeDto.getId(), conferenceTimeDto.getConferenceTime());
     }
 
     public long getId() {

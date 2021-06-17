@@ -1,4 +1,4 @@
-package wooteco.retrospective.presentation;
+package wooteco.retrospective.presentation.attendance;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
+import wooteco.retrospective.application.attendance.ConferenceTimeService;
 import wooteco.retrospective.application.dto.AttendanceDto;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
@@ -53,6 +54,9 @@ class AttendanceControllerTest {
 
     @MockBean
     private AttendanceService attendanceService;
+
+    @MockBean
+    private ConferenceTimeService conferenceTimeService;
 
     @MockBean
     private ConferenceTimeDao conferenceTimeDao;
@@ -94,7 +98,7 @@ class AttendanceControllerTest {
     void getAttendances() throws Exception {
         insertAttendance();
 
-        given(attendanceService.findTimeById(CONFERENCE_TIME_SIX.getId()))
+        given(conferenceTimeService.findConferenceTimeById(CONFERENCE_TIME_SIX.getId()))
             .willReturn(CONFERENCE_TIME_DTO_SIX);
 
         given(attendanceService.findAttendanceByTime(CONFERENCE_TIME_DTO_SIX))
@@ -130,7 +134,10 @@ class AttendanceControllerTest {
             conferenceTimeDao.findById(CONFERENCE_TIME_SIX.getId()).orElseThrow(RuntimeException::new)
         );
 
-        given(attendanceService.postAttendance(any(AttendanceRequest.class)))
+        given(conferenceTimeService.findConferenceTimeById(1L))
+            .willReturn(CONFERENCE_TIME_DTO_SIX);
+
+        given(attendanceService.postAttendance(any(ConferenceTimeDto.class), any(AttendanceRequest.class)))
             .willReturn(attendanceDto);
         return attendanceRequest;
     }

@@ -13,7 +13,6 @@ import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
-import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 import wooteco.retrospective.presentation.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
@@ -22,21 +21,23 @@ import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 @Service
 public class AttendanceService {
 
+    private final ConferenceTimeService conferenceTimeService;
     private final AttendanceDao attendanceDao;
     private final MemberDao memberDao;
-    private final ConferenceTimeDao conferenceTimeDao;
 
-    public AttendanceService(AttendanceDao attendanceDao, MemberDao memberDao, ConferenceTimeDao conferenceTimeDao) {
+    public AttendanceService(ConferenceTimeService conferenceTimeService,
+        AttendanceDao attendanceDao, MemberDao memberDao) {
+        this.conferenceTimeService = conferenceTimeService;
         this.attendanceDao = attendanceDao;
         this.memberDao = memberDao;
-        this.conferenceTimeDao = conferenceTimeDao;
     }
 
     @Transactional
-    public AttendanceDto postAttendance(AttendanceRequest attendanceRequest) {
+    public AttendanceDto postAttendance(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
         validateTime(attendanceRequest);
 
-        Attendance attendance = createAttendance(attendanceRequest);
+        ConferenceTime conferenceTime = ConferenceTime.of(conferenceTimeDto);
+        Attendance attendance = createAttendance(attendanceRequest, conferenceTime);
         Attendance newAttendance = attendanceDao.insert(attendance);
 
         return new AttendanceDto(
@@ -57,24 +58,16 @@ public class AttendanceService {
         }
     }
 
-    @Transactional
-    public void deleteAttendance(AttendanceRequest attendanceRequest) {
-        attendanceDao.delete(attendanceRequest.getMemberId(), attendanceRequest.getConferenceTimeId());
-    }
-
-    private Attendance createAttendance(AttendanceRequest attendanceRequest) {
+    private Attendance createAttendance(AttendanceRequest attendanceRequest, ConferenceTime conferenceTime) {
         Member member = memberDao.findById(attendanceRequest.getMemberId())
             .orElseThrow(RuntimeException::new);
-        ConferenceTime conferenceTime = conferenceTimeDao.findById(attendanceRequest.getConferenceTimeId())
-            .orElseThrow(RuntimeException::new);
+
         return new Attendance(member, conferenceTime);
     }
 
-    public ConferenceTimeDto findTimeById(long conferenceTimeId) {
-        ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
-            .orElseThrow(RuntimeException::new);
-
-        return new ConferenceTimeDto(conferenceTime.getId(), conferenceTime.getConferenceTime());
+    @Transactional
+    public void deleteAttendance(AttendanceRequest attendanceRequest) {
+        attendanceDao.delete(attendanceRequest.getMemberId(), attendanceRequest.getConferenceTimeId());
     }
 
     public MembersDto findAttendanceByTime(ConferenceTimeDto conferenceTimeDto) {
