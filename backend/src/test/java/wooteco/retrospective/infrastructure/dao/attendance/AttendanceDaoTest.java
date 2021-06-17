@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.AttendanceDao;
+import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,8 +36,8 @@ class AttendanceDaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
-        timeDao = new TimeDao(jdbcTemplate);
-        attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, timeDao);
+        timeDao = new TimeDaoImpl(jdbcTemplate);
+        attendanceDao = new AttendanceDaoImpl(jdbcTemplate, memberDao, timeDao);
     }
 
     @Test
@@ -89,9 +89,7 @@ class AttendanceDaoTest {
                 TIME_SIX
         );
 
-        List<Attendance> attendance = attendanceDao.findByDate(
-                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        );
+        List<Attendance> attendance = attendanceDao.findByDate(now);
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }

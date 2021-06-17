@@ -27,6 +27,14 @@ public class Attendance {
         this.time = time;
     }
 
+    public boolean isAttendAt(Time time) {
+        return this.time.equals(time);
+    }
+
+    public boolean isAttendAt(LocalDate date) {
+        return this.date.equals(date);
+    }
+
     public long getId() {
         return id;
     }

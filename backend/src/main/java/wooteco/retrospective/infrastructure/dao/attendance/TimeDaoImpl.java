@@ -4,13 +4,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.TimeDao;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TimeDao {
+public class TimeDaoImpl implements TimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Time> rowMapper = (resultSet, rowNumber) ->
@@ -19,7 +20,7 @@ public class TimeDao {
                     resultSet.getObject("time", LocalTime.class)
             );
 
-    public TimeDao(JdbcTemplate jdbcTemplate) {
+    public TimeDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

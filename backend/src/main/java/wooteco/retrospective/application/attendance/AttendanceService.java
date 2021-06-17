@@ -2,11 +2,11 @@ package wooteco.retrospective.application.attendance;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wooteco.retrospective.dao.attendance.AttendanceDao;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.dao.AttendanceDao;
+import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.dao.attendance.TimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
