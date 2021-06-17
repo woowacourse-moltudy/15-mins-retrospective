@@ -18,6 +18,9 @@ import wooteco.retrospective.domain.dao.TimeDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
+import wooteco.retrospective.exception.InvalidConferenceTimeException;
+import wooteco.retrospective.exception.InvalidDateException;
+import wooteco.retrospective.exception.InvalidTimeException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -133,7 +136,7 @@ class PairServiceTest {
                         LocalTime.of(18, 0),
                         LocalTime.of(19, 0)
                 )
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(InvalidDateException.class);
     }
 
     @DisplayName("회고 시간 전에 매칭을 요청하면 예외")
@@ -146,7 +149,7 @@ class PairServiceTest {
                         LocalTime.of(requestTime, 0),
                         LocalTime.of(currentTime, 0)
                 )
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(InvalidTimeException.class);
     }
 
     @DisplayName("잘못된 회고 시간을 줄 경우 예외")
@@ -158,6 +161,6 @@ class PairServiceTest {
                         LocalTime.of(1, 0),
                         LocalTime.now()
                 )
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(InvalidConferenceTimeException.class);
     }
 }
