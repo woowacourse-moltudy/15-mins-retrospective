@@ -12,13 +12,13 @@ import wooteco.retrospective.presentation.auth.TokenToNameArgumentResolver;
 import java.util.List;
 
 @Configuration
-public class TokenToNamelConfig implements WebMvcConfigurer {
+public class TokenToNameConfig implements WebMvcConfigurer {
 
     @Value("${server.front.origin}")
     private String allowOrigin;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public TokenToNamelConfig(JwtTokenProvider jwtTokenProvider) {
+    public TokenToNameConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
