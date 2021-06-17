@@ -43,7 +43,7 @@ class Login extends React.Component {
     try {
       const _res = await axios({
         method: 'post',
-        url: `${process.env.BASE_URL}/login`,
+        url: `${process.env.REACT_APP_BASE_URL}/login`,
         data: _data
       })
       if (_res.status < 300) {

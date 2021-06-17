@@ -1,10 +1,42 @@
 import React from 'react'
 import styled from 'styled-components'
 import EnrollButton from "../components/EnrollButton";
+import axios from "axios";
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      member: "",
+      token: ""
+    }
+  }
+
+  setToken() {
+    this.setState({
+      token: localStorage.getItem('token')
+    })
+  }
+
+  async getMemberInfo() {
+    const _res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BASE_URL}/member`,
+      headers: {
+        Authorization: `Bearer ${this.state.token}`
+      }
+    })
+
+    if (_res.status === 200) {
+      this.setState({
+        member: _res.data
+      })
+    }
+  }
+
+  async componentDidMount() {
+    await this.setToken()
+    await this.getMemberInfo()
   }
 
   render() {
@@ -15,7 +47,7 @@ class Main extends React.Component {
             <StInfo>
               <StImg src="/logo.png"/>
               <StHead>15분 회고</StHead>
-              <StName>닉네임</StName>
+              <StName>{this.state.member.name}</StName>
             </StInfo>
             <StRule>
               <StRuleItem>✔ ️오후 6시, 10시 중 원하는 시간을 선택</StRuleItem>
