@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -27,12 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.attendance.ConferenceTimeService;
-import wooteco.retrospective.application.dto.AttendanceDto;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
+import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
-import wooteco.retrospective.presentation.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.member.MemberController;
 
@@ -73,9 +71,6 @@ class AttendanceControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("date").value(LocalDate.now().toString()))
-            .andExpect(jsonPath("member.name").value("dani"))
-            .andExpect(jsonPath("conferenceTime.conferenceTime").value("18:00:00"))
             .andDo(print())
             .andDo(document("attendance/post"));
     }
@@ -88,7 +83,7 @@ class AttendanceControllerTest {
         mockMvc.perform(delete("/api/time")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
-            .andExpect(status().isOk())
+            .andExpect(status().isNoContent())
             .andDo(print())
             .andDo(document("attendance/delete"));
     }
@@ -108,8 +103,8 @@ class AttendanceControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("conferenceTimeId").value(CONFERENCE_TIME_SIX.getId()))
-            .andExpect(jsonPath("members[0].id").value(DANI.getId()))
-            .andExpect(jsonPath("members[0].name").value(DANI.getName()))
+            .andExpect(jsonPath("members.members[0].id").value(DANI.getId()))
+            .andExpect(jsonPath("members.members[0].name").value(DANI.getName()))
             .andDo(print())
             .andDo(document("attendance/get"));
     }
@@ -127,18 +122,9 @@ class AttendanceControllerTest {
             DANI.getId()
         );
 
-        AttendanceDto attendanceDto = new AttendanceDto(
-            1L,
-            LocalDate.now(),
-            DANI,     //TODO: db로부터 가져오기
-            conferenceTimeDao.findById(CONFERENCE_TIME_SIX.getId()).orElseThrow(RuntimeException::new)
-        );
-
         given(conferenceTimeService.findConferenceTimeById(1L))
             .willReturn(CONFERENCE_TIME_DTO_SIX);
 
-        given(attendanceService.postAttendance(any(ConferenceTimeDto.class), any(AttendanceRequest.class)))
-            .willReturn(attendanceDto);
         return attendanceRequest;
     }
 }

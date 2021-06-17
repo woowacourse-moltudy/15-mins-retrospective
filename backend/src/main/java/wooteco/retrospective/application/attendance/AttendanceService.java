@@ -14,7 +14,7 @@ import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
-import wooteco.retrospective.presentation.dto.MembersDto;
+import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 @Transactional(readOnly = true)
@@ -30,19 +30,13 @@ public class AttendanceService {
     }
 
     @Transactional
-    public AttendanceDto postAttendance(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
+    public void postAttendance(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
         validateTime(conferenceTimeDto, attendanceRequest);
 
         ConferenceTime conferenceTime = ConferenceTime.of(conferenceTimeDto);
         Attendance attendance = createAttendance(attendanceRequest, conferenceTime);
-        Attendance newAttendance = attendanceDao.insert(attendance);
 
-        return new AttendanceDto(
-            newAttendance.getId(),
-            newAttendance.getDate(),
-            newAttendance.getMember(),
-            newAttendance.getConferenceTime()
-        );
+        attendanceDao.insert(attendance);
     }
 
     private void validateTime(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {

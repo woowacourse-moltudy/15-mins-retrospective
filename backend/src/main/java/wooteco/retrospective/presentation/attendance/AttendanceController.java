@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.attendance.ConferenceTimeService;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
-import wooteco.retrospective.presentation.dto.MembersDto;
+import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceByTimeResponse;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceResponse;
 
 @RestController
 @RequestMapping("/api/time")
@@ -32,21 +31,21 @@ public class AttendanceController {
     }
 
     @PostMapping
-    public ResponseEntity<AttendanceResponse> postTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
-        ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(
-            attendanceRequest.getConferenceTimeId());
-        AttendanceResponse attendanceResponse =
-            AttendanceResponse.of(attendanceService.postAttendance(conferenceTimeDto, attendanceRequest));
+    public ResponseEntity<Void> postTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
+        ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(attendanceRequest.getConferenceTimeId());
 
-        return ResponseEntity.ok().body(attendanceResponse);
+        attendanceService.postAttendance(conferenceTimeDto, attendanceRequest);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
         ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(attendanceRequest.getConferenceTimeId());
+
         attendanceService.deleteAttendance(conferenceTimeDto, attendanceRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{conferenceTimeId}")

@@ -1,4 +1,4 @@
-package wooteco.retrospective.presentation.dto;
+package wooteco.retrospective.application.dto;
 
 import java.util.List;
 
