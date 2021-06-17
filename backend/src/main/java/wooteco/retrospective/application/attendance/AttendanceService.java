@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import wooteco.retrospective.application.dto.AttendanceDto;
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
+import wooteco.retrospective.presentation.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 @Transactional(readOnly = true)
@@ -30,12 +33,18 @@ public class AttendanceService {
     }
 
     @Transactional
-    public Attendance postAttendance(AttendanceRequest attendanceRequest) {
+    public AttendanceDto postAttendance(AttendanceRequest attendanceRequest) {
         validateTime(attendanceRequest);
 
         Attendance attendance = createAttendance(attendanceRequest);
+        Attendance newAttendance = attendanceDao.insert(attendance);
 
-        return attendanceDao.insert(attendance);
+        return new AttendanceDto(
+            newAttendance.getId(),
+            newAttendance.getDate(),
+            newAttendance.getMember(),
+            newAttendance.getConferenceTime()
+        );
     }
 
     private void validateTime(AttendanceRequest attendanceRequest) {
@@ -63,14 +72,17 @@ public class AttendanceService {
         return new Attendance(member, conferenceTime);
     }
 
-    public ConferenceTime findTimeById(long conferenceTimeId) {
-        return conferenceTimeDao.findById(conferenceTimeId)
+    public ConferenceTimeDto findTimeById(long conferenceTimeId) {
+        ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
             .orElseThrow(RuntimeException::new);
+
+        return new ConferenceTimeDto(conferenceTime.getId(), conferenceTime.getConferenceTime());
     }
 
-    public List<Member> findAttendanceByTime(ConferenceTime conferenceTime) {
-        return attendanceDao.findByTime(LocalDate.now(), conferenceTime.getId()).stream()
+    public MembersDto findAttendanceByTime(ConferenceTimeDto conferenceTimeDto) {
+        List<Member> members = attendanceDao.findByTime(LocalDate.now(), conferenceTimeDto.getId()).stream()
             .map(Attendance::getMember)
             .collect(Collectors.toList());
+        return new MembersDto(members);
     }
 }

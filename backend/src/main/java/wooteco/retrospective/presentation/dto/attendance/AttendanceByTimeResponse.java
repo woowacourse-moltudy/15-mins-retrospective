@@ -2,8 +2,9 @@ package wooteco.retrospective.presentation.dto.attendance;
 
 import java.util.List;
 
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.presentation.dto.MembersDto;
 
 public class AttendanceByTimeResponse {
 
@@ -18,8 +19,8 @@ public class AttendanceByTimeResponse {
         this.members = members;
     }
 
-    public static AttendanceByTimeResponse of(ConferenceTime conferenceTime, List<Member> members) {
-        return new AttendanceByTimeResponse(conferenceTime.getId(), members);
+    public static AttendanceByTimeResponse of(ConferenceTimeDto conferenceTime, MembersDto members) {
+        return new AttendanceByTimeResponse(conferenceTime.getId(), members.getMembers());
     }
 
     public Long getConferenceTimeId() {

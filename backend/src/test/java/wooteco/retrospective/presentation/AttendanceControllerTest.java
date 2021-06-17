@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -27,11 +26,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.domain.attendance.Attendance;
+import wooteco.retrospective.application.dto.AttendanceDto;
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
+import wooteco.retrospective.presentation.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
+import wooteco.retrospective.presentation.member.MemberController;
 
 @DisplayName("출석부 - Controller 테스트")
 @WebMvcTest
@@ -39,7 +41,9 @@ import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 @Import(RestDocsConfiguration.class)
 class AttendanceControllerTest {
     public static final ConferenceTime CONFERENCE_TIME_SIX = new ConferenceTime(1L, LocalTime.of(18, 0, 0));
+    public static final ConferenceTimeDto CONFERENCE_TIME_DTO_SIX = new ConferenceTimeDto(1L, LocalTime.of(18, 0, 0));
     public static final Member DANI = new Member(1L, "dani");
+    public static final MembersDto MEMBERS_DTO = new MembersDto(Collections.singletonList(DANI));
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,6 +56,9 @@ class AttendanceControllerTest {
 
     @MockBean
     private ConferenceTimeDao conferenceTimeDao;
+
+    @MockBean
+    private MemberController memberController;
 
     @DisplayName("회고 시간을 등록한다.")
     @Test
@@ -86,13 +93,12 @@ class AttendanceControllerTest {
     @Test
     void getAttendances() throws Exception {
         insertAttendance();
-        List<Member> members = Collections.singletonList(DANI);
 
         given(attendanceService.findTimeById(CONFERENCE_TIME_SIX.getId()))
-            .willReturn(CONFERENCE_TIME_SIX);
+            .willReturn(CONFERENCE_TIME_DTO_SIX);
 
-        given(attendanceService.findAttendanceByTime(CONFERENCE_TIME_SIX))
-            .willReturn(members);
+        given(attendanceService.findAttendanceByTime(CONFERENCE_TIME_DTO_SIX))
+            .willReturn(MEMBERS_DTO);
 
         mockMvc.perform(get("/api/time/1")
             .contentType(MediaType.APPLICATION_JSON))
@@ -117,14 +123,15 @@ class AttendanceControllerTest {
             DANI.getId()
         );
 
-        Attendance attendance = new Attendance(
+        AttendanceDto attendanceDto = new AttendanceDto(
+            1L,
             LocalDate.now(),
             DANI,     //TODO: db로부터 가져오기
             conferenceTimeDao.findById(CONFERENCE_TIME_SIX.getId()).orElseThrow(RuntimeException::new)
         );
 
         given(attendanceService.postAttendance(any(AttendanceRequest.class)))
-            .willReturn(attendance);
+            .willReturn(attendanceDto);
         return attendanceRequest;
     }
 }

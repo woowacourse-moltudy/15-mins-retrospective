@@ -1,7 +1,5 @@
 package wooteco.retrospective.presentation.attendance;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -14,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
-import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
+import wooteco.retrospective.presentation.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceByTimeResponse;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceResponse;
@@ -47,11 +45,11 @@ public class AttendanceController {
 
     @GetMapping("/{conferenceTimeId}")
     public ResponseEntity<AttendanceByTimeResponse> getTime(@PathVariable("conferenceTimeId") long conferenceTimeId) {
-        ConferenceTime conferenceTime = attendanceService.findTimeById(conferenceTimeId);
-        List<Member> members = attendanceService.findAttendanceByTime(conferenceTime);
+        ConferenceTimeDto conferenceTimeDto = attendanceService.findTimeById(conferenceTimeId);
+        MembersDto membersDto = attendanceService.findAttendanceByTime(conferenceTimeDto);
 
         AttendanceByTimeResponse attendanceByTimeResponse
-            = AttendanceByTimeResponse.of(conferenceTime, members);
+            = AttendanceByTimeResponse.of(conferenceTimeDto, membersDto);
 
         return ResponseEntity.ok().body(attendanceByTimeResponse);
     }
