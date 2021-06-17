@@ -120,7 +120,7 @@ class AttendanceDaoTest {
             CONFERENCE_TIME_SIX
         );
 
-        List<Attendance> attendance = attendanceDao.findByTime(now, 1L);
+        List<Attendance> attendance = attendanceDao.findByDateTime(now, 1L);
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }

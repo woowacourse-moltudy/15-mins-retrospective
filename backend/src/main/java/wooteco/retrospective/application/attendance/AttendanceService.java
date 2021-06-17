@@ -80,7 +80,7 @@ public class AttendanceService {
     }
 
     public MembersDto findAttendanceByTime(ConferenceTimeDto conferenceTimeDto) {
-        List<Member> members = attendanceDao.findByTime(LocalDate.now(), conferenceTimeDto.getId()).stream()
+        List<Member> members = attendanceDao.findByDateTime(LocalDate.now(), conferenceTimeDto.getId()).stream()
             .map(Attendance::getMember)
             .collect(Collectors.toList());
         return new MembersDto(members);

@@ -76,7 +76,7 @@ public class AttendanceDao {
         return jdbcTemplate.query(query, rowMapper, date);
     }
 
-    public List<Attendance> findByTime(LocalDate date, long conferenceTimeId) {
+    public List<Attendance> findByDateTime(LocalDate date, long conferenceTimeId) {
         String query = "SELECT * FROM ATTENDANCE WHERE date = ? AND conference_time_id = ?";
 
         return jdbcTemplate.query(query, rowMapper, date, conferenceTimeId);
