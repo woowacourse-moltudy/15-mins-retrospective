@@ -33,7 +33,8 @@ public class AttendanceController {
 
     @PostMapping
     public ResponseEntity<AttendanceResponse> postTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
-        ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(attendanceRequest.getConferenceTimeId());
+        ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(
+            attendanceRequest.getConferenceTimeId());
         AttendanceResponse attendanceResponse =
             AttendanceResponse.of(attendanceService.postAttendance(conferenceTimeDto, attendanceRequest));
 
@@ -42,7 +43,8 @@ public class AttendanceController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteTime(@Valid @RequestBody AttendanceRequest attendanceRequest) {
-        attendanceService.deleteAttendance(attendanceRequest);
+        ConferenceTimeDto conferenceTimeDto = conferenceTimeService.findConferenceTimeById(attendanceRequest.getConferenceTimeId());
+        attendanceService.deleteAttendance(conferenceTimeDto, attendanceRequest);
 
         return ResponseEntity.ok().build();
     }

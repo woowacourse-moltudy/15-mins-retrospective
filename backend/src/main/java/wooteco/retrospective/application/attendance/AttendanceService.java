@@ -21,20 +21,17 @@ import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 @Service
 public class AttendanceService {
 
-    private final ConferenceTimeService conferenceTimeService;
     private final AttendanceDao attendanceDao;
     private final MemberDao memberDao;
 
-    public AttendanceService(ConferenceTimeService conferenceTimeService,
-        AttendanceDao attendanceDao, MemberDao memberDao) {
-        this.conferenceTimeService = conferenceTimeService;
+    public AttendanceService(AttendanceDao attendanceDao, MemberDao memberDao) {
         this.attendanceDao = attendanceDao;
         this.memberDao = memberDao;
     }
 
     @Transactional
     public AttendanceDto postAttendance(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
-        validateTime(attendanceRequest);
+        validateTime(conferenceTimeDto, attendanceRequest);
 
         ConferenceTime conferenceTime = ConferenceTime.of(conferenceTimeDto);
         Attendance attendance = createAttendance(attendanceRequest, conferenceTime);
@@ -48,14 +45,19 @@ public class AttendanceService {
         );
     }
 
-    private void validateTime(AttendanceRequest attendanceRequest) {
-        if (attendanceDao.isExistSameTime(
-            LocalDate.now(),
-            attendanceRequest.getMemberId(),
-            attendanceRequest.getConferenceTimeId()
-        )) {
+    private void validateTime(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
+        Attendance attendance = createAttendance(attendanceRequest, ConferenceTime.of(conferenceTimeDto));
+
+        if (attendanceDao.isExistSameTime(LocalDate.now(), attendance)) {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }
+    }
+
+    @Transactional
+    public void deleteAttendance(ConferenceTimeDto conferenceTimeDto, AttendanceRequest attendanceRequest) {
+        Attendance attendance = createAttendance(attendanceRequest, ConferenceTime.of(conferenceTimeDto));
+
+        attendanceDao.delete(attendance);
     }
 
     private Attendance createAttendance(AttendanceRequest attendanceRequest, ConferenceTime conferenceTime) {
@@ -65,13 +67,9 @@ public class AttendanceService {
         return new Attendance(member, conferenceTime);
     }
 
-    @Transactional
-    public void deleteAttendance(AttendanceRequest attendanceRequest) {
-        attendanceDao.delete(attendanceRequest.getMemberId(), attendanceRequest.getConferenceTimeId());
-    }
-
     public MembersDto findAttendanceByTime(ConferenceTimeDto conferenceTimeDto) {
-        List<Member> members = attendanceDao.findByDateTime(LocalDate.now(), conferenceTimeDto.getId()).stream()
+        ConferenceTime conferenceTime = ConferenceTime.of(conferenceTimeDto);
+        List<Member> members = attendanceDao.findByDateTime(LocalDate.now(), conferenceTime).stream()
             .map(Attendance::getMember)
             .collect(Collectors.toList());
         return new MembersDto(members);

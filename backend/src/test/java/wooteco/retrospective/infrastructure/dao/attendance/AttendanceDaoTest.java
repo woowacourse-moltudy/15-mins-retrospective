@@ -68,26 +68,22 @@ class AttendanceDaoTest {
     @Test
     void existSameTime() {
         insertAttendance();
+
         Attendance attendance = attendanceDao.findById(1L);
-
         LocalDate now = LocalDate.now();
-        long memberId = attendance.getMemberId();
-        long conferenceTimeId = attendance.getConferenceTimeId();
 
-        assertThat(attendanceDao.isExistSameTime(now, memberId, conferenceTimeId)).isTrue();
+        assertThat(attendanceDao.isExistSameTime(now, attendance)).isTrue();
     }
 
     @DisplayName("다른 날짜에 같은 멤버가 같은 시간에 있는지 조회한다.")
     @Test
     void existSameTimeException() {
         insertAttendance();
+
         Attendance attendance = attendanceDao.findById(1L);
-
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        long memberId = attendance.getMemberId();
-        long conferenceTimeId = attendance.getConferenceTimeId();
 
-        assertThat(attendanceDao.isExistSameTime(yesterday, memberId, conferenceTimeId)).isFalse();
+        assertThat(attendanceDao.isExistSameTime(yesterday, attendance)).isFalse();
     }
 
     @DisplayName("날짜에 따른 출석부를 조회한다.")
@@ -121,7 +117,7 @@ class AttendanceDaoTest {
             CONFERENCE_TIME_SIX
         );
 
-        List<Attendance> attendance = attendanceDao.findByDateTime(now, 1L);
+        List<Attendance> attendance = attendanceDao.findByDateTime(now, CONFERENCE_TIME_SIX);
 
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }
@@ -131,7 +127,7 @@ class AttendanceDaoTest {
     void delete() {
         Attendance attendance = insertAttendance();
 
-        assertDoesNotThrow(() -> attendanceDao.delete(attendance.getMemberId(), attendance.getConferenceTimeId()));
+        assertDoesNotThrow(() -> attendanceDao.delete(attendance));
     }
 
     @DisplayName("존재하지 않는 멤버, 시간대에 따른 출석부를 삭제한다.")
@@ -143,7 +139,7 @@ class AttendanceDaoTest {
         );
 
         assertThatThrownBy(() ->
-            attendanceDao.delete(fakeAttendance.getMemberId(), fakeAttendance.getConferenceTimeId())
+            attendanceDao.delete(fakeAttendance)
         ).isInstanceOf(RuntimeException.class);
     }
 

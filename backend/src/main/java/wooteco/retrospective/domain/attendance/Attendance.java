@@ -1,6 +1,7 @@
 package wooteco.retrospective.domain.attendance;
 
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 import java.time.LocalDate;
 import java.util.Objects;

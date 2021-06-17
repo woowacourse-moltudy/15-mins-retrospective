@@ -11,10 +11,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.domain.attendance.Attendance;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
+@Transactional
 @Repository
 public class AttendanceDao {
 
@@ -64,10 +67,10 @@ public class AttendanceDao {
         return jdbcTemplate.queryForObject(query, rowMapper, id);
     }
 
-    public boolean isExistSameTime(LocalDate date, long memberId, long conferenceTimeId) {
+    public boolean isExistSameTime(LocalDate date, Attendance attendance) {
         String query = "SELECT EXISTS (SELECT * FROM ATTENDANCE WHERE date = ? AND member_id = ? AND conference_time_id = ?)";
 
-        return jdbcTemplate.queryForObject(query, boolean.class, date, memberId, conferenceTimeId);
+        return jdbcTemplate.queryForObject(query, boolean.class, date, attendance.getMemberId(), attendance.getConferenceTimeId());
     }
 
     public List<Attendance> findByDate(LocalDate date) {
@@ -76,16 +79,16 @@ public class AttendanceDao {
         return jdbcTemplate.query(query, rowMapper, date);
     }
 
-    public List<Attendance> findByDateTime(LocalDate date, long conferenceTimeId) {
+    public List<Attendance> findByDateTime(LocalDate date, ConferenceTime conferenceTime) {
         String query = "SELECT * FROM ATTENDANCE WHERE date = ? AND conference_time_id = ?";
 
-        return jdbcTemplate.query(query, rowMapper, date, conferenceTimeId);
+        return jdbcTemplate.query(query, rowMapper, date, conferenceTime.getId());
     }
 
-    public void delete(long memberId, long conferenceTimeId) {
+    public void delete(Attendance attendance) {
         String query = "DELETE FROM ATTENDANCE WHERE member_id = ? AND conference_time_id = ?";
 
-        if(jdbcTemplate.update(query, memberId, conferenceTimeId) != 1) {
+        if (jdbcTemplate.update(query, attendance.getMemberId(), attendance.getConferenceTimeId()) != 1) {
             throw new RuntimeException();
         }
     }
