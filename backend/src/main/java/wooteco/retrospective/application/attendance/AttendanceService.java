@@ -59,9 +59,7 @@ public class AttendanceService {
 
     @Transactional
     public void deleteAttendance(AttendanceRequest attendanceRequest) {
-        if (attendanceDao.delete(attendanceRequest.getMemberId(), attendanceRequest.getConferenceTimeId()) != 1) {
-            throw new RuntimeException();
-        }
+        attendanceDao.delete(attendanceRequest.getMemberId(), attendanceRequest.getConferenceTimeId());
     }
 
     private Attendance createAttendance(AttendanceRequest attendanceRequest) {

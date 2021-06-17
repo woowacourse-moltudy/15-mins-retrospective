@@ -1,6 +1,7 @@
 package wooteco.retrospective.infrastructure.dao.attendance;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -130,8 +131,20 @@ class AttendanceDaoTest {
     void delete() {
         Attendance attendance = insertAttendance();
 
-        int deleteCount = attendanceDao.delete(attendance.getMemberId(), attendance.getConferenceTimeId());
-        assertThat(deleteCount).isEqualTo(1);
+        assertDoesNotThrow(() -> attendanceDao.delete(attendance.getMemberId(), attendance.getConferenceTimeId()));
+    }
+
+    @DisplayName("존재하지 않는 멤버, 시간대에 따른 출석부를 삭제한다.")
+    @Test
+    void deleteException() {
+        Attendance fakeAttendance = new Attendance(
+            new Member("fake"),
+            new ConferenceTime(LocalTime.of(10, 0))
+        );
+
+        assertThatThrownBy(() ->
+            attendanceDao.delete(fakeAttendance.getMemberId(), fakeAttendance.getConferenceTimeId())
+        ).isInstanceOf(RuntimeException.class);
     }
 
     private Attendance insertAttendance() {
