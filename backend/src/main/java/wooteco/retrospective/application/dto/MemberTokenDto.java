@@ -13,8 +13,8 @@ public class MemberTokenDto {
         this.token = token;
     }
 
-    public static MemberTokenDto from(Member member) {
-        return new MemberTokenDto(member.getName());
+    public static MemberTokenDto from(String token) {
+        return new MemberTokenDto(token);
     }
 
     public String getToken() {
