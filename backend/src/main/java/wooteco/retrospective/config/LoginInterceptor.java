@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public LoginInterceptor(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
