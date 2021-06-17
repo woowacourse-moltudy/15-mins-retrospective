@@ -121,20 +121,28 @@ const StInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   width: 100%;
 `
 
 const StImg = styled.img`
   width: 2rem;
+  position: absolute;
+  left: 0;
 `
 
 const StHead = styled.div`
   font-size: 1.3rem;
   font-family: 'Hanna-Pro';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `
 
 const StName = styled.div`
   font-size: 1.2rem;
+  position: absolute;
+  right: 0;
 `
 
 const StRule = styled.div`
