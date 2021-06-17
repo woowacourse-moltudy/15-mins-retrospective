@@ -1,4 +1,4 @@
-package wooteco.retrospective.domain.dto;
+package wooteco.retrospective.application.dto;
 
 import wooteco.retrospective.domain.member.Member;
 

@@ -3,7 +3,6 @@ package wooteco.retrospective.presentation.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,9 +14,8 @@ import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
-import wooteco.retrospective.domain.dto.MemberDTO;
+import wooteco.retrospective.application.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.presentation.dto.member.MemberResponse;
 import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 

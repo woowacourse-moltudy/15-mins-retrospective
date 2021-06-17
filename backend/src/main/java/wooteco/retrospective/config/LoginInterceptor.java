@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        Optional.ofNullable( request.getHeader(HttpHeaders.AUTHORIZATION))
+        Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
                 .orElseThrow(() -> new AuthorizationException("존재하지 않는 토큰입니다."));
 
         String token = AuthorizationExtractor.extract(request);

@@ -1,8 +1,7 @@
 package wooteco.retrospective.presentation.dto.member;
 
 
-import wooteco.retrospective.domain.dto.MemberDTO;
-import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.application.dto.MemberDTO;
 
 public class MemberResponse {
 
