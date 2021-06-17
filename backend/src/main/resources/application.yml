@@ -7,9 +7,11 @@ spring:
   h2:
     console:
       enabled: true
+
 server:
   front:
     origin: http://localhost:3000
+
 security:
   jwt:
     token:
