@@ -8,7 +8,8 @@ class Main extends React.Component {
     super(props);
     this.state = {
       member: "",
-      token: ""
+      token: "",
+      times: []
     }
   }
 
@@ -17,6 +18,23 @@ class Main extends React.Component {
       token: localStorage.getItem('token')
     })
   }
+
+  async getTimeTable() {
+    const _res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BASE_URL}/time`,
+      headers: {
+        Authorization: `Bearer ${this.state.token}`
+      }
+    })
+
+    if (_res.status === 200) {
+      this.setState({
+        times: _res.data.timesResponse
+      })
+    }
+  }
+
 
   async getMemberInfo() {
     const _res = await axios({
@@ -37,9 +55,13 @@ class Main extends React.Component {
   async componentDidMount() {
     await this.setToken()
     await this.getMemberInfo()
+    await this.getTimeTable()
   }
 
   render() {
+    const Conferences = this.state.times.map((time) => {
+      return <EnrollButton key={time.id} time={time.conferenceTime}/>
+    })
     return (
       <StDiv>
         <StContainer>
@@ -58,8 +80,7 @@ class Main extends React.Component {
             <div/>
           </StHeading>
           <StContents>
-            <EnrollButton time={"18"}/>
-            <EnrollButton time={"22"}/>
+            {Conferences}
           </StContents>
         </StContainer>
       </StDiv>
@@ -88,7 +109,7 @@ const StDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   height: 100vh;
 `
 
@@ -111,7 +132,7 @@ const StContents = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   width: 90%;
   height: 60%;
   padding: 5%;
