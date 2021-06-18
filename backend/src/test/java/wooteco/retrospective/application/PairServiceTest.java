@@ -182,6 +182,6 @@ class PairServiceTest {
                                 LocalTime.of(1, 0)
                         )
                 )
-        ).isInstanceOf(InvalidConferenceTimeException.class);
+        ).isInstanceOf(InvalidTimeException.class);
     }
 }

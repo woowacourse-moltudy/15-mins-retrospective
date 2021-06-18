@@ -16,7 +16,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@RequestMapping("/pairs")
+@RequestMapping("/api/pairs")
 @RestController
 public class PairController {
 
