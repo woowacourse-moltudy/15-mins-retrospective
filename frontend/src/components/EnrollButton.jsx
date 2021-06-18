@@ -2,41 +2,100 @@ import React from 'react'
 import styled from 'styled-components'
 import Enroll from './Enroll'
 import PairMatch from './PairMatch';
+import {addInMembers, deleteInMembers, getMembers, getPairs} from '../apis/MainApi';
 
 class EnrollButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      members: ["웨지", "다니", "샐리", "손너잘", "피카", "현구막", "소롱", "파즈", "김김", "코다", "포모", "나봄", "에드", "삭정", "춘식", "파피", "오즈"],
-      pairs: [
-        ["웨지", "다니"],
-        ["샐리", "손너잘"],
-        ["피카", "현구막"],
-        ["소롱", "파즈"],
-        ["김김", "코다", "포모"]
-      ],
-      isEnd: false
+      members: [],
+      pairs: [],
+      isEnd: false,
+      updateFlag: false
     }
   }
 
-  checkTime() {
+  async checkTime() {
     const now = new Date()
     const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.props.time, 0, 0)
     if (now > target) {
-      this.setState({
+      await this.setState({
         isEnd: true
       })
     }
   }
 
-  componentDidMount() {
-    this.checkTime()
+  async getPairs() {
+    const _now = new Date()
+    const _date = _now.toJSON().substring(0, 10)
+    const _res = await getPairs(this.props.id, _date, this.props.token)
+    if (_res.status === 200) {
+      this.setState({
+        pairs: _res.data
+      })
+    }
   }
 
+  async getMembers() {
+    const _res = await getMembers(this.props.id, this.props.token)
+    if (_res.status === 200) {
+      this.setState({
+        members: _res.data.members.members
+      })
+    }
+  }
+
+  handleEnroll = () => {
+    const _ids = this.state.members.map((member) => member.id)
+    if (_ids.includes(this.props.member.id)) {
+      this.deleteInMembers()
+    } else {
+      this.addInMembers()
+    }
+  }
+
+  async addInMembers() {
+    const _res = await addInMembers(this.props.id, this.props.member.id, this.props.token)
+    if (_res.status === 200) {
+      this.setState({
+        updateFlag: true
+      })
+    }
+  }
+
+  async deleteInMembers() {
+    const _res = await deleteInMembers(this.props.id, this.props.member.id, this.props.token)
+    if (_res.status === 204) {
+      this.setState({
+        updateFlag: true
+      })
+    }
+  }
+
+  async componentDidMount() {
+    await this.checkTime()
+    if (this.state.isEnd) {
+      await this.getPairs()
+    } else {
+      await this.getMembers()
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.updateFlag) {
+      this.getMembers()
+      this.setState({
+        updateFlag: false
+      })
+    }
+  }
 
   render() {
     return (
-      <StContainer disabled={this.state.isEnd}>
+      <StContainer
+        disabled={this.state.isEnd}
+        onClick={this.handleEnroll}
+      >
         {this.state.isEnd
           ? <PairMatch
             pairs={this.state.pairs}

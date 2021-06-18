@@ -6,16 +6,17 @@ class PairMatch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      emoji: ["🍎", "🍊", "🥝", "🥑", "🥦", "🥕", "🥔", "🍆"]
+      emoji: ['🍎', '🍊', '🥝', '🥑', '🥦', '🥕', '🥔', '🍆', '🥒', '🍍', '🍑', '🌽', '🍓', '🍇', '🍋', '🍠', '🥜']
     }
   }
 
   render() {
     const PrintPairs = this.props.pairs.map((pair) => {
-      return <Pair pair={pair} key={pair} emoji={this.state.emoji[this.props.pairs.indexOf(pair)]}/>
+      const _emoji = this.state.emoji
+      return <Pair pair={pair} key={pair} emoji={_emoji[Math.floor(Math.random() * _emoji.length)]}/>
     })
 
-    return(
+    return (
       <StContainer>
         <StHead>종료!</StHead>
         <StPairs>
@@ -51,7 +52,7 @@ const StPairs = styled.div`
   grid-gap: 5px;
   justify-content: center;
   align-items: center;
-  
+
   width: 90%;
   height: 100%;
   padding: 0.5rem

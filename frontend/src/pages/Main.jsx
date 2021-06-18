@@ -1,14 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
-import EnrollButton from "../components/EnrollButton";
-import axios from "axios";
+import EnrollButton from '../components/EnrollButton';
+import {getMember} from '../apis/LoginApi';
+import {getTimes} from '../apis/MainApi';
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       member: "",
-      token: ""
+      token: "",
+      times: []
     }
   }
 
@@ -18,15 +20,25 @@ class Main extends React.Component {
     })
   }
 
-  async getMemberInfo() {
-    const _res = await axios({
-      method: 'get',
-      url: `${process.env.REACT_APP_BASE_URL}/member`,
-      headers: {
-        Authorization: `Bearer ${this.state.token}`
-      }
-    })
+  async getTimes() {
+    const _res = await getTimes(this.state.token)
+    if (_res.status === 200) {
+      let times = _res.data.timesResponse
+      this.timeFormat(times);
+      this.setState({
+        times: _res.data.timesResponse
+      })
+    }
+  }
 
+  timeFormat(times) {
+    for (let time of times) {
+      time.conferenceTime = time.conferenceTime.substring(0, 2)
+    }
+  }
+
+  async getMemberInfo() {
+    const _res = await getMember(this.state.token)
     if (_res.status === 200) {
       this.setState({
         member: _res.data
@@ -37,9 +49,19 @@ class Main extends React.Component {
   async componentDidMount() {
     await this.setToken()
     await this.getMemberInfo()
+    await this.getTimes()
   }
 
   render() {
+    const Conferences = this.state.times.map((time) => {
+      return <EnrollButton
+        key={time.id}
+        time={time.conferenceTime}
+        id={time.id}
+        token={this.state.token}
+        member={this.state.member}
+      />
+    })
     return (
       <StDiv>
         <StContainer>
@@ -58,8 +80,7 @@ class Main extends React.Component {
             <div/>
           </StHeading>
           <StContents>
-            <EnrollButton time={"18"}/>
-            <EnrollButton time={"22"}/>
+            {Conferences}
           </StContents>
         </StContainer>
       </StDiv>
@@ -88,7 +109,7 @@ const StDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   height: 100vh;
 `
 
@@ -111,7 +132,7 @@ const StContents = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   width: 90%;
   height: 60%;
   padding: 5%;

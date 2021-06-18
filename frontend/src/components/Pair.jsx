@@ -1,6 +1,6 @@
-import React, {memo} from 'react'
+import React from 'react'
 import styled from 'styled-components';
-import Member from "./Member";
+import Member from './Member';
 
 class Pair extends React.Component {
   constructor(props) {
@@ -8,8 +8,8 @@ class Pair extends React.Component {
   }
 
   render() {
-    const PrintPair = this.props.pair.map((member) => {
-      return <Member name={member} key={member}/>
+    const PrintPair = this.props.pair.pair.map((member) => {
+      return <Member name={member.name} key={member.id}/>
     })
     return (
       <StDiv>
@@ -17,7 +17,6 @@ class Pair extends React.Component {
       </StDiv>
     );
   }
-
 }
 
 export default Pair
