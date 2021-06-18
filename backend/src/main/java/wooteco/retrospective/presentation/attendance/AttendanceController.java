@@ -1,5 +1,7 @@
 package wooteco.retrospective.presentation.attendance;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.attendance.ConferenceTimeService;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.application.dto.MembersDto;
+import wooteco.retrospective.presentation.dto.TimeResponse;
+import wooteco.retrospective.presentation.dto.TimesResponse;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceByTimeResponse;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
@@ -28,6 +32,14 @@ public class AttendanceController {
     public AttendanceController(AttendanceService attendanceService, ConferenceTimeService conferenceTimeService) {
         this.attendanceService = attendanceService;
         this.conferenceTimeService = conferenceTimeService;
+    }
+
+    @GetMapping
+    public ResponseEntity<TimesResponse> getTime() {
+        List<ConferenceTimeDto> conferenceTimeDtos = conferenceTimeService.findAllTime();
+
+        TimesResponse timesResponse = TimesResponse.of(conferenceTimeDtos);
+        return ResponseEntity.ok().body(timesResponse);
     }
 
     @PostMapping
