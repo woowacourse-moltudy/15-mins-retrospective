@@ -14,10 +14,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 
 @Repository
 @Transactional
-public class ConferenceTimeDao {
+public class ConferenceTimeDaoImpl implements ConferenceTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ConferenceTime> rowMapper = (resultSet, rowNumber) ->
@@ -26,7 +27,7 @@ public class ConferenceTimeDao {
             resultSet.getObject("conference_time", LocalTime.class)
         );
 
-    public ConferenceTimeDao(JdbcTemplate jdbcTemplate) {
+    public ConferenceTimeDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -11,8 +11,10 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Optional;
 
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,10 +31,13 @@ import wooteco.retrospective.application.attendance.ConferenceTimeService;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
+import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDaoImpl;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.member.MemberController;
+import wooteco.retrospective.presentation.pair.PairController;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 @DisplayName("출석부 - Controller 테스트")
 @WebMvcTest
@@ -62,12 +67,19 @@ class AttendanceControllerTest {
     @MockBean
     private MemberController memberController;
 
+    @MockBean
+    private PairController pairController;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
     @DisplayName("회고 시간을 등록한다.")
     @Test
     void postTime() throws Exception {
         AttendanceRequest attendanceRequest = insertAttendance();
 
         mockMvc.perform(post("/api/time")
+            .header(HttpHeaders.AUTHORIZATION, "test_token")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
             .andExpect(status().isOk())
@@ -81,6 +93,7 @@ class AttendanceControllerTest {
         AttendanceRequest attendanceRequest = insertAttendance();
 
         mockMvc.perform(delete("/api/time")
+            .header(HttpHeaders.AUTHORIZATION, "test_token")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(attendanceRequest)))
             .andExpect(status().isNoContent())
@@ -100,6 +113,7 @@ class AttendanceControllerTest {
             .willReturn(MEMBERS_DTO);
 
         mockMvc.perform(get("/api/time/1")
+            .header(HttpHeaders.AUTHORIZATION, "test_token")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("conferenceTimeId").value(CONFERENCE_TIME_SIX.getId()))
@@ -110,6 +124,9 @@ class AttendanceControllerTest {
     }
 
     private AttendanceRequest insertAttendance() {
+
+        BDDMockito.given(jwtTokenProvider.validateToken(any()))
+            .willReturn(true);
 
         given(conferenceTimeDao.insert(any(ConferenceTime.class)))
             .willReturn(CONFERENCE_TIME_SIX);

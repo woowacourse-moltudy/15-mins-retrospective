@@ -26,3 +26,13 @@ create table if not exists ATTENDANCE (
 
 insert into CONFERENCE_TIME(conference_time) values (PARSEDATETIME('18:00:00', 'HH:mm:ss'));
 insert into CONFERENCE_TIME(conference_time) values (PARSEDATETIME('22:00:00', 'HH:mm:ss'));
+
+create table if not exists PAIR (
+    id bigint auto_increment not null,
+    group_id bigint not null,
+    attendance_id bigint not null,
+
+    primary key(id),
+    unique key(group_id, attendance_id),
+    foreign key(attendance_id) references ATTENDANCE(id)
+);

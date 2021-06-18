@@ -23,6 +23,10 @@ public class ConferenceTime {
         return new ConferenceTime(conferenceTimeDto.getId(), conferenceTimeDto.getConferenceTime());
     }
 
+    public boolean isBefore(ConferenceTime conferenceTime) {
+        return this.conferenceTime.isBefore(conferenceTime.getConferenceTime());
+    }
+
     public long getId() {
         return id;
     }

@@ -1,5 +1,7 @@
 package wooteco.retrospective.infrastructure.dao.member;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -43,13 +45,25 @@ public class MemberDao {
     public Optional<Member> findById(Long id) {
         String query = "SELECT id, name FROM MEMBER WHERE id = ?";
 
-        return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, id));
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(query, ROW_MAPPER, id)
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Member> findByName(String name) {
         String query = "SELECT id, name FROM MEMBER WHERE name = ?";
 
-        return Optional.ofNullable(this.jdbcTemplate.queryForObject(query, ROW_MAPPER, name));
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(query, ROW_MAPPER, name)
+            );
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Member> findAll() {

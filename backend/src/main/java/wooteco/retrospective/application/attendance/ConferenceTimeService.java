@@ -5,8 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.exception.NotFoundTimeException;
-import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDao;
+import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDaoImpl;
 
 @Transactional(readOnly = true)
 @Service

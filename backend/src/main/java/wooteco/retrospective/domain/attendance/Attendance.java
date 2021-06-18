@@ -28,6 +28,14 @@ public class Attendance {
         this.conferenceTime = conferenceTime;
     }
 
+    public boolean isAttendAt(ConferenceTime conferenceTime) {
+        return this.conferenceTime.equals(conferenceTime);
+    }
+
+    public boolean isAttendAt(LocalDate date) {
+        return this.date.equals(date);
+    }
+
     public long getId() {
         return id;
     }

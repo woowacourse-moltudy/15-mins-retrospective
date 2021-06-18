@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ class ConferenceTimeDaoTest {
 
     @BeforeEach
     void setUp() {
-        conferenceTimeDao = new ConferenceTimeDao(jdbcTemplate);
+        conferenceTimeDao = new ConferenceTimeDaoImpl(jdbcTemplate);
     }
 
     @DisplayName("모든 시간을 조회한다.")

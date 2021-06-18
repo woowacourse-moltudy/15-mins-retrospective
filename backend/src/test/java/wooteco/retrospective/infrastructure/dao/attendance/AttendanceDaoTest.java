@@ -17,8 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.AttendanceDao;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
@@ -38,12 +39,12 @@ class AttendanceDaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
-        conferenceTimeDao = new ConferenceTimeDao(jdbcTemplate);
-        attendanceDao = new AttendanceDao(jdbcTemplate, memberDao, conferenceTimeDao);
+        conferenceTimeDao = new ConferenceTimeDaoImpl(jdbcTemplate);
+        attendanceDao = new AttendanceDaoImpl(jdbcTemplate, memberDao, conferenceTimeDao);
     }
 
-    @DisplayName("출석부를 추가한다.")
     @Test
+    @DisplayName("출석부를 추가한다.")
     void insert() {
         Attendance expectedAttendance = new Attendance(LocalDate.now(), MEMBER_SALLY, CONFERENCE_TIME_SIX);
         Attendance newAttendance = insertAttendance();
@@ -51,8 +52,8 @@ class AttendanceDaoTest {
         assertThat(expectedAttendance).isEqualTo(newAttendance);
     }
 
-    @DisplayName("출석부를 조회한다.")
     @Test
+    @DisplayName("출석부를 조회한다.")
     void findById() {
         insertAttendance();
         Attendance expectedAttendance = new Attendance(
@@ -66,8 +67,8 @@ class AttendanceDaoTest {
         assertThat(expectedAttendance).isEqualTo(attendance);
     }
 
-    @DisplayName("같은 시간에 같은 멤버가 있는지 조회한다.")
     @Test
+    @DisplayName("같은 시간에 같은 멤버가 있는지 조회한다.")
     void existSameTime() {
         insertAttendance();
 
@@ -77,8 +78,8 @@ class AttendanceDaoTest {
         assertThat(attendanceDao.isExistSameTime(now, attendance)).isTrue();
     }
 
-    @DisplayName("다른 날짜에 같은 멤버가 같은 시간에 있는지 조회한다.")
     @Test
+    @DisplayName("다른 날짜에 같은 멤버가 같은 시간에 있는지 조회한다.")
     void existSameTimeException() {
         insertAttendance();
 
@@ -88,8 +89,8 @@ class AttendanceDaoTest {
         assertThat(attendanceDao.isExistSameTime(yesterday, attendance)).isFalse();
     }
 
-    @DisplayName("날짜에 따른 출석부를 조회한다.")
     @Test
+    @DisplayName("날짜에 따른 출석부를 조회한다.")
     void findByDate() {
         insertAttendance();
 
@@ -106,8 +107,8 @@ class AttendanceDaoTest {
         assertThat(attendance.contains(expectedAttendance)).isTrue();
     }
 
-    @DisplayName("날짜, 시간에 따른 출석부를 조회한다.")
     @Test
+    @DisplayName("날짜, 시간에 따른 출석부를 조회한다.")
     void findByTime() {
         insertAttendance();
 

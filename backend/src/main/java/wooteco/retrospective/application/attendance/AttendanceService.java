@@ -7,16 +7,15 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import wooteco.retrospective.application.dto.AttendanceDto;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
+import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.exception.AlreadyExistTimeException;
 import wooteco.retrospective.exception.NotFoundMemberException;
-import wooteco.retrospective.infrastructure.dao.attendance.AttendanceDao;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
-import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 @Transactional(readOnly = true)

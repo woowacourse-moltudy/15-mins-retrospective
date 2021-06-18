@@ -11,22 +11,20 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import wooteco.retrospective.domain.attendance.Attendance;
+import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.exception.NotFoundTimeException;
 import wooteco.retrospective.infrastructure.dao.member.MemberDao;
 
 @Repository
-@Transactional
-public class AttendanceDao {
+public class AttendanceDaoImpl implements AttendanceDao {
 
-    private final JdbcTemplate jdbcTemplate;
     private MemberDao memberDao;
     private ConferenceTimeDao conferenceTimeDao;
-
+    private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Attendance> rowMapper = (resultSet, rowNumber) ->
         new Attendance(
             resultSet.getLong("id"),
@@ -35,7 +33,7 @@ public class AttendanceDao {
             conferenceTimeDao.findById(resultSet.getLong("conference_time_id")).orElseThrow(NotFoundTimeException::new)
         );
 
-    public AttendanceDao(JdbcTemplate jdbcTemplate, MemberDao memberDao,
+    public AttendanceDaoImpl(JdbcTemplate jdbcTemplate, MemberDao memberDao,
         ConferenceTimeDao conferenceTimeDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.memberDao = memberDao;
@@ -63,7 +61,7 @@ public class AttendanceDao {
         );
     }
 
-    public Attendance findById(long id) {   //TODO: 예외처리
+    public Attendance findById(long id) {
         String query = "SELECT * FROM ATTENDANCE WHERE id = ?";
 
         return jdbcTemplate.queryForObject(query, rowMapper, id);
