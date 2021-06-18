@@ -12,6 +12,7 @@ import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
 import wooteco.retrospective.exception.InvalidConferenceTimeException;
 import wooteco.retrospective.exception.InvalidDateException;
+import wooteco.retrospective.exception.InvalidTimeException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,16 +43,19 @@ public class PairService {
         validateIsRightDate(date, currentDateTime.toLocalDate());
 
         ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
-                .filter(time -> isCallableTime(time, currentDateTime.toLocalTime()))
                 .orElseThrow(InvalidConferenceTimeException::new);
+
+        isCallableTime(conferenceTime, currentDateTime.toLocalTime());
 
         return pairDao.findByDateAndTime(date, conferenceTime)
                 .map(toPairResponseDtos())
                 .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, conferenceTime));
     }
 
-    private boolean isCallableTime(ConferenceTime conferenceTime, LocalTime currentTime) {
-        return conferenceTime.isBefore(currentTime);
+    private void isCallableTime(ConferenceTime conferenceTime, LocalTime currentTime) {
+        if(!conferenceTime.isBefore(currentTime)) {
+            throw new InvalidTimeException();
+        }
     }
 
     private void validateIsRightDate(LocalDate date, LocalDate currentDate) {
