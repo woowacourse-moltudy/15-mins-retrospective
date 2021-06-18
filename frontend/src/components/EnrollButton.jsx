@@ -11,6 +11,7 @@ class EnrollButton extends React.Component {
       members: [],
       pairs: [],
       isEnd: false,
+      updateFlag: false
     }
   }
 
@@ -52,19 +53,77 @@ class EnrollButton extends React.Component {
     })
   }
 
+  handleEnroll = (props) => {
+    const _ids = this.state.members.map((member) => member.id)
+    if (_ids.includes(this.props.member.id)) {
+      this.deleteInMembers()
+    } else {
+      this.addInMembers()
+    }
+  }
+
+  async addInMembers() {
+    const _res = await axios({
+      method: 'post',
+      url: `${process.env.REACT_APP_BASE_URL}/time`,
+      data: {
+        conferenceTimeId: this.props.id,
+        memberId: this.props.member.id
+      },
+      headers: {
+        Authorization: `Bearer ${this.props.token}`
+      }
+    })
+    if (_res.status === 200) {
+      this.setState({
+        updateFlag: true
+      })
+    }
+  }
+
+  async deleteInMembers() {
+    const _res = await axios({
+      method: 'delete',
+      url: `${process.env.REACT_APP_BASE_URL}/time`,
+      data: {
+        conferenceTimeId: this.props.id,
+        memberId: this.props.member.id
+      },
+      headers: {
+        Authorization: `Bearer ${this.props.token}`
+      }
+    })
+    if (_res.status === 204) {
+      this.setState({
+        updateFlag: true
+      })
+    }
+  }
+
   componentDidMount() {
     this.checkTime()
-    if (!this.state.isEnd) {
+    if (this.state.isEnd) {
       this.getPairs()
     } else {
       this.getMembers()
     }
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.updateFlag) {
+      this.getMembers()
+      this.setState({
+        updateFlag: false
+      })
+    }
+  }
 
   render() {
     return (
-      <StContainer disabled={this.state.isEnd}>
+      <StContainer
+        disabled={this.state.isEnd}
+        onClick={this.handleEnroll}
+      >
         {this.state.isEnd
           ? <PairMatch
             pairs={this.state.pairs}

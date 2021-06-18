@@ -72,6 +72,7 @@ class Main extends React.Component {
         time={time.conferenceTime}
         id={time.id}
         token={this.state.token}
+        member={this.state.member}
       />
     })
     return (

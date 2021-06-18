@@ -25,7 +25,7 @@ class Enroll extends React.Component {
   render() {
     const PrintMembers = this.props.members.map((member) => {
       return (
-        <Member name={member} key={member}/>
+        <Member name={member.name} key={member.id}/>
       )
     })
 
