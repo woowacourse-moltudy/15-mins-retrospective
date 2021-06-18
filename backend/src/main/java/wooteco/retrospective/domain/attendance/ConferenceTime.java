@@ -27,6 +27,10 @@ public class ConferenceTime {
         return this.conferenceTime.isBefore(conferenceTime.getConferenceTime());
     }
 
+    public boolean isBefore(LocalTime conferenceTime) {
+        return this.conferenceTime.isBefore(conferenceTime);
+    }
+
     public long getId() {
         return id;
     }

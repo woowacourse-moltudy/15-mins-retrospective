@@ -10,6 +10,7 @@ import wooteco.retrospective.application.pair.PairService;
 import wooteco.retrospective.presentation.dto.pair.PairRequest;
 import wooteco.retrospective.presentation.dto.pair.PairResponse;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class PairController {
     public ResponseEntity<List<PairResponse>> getPairs(@ModelAttribute PairRequest pairRequest) {
         List<PairResponseDto> pairs = pairService.getPairsByDateAndTime(
                 pairRequest.getDate(),
-                pairRequest.getConferenceTime(),
-                LocalTime.now()
+                pairRequest.getConferenceTimeId(),
+                LocalDateTime.now()
         );
 
         return ResponseEntity.ok(pairs.stream()

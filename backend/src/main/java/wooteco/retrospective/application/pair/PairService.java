@@ -1,15 +1,7 @@
 package wooteco.retrospective.application.pair;
 
-import static java.util.stream.Collectors.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.function.Function;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
@@ -20,7 +12,14 @@ import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
 import wooteco.retrospective.exception.InvalidConferenceTimeException;
 import wooteco.retrospective.exception.InvalidDateException;
-import wooteco.retrospective.exception.InvalidTimeException;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
 @Service
@@ -38,58 +37,49 @@ public class PairService {
 
     @Transactional
     public List<PairResponseDto> getPairsByDateAndTime(LocalDate date,
-        LocalTime requestedConferenceTime,
-        LocalTime currentTime) {
-        ConferenceTime conferenceTime = getConferenceTimeIfValid(new ConferenceTime(requestedConferenceTime));
-        validateIsCallableTime(conferenceTime, new ConferenceTime(currentTime));
-        validateIsRightDate(date);
+                                                       Long conferenceTimeId,
+                                                       LocalDateTime currentDateTime) {
+        validateIsRightDate(date, currentDateTime.toLocalDate());
+
+        ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
+                .filter(time -> isCallableTime(time, currentDateTime.toLocalTime()))
+                .orElseThrow(InvalidConferenceTimeException::new);
 
         return pairDao.findByDateAndTime(date, conferenceTime)
-            .map(toPairResponseDtos())
-            .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, conferenceTime));
+                .map(toPairResponseDtos())
+                .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, conferenceTime));
     }
 
-    private ConferenceTime getConferenceTimeIfValid(ConferenceTime conferenceTime) {
-        return conferenceTimeDao.findAll().stream()
-            .filter(time -> time.equals(conferenceTime))
-            .findAny()
-            .orElseThrow(InvalidConferenceTimeException::new);
+    private boolean isCallableTime(ConferenceTime conferenceTime, LocalTime currentTime) {
+        return conferenceTime.isBefore(currentTime);
     }
 
-    private void validateIsCallableTime(ConferenceTime conferenceTime, ConferenceTime currentTime) {
-        conferenceTimeDao.findAll().stream()
-            .filter(time -> time.isBefore(currentTime))
-            .filter(time -> time.equals(conferenceTime))
-            .findAny()
-            .orElseThrow(InvalidTimeException::new);
-    }
-
-    private void validateIsRightDate(LocalDate date) {
-        if (date.isAfter(LocalDate.now())) {
+    private void validateIsRightDate(LocalDate date, LocalDate currentDate) {
+        if (date.isAfter(currentDate)) {
             throw new InvalidDateException();
         }
     }
 
     private Function<Pairs, List<PairResponseDto>> toPairResponseDtos() {
         return pairs -> pairs.getPairs().stream()
-            .map(PairResponseDto::new)
-            .collect(toList());
+                .map(PairResponseDto::new)
+                .collect(toList());
     }
 
     private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDate date,
-        ConferenceTime conferenceTime) {
+                                                                          ConferenceTime conferenceTime) {
         List<Attendance> attendances = getAttendancesOf(date, conferenceTime);
 
         Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendances));
 
         return pairDao.insert(pairs).getPairs().stream()
-            .map(PairResponseDto::new)
-            .collect(toList());
+                .map(PairResponseDto::new)
+                .collect(toList());
     }
 
     private List<Attendance> getAttendancesOf(LocalDate date, ConferenceTime conferenceTime) {
         return attendanceDao.findByDate(date).stream()
-            .filter(attendance -> attendance.isAttendAt(conferenceTime))
-            .collect(toList());
+                .filter(attendance -> attendance.isAttendAt(conferenceTime))
+                .collect(toList());
     }
 }

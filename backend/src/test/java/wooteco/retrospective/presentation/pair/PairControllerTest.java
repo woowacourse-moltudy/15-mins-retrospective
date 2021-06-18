@@ -20,6 +20,7 @@ import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -64,8 +65,8 @@ public class PairControllerTest {
         given(result);
 
         ResultActions resultActions = mockMvc.perform(get(
-                "/pairs?date={date}&conferenceTime={conferenceTime}",
-                "2021-06-15", "18:00:00")
+                "/pairs?date={date}&conferenceTimeId={conferenceTimeId}",
+                "2021-06-15", "1")
                 .header(HttpHeaders.AUTHORIZATION, "test_token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
@@ -78,8 +79,8 @@ public class PairControllerTest {
     private void given(List<PairResponseDto> result) {
         BDDMockito.given(pairService.getPairsByDateAndTime(
                 any(LocalDate.class),
-                any(LocalTime.class),
-                any(LocalTime.class))
+                any(Long.class),
+                any(LocalDateTime.class))
         ).willReturn(result);
 
         BDDMockito.given(jwtTokenProvider.validateToken(any()))
@@ -90,7 +91,7 @@ public class PairControllerTest {
         resultActions.andDo(document("pair/getPairs",
                 requestParameters(
                         parameterWithName("date").description("회의 날짜"),
-                        parameterWithName("conferenceTime").description("회의 시간")
+                        parameterWithName("conferenceTimeId").description("회의 시간 Id")
                 ),
                 responseFields(
                         fieldWithPath("[].pair").type(ARRAY).description("페어 정보"),
