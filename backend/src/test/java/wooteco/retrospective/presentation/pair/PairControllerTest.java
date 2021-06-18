@@ -65,7 +65,7 @@ public class PairControllerTest {
         given(result);
 
         ResultActions resultActions = mockMvc.perform(get(
-                "/pairs?date={date}&conferenceTimeId={conferenceTimeId}",
+                "/api/pairs?date={date}&conferenceTimeId={conferenceTimeId}",
                 "2021-06-15", "1")
                 .header(HttpHeaders.AUTHORIZATION, "test_token"))
                 .andExpect(status().isOk())

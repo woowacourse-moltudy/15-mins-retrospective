@@ -1,9 +1,8 @@
 package wooteco.retrospective.exception;
 
-public class AuthorizationException extends RuntimeException {
+public class AuthorizationException extends RetrospectiveException {
 
-    public AuthorizationException() {
+    public AuthorizationException(String message) {
+        super(message);
     }
-
-    public AuthorizationException(String message) { super(message);}
 }
