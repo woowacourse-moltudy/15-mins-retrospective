@@ -1,20 +1,19 @@
 package wooteco.retrospective.application;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.boot.convert.DataSizeUnit;
+
 import wooteco.retrospective.application.dto.MemberResponseDto;
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.application.pair.PairService;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.Time;
+import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.dao.PairDao;
-import wooteco.retrospective.domain.dao.TimeDao;
+import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
@@ -35,14 +34,14 @@ import static wooteco.retrospective.common.Fixture.*;
 class PairServiceTest {
 
     private static PairService pairService;
-    private static TimeDao timeDao;
+    private static ConferenceTimeDao conferenceTimeDao;
     private static PairDao pairDao;
     private static AttendanceDao attendanceDao;
 
     private static List<Attendance> yesterdayAttendances = List.of(
-            new Attendance(1L, YESTERDAY, neozal.getMember(), new Time(TIME_SIX)),
-            new Attendance(2L, YESTERDAY, danijani.getMember(), new Time(TIME_SIX)),
-            new Attendance(3L, YESTERDAY, whyguy.getMember(), new Time(TIME_SIX))
+            new Attendance(1L, YESTERDAY, neozal.getMember(), new ConferenceTime(TIME_SIX)),
+            new Attendance(2L, YESTERDAY, danijani.getMember(), new ConferenceTime(TIME_SIX)),
+            new Attendance(3L, YESTERDAY, whyguy.getMember(), new ConferenceTime(TIME_SIX))
     );
     private static Pair yesterdayPair = new Pair(1L ,yesterdayAttendances);
 
@@ -51,10 +50,10 @@ class PairServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        timeDao = new TimeDao.Fake();
+        conferenceTimeDao = new ConferenceTimeDao.Fake();
         pairDao = new PairDao.Fake();
         attendanceDao = new AttendanceDao.Fake();
-        pairService = new PairService(timeDao, pairDao, attendanceDao);
+        pairService = new PairService(conferenceTimeDao, pairDao, attendanceDao);
 
         pairDao.insert(
                 Pairs.from(List.of(

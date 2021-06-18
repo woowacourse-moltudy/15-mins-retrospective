@@ -1,20 +1,20 @@
 package wooteco.retrospective.domain.dao;
 
-import wooteco.retrospective.domain.attendance.Time;
-import wooteco.retrospective.domain.pair.Pair;
-import wooteco.retrospective.domain.pair.Pairs;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.pair.Pair;
+import wooteco.retrospective.domain.pair.Pairs;
+
 public interface PairDao {
 
     Pairs insert(Pairs pairs);
 
-    Optional<Pairs> findByDateAndTime(LocalDate date, Time time);
+    Optional<Pairs> findByDateAndTime(LocalDate date, ConferenceTime time);
 
     class Fake implements PairDao {
 
@@ -27,21 +27,21 @@ public interface PairDao {
         }
 
         @Override
-        public Optional<Pairs> findByDateAndTime(LocalDate date, Time time) {
+        public Optional<Pairs> findByDateAndTime(LocalDate date, ConferenceTime time) {
             return cache.stream()
-                    .filter(isContainsAnyMatchedPairWith(date, time))
-                    .findAny();
+                .filter(isContainsAnyMatchedPairWith(date, time))
+                .findAny();
         }
 
-        private Predicate<Pairs> isContainsAnyMatchedPairWith(LocalDate date, Time time) {
+        private Predicate<Pairs> isContainsAnyMatchedPairWith(LocalDate date, ConferenceTime time) {
             return pairs -> pairs.getPairs().stream()
-                    .anyMatch(isExistsAnyMatchedPairWith(date, time));
+                .anyMatch(isExistsAnyMatchedPairWith(date, time));
         }
 
-        private Predicate<Pair> isExistsAnyMatchedPairWith(LocalDate date, Time time) {
+        private Predicate<Pair> isExistsAnyMatchedPairWith(LocalDate date, ConferenceTime time) {
             return pair -> pair.getAttendances().stream()
-                    .filter(attendance -> attendance.isAttendAt(date))
-                    .anyMatch(attendance -> attendance.isAttendAt(time));
+                .filter(attendance -> attendance.isAttendAt(date))
+                .anyMatch(attendance -> attendance.isAttendAt(time));
         }
     }
 }

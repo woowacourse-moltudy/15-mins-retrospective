@@ -8,6 +8,7 @@ endif::[]
 :toclevels: 4
 
 include::member.adoc[]
+include::attendance.adoc[]
 
 # 예외 발생 시
 ### Response

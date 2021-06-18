@@ -1,6 +1,7 @@
 package wooteco.retrospective.domain.attendance;
 
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -10,25 +11,25 @@ public class Attendance {
     private final Long id;
     private final LocalDate date;
     private final Member member;
-    private final Time time;
+    private final ConferenceTime conferenceTime;
 
-    public Attendance(Member member, Time time) {
-        this(LocalDate.now(), member, time);
+    public Attendance(Member member, ConferenceTime conferenceTime) {
+        this(LocalDate.now(), member, conferenceTime);
     }
 
-    public Attendance(LocalDate localDate, Member member, Time time) {
-        this(null, localDate, member, time);
+    public Attendance(LocalDate localDate, Member member, ConferenceTime conferenceTime) {
+        this(null, localDate, member, conferenceTime);
     }
 
-    public Attendance(Long id, LocalDate date, Member member, Time time) {
+    public Attendance(Long id, LocalDate date, Member member, ConferenceTime conferenceTime) {
         this.id = id;
         this.date = date;
         this.member = member;
-        this.time = time;
+        this.conferenceTime = conferenceTime;
     }
 
-    public boolean isAttendAt(Time time) {
-        return this.time.equals(time);
+    public boolean isAttendAt(ConferenceTime conferenceTime) {
+        return this.conferenceTime.equals(conferenceTime);
     }
 
     public boolean isAttendAt(LocalDate date) {
@@ -47,16 +48,16 @@ public class Attendance {
         return member;
     }
 
-    public Time getTime() {
-        return time;
+    public ConferenceTime getConferenceTime() {
+        return conferenceTime;
     }
 
     public long getMemberId() {
         return member.getId();
     }
 
-    public long getTimeId() {
-        return time.getId();
+    public long getConferenceTimeId() {
+        return conferenceTime.getId();
     }
 
     @Override
@@ -66,11 +67,11 @@ public class Attendance {
         if (o == null || getClass() != o.getClass())
             return false;
         Attendance that = (Attendance) o;
-        return date.equals(that.date) && member.getName().equals(that.member.getName()) && time.equals(that.time);
+        return date.equals(that.date) && member.getName().equals(that.member.getName()) && conferenceTime.equals(that.conferenceTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, member, time);
+        return Objects.hash(date, member, conferenceTime);
     }
 }
