@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import EnrollButton from "../components/EnrollButton";
 import axios from "axios";
+import {getMember} from "../apis/LoginApi";
+import {getTimes} from "../apis/MainApi";
 
 class Main extends React.Component {
   constructor(props) {
@@ -19,15 +21,8 @@ class Main extends React.Component {
     })
   }
 
-  async getTimeTable() {
-    const _res = await axios({
-      method: 'get',
-      url: `${process.env.REACT_APP_BASE_URL}/time`,
-      headers: {
-        Authorization: `Bearer ${this.state.token}`
-      }
-    })
-
+  async getTimes() {
+    const _res = await getTimes(this.state.token)
     if (_res.status === 200) {
       let times = _res.data.timesResponse
       this.timeFormat(times);
@@ -44,14 +39,7 @@ class Main extends React.Component {
   }
 
   async getMemberInfo() {
-    const _res = await axios({
-      method: 'get',
-      url: `${process.env.REACT_APP_BASE_URL}/member`,
-      headers: {
-        Authorization: `Bearer ${this.state.token}`
-      }
-    })
-
+    const _res = await getMember(this.state.token)
     if (_res.status === 200) {
       this.setState({
         member: _res.data
@@ -62,7 +50,7 @@ class Main extends React.Component {
   async componentDidMount() {
     await this.setToken()
     await this.getMemberInfo()
-    await this.getTimeTable()
+    await this.getTimes()
   }
 
   render() {

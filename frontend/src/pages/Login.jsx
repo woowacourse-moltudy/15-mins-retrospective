@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
 import LoginInput from "../components/LoginInput";
-import axios from "axios";
+import {login} from "../apis/LoginApi";
 
 class Login extends React.Component {
   constructor(props) {
@@ -37,16 +37,9 @@ class Login extends React.Component {
   };
 
   handleSubmit = async () => {
-    const _data = {
-      name: this.state.name
-    }
     try {
-      const _res = await axios({
-        method: 'post',
-        url: `${process.env.REACT_APP_BASE_URL}/login`,
-        data: _data
-      })
-      if (_res.status < 300) {
+      const _res = await login(this.state.name)
+      if (_res.status === 200) {
         localStorage.setItem('token', _res.data.token)
         this.props.history.push('/')
       }

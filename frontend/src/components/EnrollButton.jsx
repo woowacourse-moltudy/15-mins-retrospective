@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Enroll from './Enroll'
 import PairMatch from './PairMatch';
-import axios from "axios";
+import {addInMembers, deleteInMembers, getMembers, getPairs} from '../apis/MainApi';
 
 class EnrollButton extends React.Component {
   constructor(props) {
@@ -28,29 +28,21 @@ class EnrollButton extends React.Component {
   async getPairs() {
     const _now = new Date()
     const _date = _now.toJSON().substring(0, 10)
-    const _res = await axios({
-      method: 'get',
-      url: `http://localhost:8080/pairs?date=${_date}&conferenceTimeId=${this.props.id}`,
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      }
-    })
-    this.setState({
-      pairs: _res.data
-    })
+    const _res = await getPairs(this.props.id, _date, this.props.token)
+    if (_res.status === 200) {
+      this.setState({
+        pairs: _res.data
+      })
+    }
   }
 
   async getMembers() {
-    const _res = await axios({
-      method: 'get',
-      url: `${process.env.REACT_APP_BASE_URL}/time/${this.props.id}`,
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      }
-    })
-    this.setState({
-      members: _res.data.members.members
-    })
+    const _res = await getMembers(this.props.id, this.props.token)
+    if (_res.status === 200) {
+      this.setState({
+        members: _res.data.members.members
+      })
+    }
   }
 
   handleEnroll = () => {
@@ -63,17 +55,7 @@ class EnrollButton extends React.Component {
   }
 
   async addInMembers() {
-    const _res = await axios({
-      method: 'post',
-      url: `${process.env.REACT_APP_BASE_URL}/time`,
-      data: {
-        conferenceTimeId: this.props.id,
-        memberId: this.props.member.id
-      },
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      }
-    })
+    const _res = await addInMembers(this.props.id, this.props.member.id, this.props.token)
     if (_res.status === 200) {
       this.setState({
         updateFlag: true
@@ -82,17 +64,7 @@ class EnrollButton extends React.Component {
   }
 
   async deleteInMembers() {
-    const _res = await axios({
-      method: 'delete',
-      url: `${process.env.REACT_APP_BASE_URL}/time`,
-      data: {
-        conferenceTimeId: this.props.id,
-        memberId: this.props.member.id
-      },
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      }
-    })
+    const _res = await deleteInMembers(this.props.id, this.props.member.id, this.props.token)
     if (_res.status === 204) {
       this.setState({
         updateFlag: true
