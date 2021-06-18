@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Member from "./Member";
+import Member from './Member';
 
 class Enroll extends React.Component {
   constructor(props) {
@@ -65,7 +65,7 @@ const StMembers = styled.div`
   grid-gap: 5px;
   justify-content: center;
   align-items: center;
-  
+
   width: 90%;
   height: 100%;
   padding: 0.5rem

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
-import LoginInput from "../components/LoginInput";
-import {login} from "../apis/LoginApi";
+import LoginInput from '../components/LoginInput';
+import {login} from '../apis/LoginApi';
 
 class Login extends React.Component {
   constructor(props) {

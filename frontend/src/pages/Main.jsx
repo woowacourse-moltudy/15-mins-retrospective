@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import EnrollButton from "../components/EnrollButton";
-import axios from "axios";
-import {getMember} from "../apis/LoginApi";
-import {getTimes} from "../apis/MainApi";
+import EnrollButton from '../components/EnrollButton';
+import {getMember} from '../apis/LoginApi';
+import {getTimes} from '../apis/MainApi';
 
 class Main extends React.Component {
   constructor(props) {

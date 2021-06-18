@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import Member from "./Member";
+import Member from './Member';
 
 class Pair extends React.Component {
   constructor(props) {
