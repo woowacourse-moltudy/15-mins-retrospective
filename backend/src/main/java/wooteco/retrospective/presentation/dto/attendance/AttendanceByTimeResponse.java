@@ -17,10 +17,11 @@ public class AttendanceByTimeResponse {
         this.members = members;
     }
 
-    public static AttendanceByTimeResponse of(ConferenceTimeDto conferenceTime, MembersDto membersDto) {
-        MembersResponse membersResponse = new MembersResponse(membersDto.getMembers());
-
-        return new AttendanceByTimeResponse(conferenceTime.getId(), membersResponse);
+    public static AttendanceByTimeResponse of(ConferenceTimeDto conferenceTimeDto, MembersDto membersDto) {
+        return new AttendanceByTimeResponse(
+            conferenceTimeDto.getId(),
+            new MembersResponse(membersDto.getMemberResponses())
+        );
     }
 
     public Long getConferenceTimeId() {

@@ -2,17 +2,15 @@ package wooteco.retrospective.presentation.dto.member;
 
 import java.util.List;
 
-import wooteco.retrospective.domain.member.Member;
-
 public class MembersResponse {
 
-    private final List<Member> members;
+    private final List<MemberResponse> members;
 
-    public MembersResponse(List<Member> members) {
+    public MembersResponse(List<MemberResponse> members) {
         this.members = members;
     }
 
-    public List<Member> getMembers() {
+    public List<MemberResponse> getMembers() {
         return members;
     }
 }
