@@ -2,26 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 import Enroll from './Enroll'
 import PairMatch from './PairMatch';
+import axios from "axios";
 
 class EnrollButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      members: ["웨지", "다니", "샐리", "손너잘", "피카", "현구막", "소롱", "파즈", "김김", "코다", "포모", "나봄", "에드", "삭정", "춘식", "파피", "오즈"],
-      pairs: [
-        ["웨지", "다니"],
-        ["샐리", "손너잘"],
-        ["피카", "현구막"],
-        ["소롱", "파즈"],
-        ["김김", "코다", "포모"]
-      ],
-      isEnd: false
+      members: [],
+      pairs: [],
+      isEnd: false,
     }
   }
 
   checkTime() {
     const now = new Date()
-    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.props.time, 0, 0)
+    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.props.time, now.getMinutes(), now.getSeconds())
     if (now > target) {
       this.setState({
         isEnd: true
@@ -29,8 +24,41 @@ class EnrollButton extends React.Component {
     }
   }
 
+  async getPairs() {
+    const _now = new Date()
+    const _date = _now.toJSON().substring(0, 10)
+    const _res = await axios({
+      method: 'get',
+      url: `http://localhost:8080/pairs?date=${_date}&conferenceTimeId=${this.props.id}`,
+      headers: {
+        Authorization: `Bearer ${this.props.token}`
+      }
+    })
+    this.setState({
+      pairs: _res.data
+    })
+  }
+
+  async getMembers() {
+    const _res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_BASE_URL}/time/${this.props.id}`,
+      headers: {
+        Authorization: `Bearer ${this.props.token}`
+      }
+    })
+    this.setState({
+      members: _res.data.members.members
+    })
+  }
+
   componentDidMount() {
     this.checkTime()
+    if (!this.state.isEnd) {
+      this.getPairs()
+    } else {
+      this.getMembers()
+    }
   }
 
 

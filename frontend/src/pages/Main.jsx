@@ -29,12 +29,19 @@ class Main extends React.Component {
     })
 
     if (_res.status === 200) {
+      let times = _res.data.timesResponse
+      this.timeFormat(times);
       this.setState({
         times: _res.data.timesResponse
       })
     }
   }
 
+  timeFormat(times) {
+    for (let time of times) {
+      time.conferenceTime = time.conferenceTime.substring(0, 2)
+    }
+  }
 
   async getMemberInfo() {
     const _res = await axios({
@@ -60,7 +67,12 @@ class Main extends React.Component {
 
   render() {
     const Conferences = this.state.times.map((time) => {
-      return <EnrollButton key={time.id} time={time.conferenceTime}/>
+      return <EnrollButton
+        key={time.id}
+        time={time.conferenceTime}
+        id={time.id}
+        token={this.state.token}
+      />
     })
     return (
       <StDiv>
