@@ -15,11 +15,11 @@ class EnrollButton extends React.Component {
     }
   }
 
-  checkTime() {
+  async checkTime() {
     const now = new Date()
-    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.props.time, now.getMinutes(), now.getSeconds())
+    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), this.props.time, 0, 0)
     if (now > target) {
-      this.setState({
+      await this.setState({
         isEnd: true
       })
     }
@@ -53,7 +53,7 @@ class EnrollButton extends React.Component {
     })
   }
 
-  handleEnroll = (props) => {
+  handleEnroll = () => {
     const _ids = this.state.members.map((member) => member.id)
     if (_ids.includes(this.props.member.id)) {
       this.deleteInMembers()
@@ -100,12 +100,12 @@ class EnrollButton extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.checkTime()
+  async componentDidMount() {
+    await this.checkTime()
     if (this.state.isEnd) {
-      this.getPairs()
+      await this.getPairs()
     } else {
-      this.getMembers()
+      await this.getMembers()
     }
   }
 
