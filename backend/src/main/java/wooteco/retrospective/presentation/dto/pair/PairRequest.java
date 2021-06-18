@@ -9,22 +9,21 @@ public class PairRequest {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    private LocalTime conferenceTime;
+    private Long conferenceTimeId;
 
     private PairRequest() {
     }
 
-    public PairRequest(LocalDate date, LocalTime conferenceTime) {
+    public PairRequest(LocalDate date, Long conferenceTimeId) {
         this.date = date;
-        this.conferenceTime = conferenceTime;
+        this.conferenceTimeId = conferenceTimeId;
     }
 
     public LocalDate getDate() {
         return date;
     }
 
-    public LocalTime getConferenceTime() {
-        return conferenceTime;
+    public Long getConferenceTimeId() {
+        return conferenceTimeId;
     }
 }

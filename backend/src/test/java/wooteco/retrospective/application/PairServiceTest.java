@@ -22,6 +22,7 @@ import wooteco.retrospective.exception.InvalidDateException;
 import wooteco.retrospective.exception.InvalidTimeException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -70,8 +71,11 @@ class PairServiceTest {
     void getPairsByDateAndTime() {
         List<PairResponseDto> pairResponse = pairService.getPairsByDateAndTime(
                 TODAY,
-                LocalTime.of(18, 0),
-                LocalTime.of(19, 0)
+                1L,
+                LocalDateTime.of(
+                        TODAY,
+                        LocalTime.of(19, 0)
+                )
         );
 
         assertThat(pairResponse)
@@ -87,14 +91,20 @@ class PairServiceTest {
     void getPairsByDateAndTimeWithTwice() {
         List<PairResponseDto> once = pairService.getPairsByDateAndTime(
                 TODAY,
-                LocalTime.of(18, 0),
-                LocalTime.of(19, 0)
+                1L,
+                LocalDateTime.of(
+                        TODAY,
+                        LocalTime.of(19, 0)
+                )
         );
 
         List<PairResponseDto> twice = pairService.getPairsByDateAndTime(
                 TODAY,
-                LocalTime.of(18, 0),
-                LocalTime.of(20, 0)
+                1L,
+                LocalDateTime.of(
+                        TODAY,
+                        LocalTime.of(19, 0)
+                )
         );
 
         assertThat(once)
@@ -107,8 +117,11 @@ class PairServiceTest {
     void getPairsByDateAndTimeWithBeforeDays() {
         List<PairResponseDto> pairs = pairService.getPairsByDateAndTime(
                 YESTERDAY,
-                LocalTime.of(18, 0),
-                LocalTime.of(19, 0)
+                1L,
+                LocalDateTime.of(
+                        TODAY,
+                        LocalTime.of(19, 0)
+                )
         );
 
         List<String> actual = pairs.stream()
@@ -131,22 +144,28 @@ class PairServiceTest {
     void getPairsByDateAndTimeFailWithBadDate() {
         assertThatThrownBy(
                 () -> pairService.getPairsByDateAndTime(
-                        LocalDate.now().plusDays(1),
-                        LocalTime.of(18, 0),
-                        LocalTime.of(19, 0)
+                        TODAY.plusDays(1),
+                        1L,
+                        LocalDateTime.of(
+                                TODAY,
+                                LocalTime.of(19, 0)
+                        )
                 )
         ).isInstanceOf(InvalidDateException.class);
     }
 
     @DisplayName("회고 시간 전에 매칭을 요청하면 예외")
     @ParameterizedTest
-    @CsvSource({"22, 21", "18, 17", "22, 17"})
-    void getPairsByDateAndTimeFailWithBadTime(int requestTime, int currentTime) {
+    @CsvSource({"2, 21", "1, 17", "2, 17"})
+    void getPairsByDateAndTimeFailWithBadTime(long requestTimeId, int currentTime) {
         assertThatThrownBy(
                 () -> pairService.getPairsByDateAndTime(
-                        LocalDate.now(),
-                        LocalTime.of(requestTime, 0),
-                        LocalTime.of(currentTime, 0)
+                        TODAY,
+                        requestTimeId,
+                        LocalDateTime.of(
+                                TODAY,
+                                LocalTime.of(currentTime, 0)
+                        )
                 )
         ).isInstanceOf(InvalidTimeException.class);
     }
@@ -156,9 +175,12 @@ class PairServiceTest {
     void getPairsByDateAndTimeFailWithBadConferenceTime() {
         assertThatThrownBy(
                 () -> pairService.getPairsByDateAndTime(
-                        LocalDate.now(),
-                        LocalTime.of(1, 0),
-                        LocalTime.now()
+                        TODAY,
+                        1L,
+                        LocalDateTime.of(
+                                TODAY,
+                                LocalTime.of(1, 0)
+                        )
                 )
         ).isInstanceOf(InvalidConferenceTimeException.class);
     }
