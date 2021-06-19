@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(IExnlGPpZbLkkwS1grh2ADNG2XD2c+wI9ymt+15nO8de7K+AeHYU5VFj04jlx5m1UxpwG41D8qh+9oQDOUQ0nNHuwrCkUUcSD+fhFNUCWvnnqXHIL8eO/Y98oclVjb7PgqZMlW1tThXhkAReln/rnw==)
+    username: ENC(Ebcaf8Vg/EOaXF0D1WXj4A==)
+    password: ENC(LFklxrNAm9+8D0UpzcJxfA==)
+  h2:
+    console:
+      enabled: true
+
+server:
+  front:
+    origin: http://localhost:3000
+
+security:
+  jwt:
+    token:
+      secret-key: my_secret_is_secret
+      expire-length: 3600000
