@@ -10,10 +10,10 @@ spring:
 
 server:
   front:
-    origin: http://54.180.153.254
+    origin: '*'
 
 security:
-  jwt:정
+  jwt:
     token:
       secret-key: my_secret_is_secret
       expire-length: 3600000
