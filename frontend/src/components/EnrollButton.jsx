@@ -26,7 +26,7 @@ class EnrollButton extends React.Component {
   }
 
   async getPairs() {
-    let _now = new Date()
+    const _now = new Date()
     const _date = new Date(_now.getTime() - (_now.getTimezoneOffset() * 60000)).toJSON().substring(0, 10)
     const _res = await getPairs(this.props.id, _date, this.props.token)
     if (_res.status === 200) {
