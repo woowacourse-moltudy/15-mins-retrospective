@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from "styled-components";
+import styled from 'styled-components';
 import LoginInput from '../components/LoginInput';
 import {login} from '../apis/LoginApi';
 
@@ -33,8 +33,8 @@ class Login extends React.Component {
 
     await this.setState({
       name: e.target.value.substring(0, 10).replaceAll(' ', ''),
-    });
-  };
+    })
+  }
 
   handleSubmit = async () => {
     try {
@@ -51,6 +51,12 @@ class Login extends React.Component {
     }
   }
 
+  handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.handleSubmit()
+    }
+  }
+
   render() {
     return (
       <StDiv>
@@ -62,6 +68,7 @@ class Login extends React.Component {
             <LoginInput
               value={this.state.name}
               onChange={this.handleInput}
+              onKeyPress={this.handleKeyPress}
             />
           </Wrapper>
           {!this.state.valid && <StMessage>{this.state.validMessage}</StMessage>}
