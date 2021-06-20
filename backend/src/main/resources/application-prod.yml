@@ -1,9 +1,9 @@
 spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ENC(IExnlGPpZbLkkwS1grh2ADNG2XD2c+wI9ymt+15nO8de7K+AeHYU5VFj04jlx5m1UxpwG41D8qh+9oQDOUQ0nNHuwrCkUUcSD+fhFNUCWvnnqXHIL8eO/Y98oclVjb7PgqZMlW1tThXhkAReln/rnw==)
-#    username: ENC(Ebcaf8Vg/EOaXF0D1WXj4A==)
-#    password: ENC(LFklxrNAm9+8D0UpzcJxfA==)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(vBS1YY41plyzrBTRP0zZOSHpi8XrwNAz0br4U47uyt1CEAfEGJ067Hx84xKY9Z10yG2mB7B796coGptJHseZYcWnCJcXaZz6fEW+eCZop5sDbNWZO3G65g==)
+    username: ENC(VVKeXAFc8s9OaXl+ie0H6Q==)
+    password:
   h2:
     console:
       enabled: true
