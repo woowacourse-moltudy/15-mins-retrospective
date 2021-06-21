@@ -185,7 +185,8 @@ const StName = styled.div`
   right: 0;
 `
 
-const StToggle = styled.div`
+const StToggle = styled.button`
+  font-family: 'Hanna-Air';
   font-size: 1.1rem;
   position: absolute;
   right: 0;
@@ -194,7 +195,8 @@ const StToggle = styled.div`
 
   background: #fdfdfd;
   border-radius: 5px;
-
+  border: none;
+  
   animation: swipe ease 1s;
 
   @keyframes swipe {
@@ -206,6 +208,10 @@ const StToggle = styled.div`
       opacity: 1;
       transform: translateX(0);
     }
+  }
+  
+  :active {
+    box-shadow: -1px -1px 1px 1px #b0c3d4, inset 1px 1px 2px 1px #cccccc, inset 0px 1px 2px 1px #cccccc;
   }
 `
 
