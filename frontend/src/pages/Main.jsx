@@ -62,6 +62,10 @@ class Main extends React.Component {
         member: _res.data
       })
     }
+    if (_res.status === 401) {
+      localStorage.removeItem('token')
+      this.props.history.push('/login')
+    }
   }
 
   async componentDidMount() {
