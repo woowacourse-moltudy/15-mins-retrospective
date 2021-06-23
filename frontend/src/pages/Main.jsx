@@ -10,7 +10,8 @@ class Main extends React.Component {
     this.state = {
       member: "",
       token: "",
-      times: []
+      times: [],
+      toggle: "none"
     }
   }
 
@@ -18,6 +19,23 @@ class Main extends React.Component {
     this.setState({
       token: localStorage.getItem('token')
     })
+  }
+
+  toggle = () => {
+    if (this.state.toggle === 'none') {
+      this.setState({
+        toggle: 'block'
+      })
+    } else {
+      this.setState({
+        toggle: 'none'
+      })
+    }
+  }
+
+  logout = () => {
+    localStorage.removeItem('token')
+    this.props.history.push('/login')
   }
 
   async getTimes() {
@@ -44,6 +62,10 @@ class Main extends React.Component {
         member: _res.data
       })
     }
+    if (_res.status === 401) {
+      localStorage.removeItem('token')
+      this.props.history.push('/login')
+    }
   }
 
   async componentDidMount() {
@@ -69,7 +91,8 @@ class Main extends React.Component {
             <StInfo>
               <StImg src="/logo.png"/>
               <StHead>15분 회고</StHead>
-              <StName>{this.state.member.name}</StName>
+              <StName onClick={this.toggle}>{this.state.member.name}</StName>
+              <StToggle onClick={this.logout} style={{display:this.state.toggle}}>로그아웃</StToggle>
             </StInfo>
             <StRule>
               <StRuleItem>✔ ️오후 6시, 10시 중 원하는 시간을 선택</StRuleItem>
@@ -164,6 +187,36 @@ const StName = styled.div`
   font-size: 1.2rem;
   position: absolute;
   right: 0;
+`
+
+const StToggle = styled.button`
+  font-family: 'Hanna-Air';
+  font-size: 1.1rem;
+  position: absolute;
+  right: 0;
+  top: 1.5rem;
+  padding: 7px;
+
+  background: #fdfdfd;
+  border-radius: 5px;
+  border: none;
+  
+  animation: swipe ease 1s;
+
+  @keyframes swipe {
+    0% {
+      opacity: 0;
+      transform: translateY(-0.4rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  :active {
+    box-shadow: -1px -1px 1px 1px #b0c3d4, inset 1px 1px 2px 1px #cccccc, inset 0px 1px 2px 1px #cccccc;
+  }
 `
 
 const StRule = styled.div`
