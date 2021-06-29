@@ -24,8 +24,8 @@ create table if not exists ATTENDANCE (
     foreign key(conference_time_id) references CONFERENCE_TIME(id)
 );
 
-insert into CONFERENCE_TIME(conference_time) values (PARSEDATETIME('18:00:00', 'HH:mm:ss'));
-insert into CONFERENCE_TIME(conference_time) values (PARSEDATETIME('22:00:00', 'HH:mm:ss'));
+insert into CONFERENCE_TIME(conference_time) values ('18:00:00');
+insert into CONFERENCE_TIME(conference_time) values ('22:00:00');
 
 create table if not exists PAIR (
     id bigint auto_increment not null,
@@ -34,5 +34,5 @@ create table if not exists PAIR (
 
     primary key(id),
     unique key(group_id, attendance_id),
-    foreign key(attendance_id) references ATTENDANCE(id)
+    foreign key(attendance_id) references ATTENDANCE(id) ON DELETE CASCADE
 );
