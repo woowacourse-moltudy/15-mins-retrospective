@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.auth.TokenToNameArgumentResolver;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 import java.util.List;
 

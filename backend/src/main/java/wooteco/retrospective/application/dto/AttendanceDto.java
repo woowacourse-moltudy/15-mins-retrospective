@@ -1,9 +1,9 @@
 package wooteco.retrospective.application.dto;
 
-import java.time.LocalDate;
-
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
+
+import java.time.LocalDate;
 
 public class AttendanceDto {
 

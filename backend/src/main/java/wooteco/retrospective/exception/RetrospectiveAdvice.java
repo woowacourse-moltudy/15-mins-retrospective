@@ -1,19 +1,27 @@
 package wooteco.retrospective.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @RestControllerAdvice
 public class RetrospectiveAdvice {
 
+    private static final Logger logger = LoggerFactory.getLogger(RetrospectiveAdvice.class);
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDto> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = Objects.requireNonNull(e.getFieldError()).getDefaultMessage();
+
+        logger.warn(Arrays.toString(e.getStackTrace()));
+
         return ResponseEntity.badRequest()
                 .body(
                         new ErrorDto(message)
@@ -22,6 +30,9 @@ public class RetrospectiveAdvice {
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<ErrorDto> invalidTokenException(AuthorizationException e) {
+
+        logger.warn(Arrays.toString(e.getStackTrace()));
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(
                         new ErrorDto(e.getMessage())
@@ -30,6 +41,9 @@ public class RetrospectiveAdvice {
 
     @ExceptionHandler(RetrospectiveException.class)
     public ResponseEntity<ErrorDto> retrospectiveException(RetrospectiveException e) {
+
+        logger.warn(Arrays.toString(e.getStackTrace()));
+
         return ResponseEntity.badRequest()
                 .body(
                         new ErrorDto(e.getMessage())

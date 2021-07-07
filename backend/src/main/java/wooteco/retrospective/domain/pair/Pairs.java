@@ -1,7 +1,6 @@
 package wooteco.retrospective.domain.pair;
 
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.matchpolicy.DefaultMatchPolicy;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 import wooteco.retrospective.domain.pair.member.Shuffled;

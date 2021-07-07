@@ -1,15 +1,25 @@
 package wooteco.retrospective.domain.member;
 
 import org.apache.commons.lang3.StringUtils;
+import wooteco.retrospective.domain.attendance.Attendance;
 
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Member {
-
     private static final int MAX_LENGTH = 10;
 
-    private final Long id;
-    private final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = MAX_LENGTH)
+    private String name;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<Attendance> attendances;
 
     public Member(String name) {
         this(null, name);
@@ -19,6 +29,10 @@ public class Member {
         validateMember(name);
         this.id = id;
         this.name = name;
+    }
+
+    protected Member() {
+
     }
 
     private void validateMember(String name) {

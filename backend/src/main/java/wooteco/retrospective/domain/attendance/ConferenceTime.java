@@ -1,14 +1,22 @@
 package wooteco.retrospective.domain.attendance;
 
-import java.time.LocalTime;
-import java.util.Objects;
-
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 
+import javax.persistence.*;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Objects;
+
+@Entity
 public class ConferenceTime {
 
-    private final Long id;
-    private final LocalTime conferenceTime;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private LocalTime conferenceTime;
+
+    @OneToMany(mappedBy = "conferenceTime", cascade = CascadeType.PERSIST)
+    private List<Attendance> attendances;
 
     public ConferenceTime(LocalTime conferenceTime) {
         this(null, conferenceTime);
@@ -17,6 +25,10 @@ public class ConferenceTime {
     public ConferenceTime(Long id, LocalTime conferenceTime) {
         this.id = id;
         this.conferenceTime = conferenceTime;
+    }
+
+    protected ConferenceTime() {
+
     }
 
     public static ConferenceTime of(ConferenceTimeDto conferenceTimeDto) {

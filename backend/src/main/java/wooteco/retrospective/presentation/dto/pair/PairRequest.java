@@ -3,7 +3,6 @@ package wooteco.retrospective.presentation.dto.pair;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class PairRequest {
 

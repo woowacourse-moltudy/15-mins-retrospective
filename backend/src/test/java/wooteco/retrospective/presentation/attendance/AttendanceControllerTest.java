@@ -1,17 +1,6 @@
 package wooteco.retrospective.presentation.attendance;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.attendance.ConferenceTimeService;
@@ -34,11 +20,23 @@ import wooteco.retrospective.application.dto.MembersDto;
 import wooteco.retrospective.domain.attendance.ConferenceTime;
 import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDaoImpl;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.member.MemberController;
 import wooteco.retrospective.presentation.pair.PairController;
 import wooteco.retrospective.utils.auth.JwtTokenProvider;
+
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("출석부 - Controller 테스트")
 @WebMvcTest

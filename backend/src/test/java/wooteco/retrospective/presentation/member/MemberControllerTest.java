@@ -10,15 +10,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wooteco.retrospective.application.attendance.AttendanceService;
 import wooteco.retrospective.application.attendance.ConferenceTimeService;
+import wooteco.retrospective.application.dto.MemberDTO;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.dto.MemberTokenDto;
 import wooteco.retrospective.application.member.MemberService;
-import wooteco.retrospective.application.dto.MemberDTO;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.utils.auth.JwtTokenProvider;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
+import wooteco.retrospective.utils.auth.JwtTokenProvider;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

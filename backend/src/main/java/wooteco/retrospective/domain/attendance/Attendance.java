@@ -1,20 +1,38 @@
 package wooteco.retrospective.domain.attendance;
 
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
+import wooteco.retrospective.domain.pair.Pair;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 
+@Entity
 public class Attendance {
 
-    private final Long id;
-    private final LocalDate date;
-    private final Member member;
-    private final ConferenceTime conferenceTime;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private LocalDate date;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    @Column(updatable = false, nullable = false)
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "CONFERENCE_TIME")
+    @Column(nullable = false)
+    private ConferenceTime conferenceTime;
+
+    @ManyToOne
+    @JoinColumn(name = "PAIR_ID")
+    private Pair pair;
 
     public Attendance(Member member, ConferenceTime conferenceTime) {
         this(LocalDate.now(), member, conferenceTime);
+
     }
 
     public Attendance(LocalDate localDate, Member member, ConferenceTime conferenceTime) {
@@ -26,6 +44,10 @@ public class Attendance {
         this.date = date;
         this.member = member;
         this.conferenceTime = conferenceTime;
+    }
+
+    protected Attendance() {
+
     }
 
     public boolean isAttendAt(ConferenceTime conferenceTime) {
@@ -58,6 +80,14 @@ public class Attendance {
 
     public long getConferenceTimeId() {
         return conferenceTime.getId();
+    }
+
+    public Optional<Long> getGroupId() {
+        if(pair == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(pair.getGroupId());
     }
 
     @Override
