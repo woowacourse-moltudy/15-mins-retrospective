@@ -2,7 +2,7 @@ package wooteco.retrospective.application.dto;
 
 import java.time.LocalDate;
 
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 
 public class AttendanceDto {

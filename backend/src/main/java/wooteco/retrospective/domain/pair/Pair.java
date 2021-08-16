@@ -1,10 +1,9 @@
 package wooteco.retrospective.domain.pair;
 
-import wooteco.retrospective.domain.attendance.Attendance;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import wooteco.retrospective.domain.attendance.Attendance;
 
 public class Pair {
 

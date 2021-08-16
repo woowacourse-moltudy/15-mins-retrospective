@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
 

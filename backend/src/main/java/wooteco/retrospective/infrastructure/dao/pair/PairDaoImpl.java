@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.dao.PairDao;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;

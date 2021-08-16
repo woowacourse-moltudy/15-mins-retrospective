@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 
 @Repository

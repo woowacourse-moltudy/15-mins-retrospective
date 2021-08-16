@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.member.Member;
 
 import java.util.List;
 import java.util.function.UnaryOperator;

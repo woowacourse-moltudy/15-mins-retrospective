@@ -1,15 +1,18 @@
 package wooteco.retrospective.domain.member;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 public class Member {
 
     private static final int MAX_LENGTH = 10;
 
-    private final Long id;
-    private final String name;
+    private Long id;
+    private String name;
+
+
+    protected Member() {
+    }
 
     public Member(String name) {
         this(null, name);
@@ -27,7 +30,7 @@ public class Member {
         }
 
         if (name.length() <= 0 || name.length() > MAX_LENGTH ||
-                StringUtils.containsWhitespace(name)) {
+            StringUtils.containsWhitespace(name)) {
             throw new IllegalArgumentException();
         }
     }
@@ -42,8 +45,12 @@ public class Member {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Member)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Member)) {
+            return false;
+        }
 
         Member member = (Member) o;
 

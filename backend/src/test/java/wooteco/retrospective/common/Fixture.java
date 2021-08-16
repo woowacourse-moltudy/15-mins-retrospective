@@ -2,7 +2,7 @@ package wooteco.retrospective.common;
 
 import org.junit.jupiter.params.provider.Arguments;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 
 import java.time.LocalDate;

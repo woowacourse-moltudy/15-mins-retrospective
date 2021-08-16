@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.dao.AttendanceDao;
 import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.domain.dao.PairDao;

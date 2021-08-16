@@ -1,17 +1,19 @@
 package wooteco.retrospective.domain.attendance;
 
-import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
-
 import java.time.LocalDate;
 import java.util.Objects;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
+import wooteco.retrospective.domain.member.Member;
 
 public class Attendance {
 
-    private final Long id;
-    private final LocalDate date;
-    private final Member member;
-    private final ConferenceTime conferenceTime;
+    private Long id;
+    private LocalDate date;
+    private Member member;
+    private ConferenceTime conferenceTime;
+
+    protected Attendance() {
+    }
 
     public Attendance(Member member, ConferenceTime conferenceTime) {
         this(LocalDate.now(), member, conferenceTime);

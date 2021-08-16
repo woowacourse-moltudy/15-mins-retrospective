@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.dao.AttendanceDao;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.dao.ConferenceTimeDao;
 import wooteco.retrospective.exception.NotFoundMemberException;
 import wooteco.retrospective.exception.NotFoundTimeException;
