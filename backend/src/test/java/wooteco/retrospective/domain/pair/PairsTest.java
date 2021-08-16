@@ -41,9 +41,9 @@ class PairsTest {
         List<Pair> pairs = Pairs.withDefaultMatchPolicy(attendances).getPairs();
 
         long actual = pairs.stream()
+                .flatMap(pair -> pair.getAttendances().stream())
                 .distinct()
-                .mapToLong(pair -> pair.getAttendances().size())
-                .sum();
+                .count();
 
         assertThat(actual).isEqualTo(attendances.size());
     }

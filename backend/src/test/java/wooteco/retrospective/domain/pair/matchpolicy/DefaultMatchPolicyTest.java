@@ -57,9 +57,9 @@ class DefaultMatchPolicyTest {
         List<Pair> pairs = matchPolicy.apply(attendane);
 
         long actual = pairs.stream()
+                .flatMap(pair -> pair.getAttendances().stream())
                 .distinct()
-                .mapToLong(pair -> pair.getAttendances().size())
-                .sum();
+                .count();
 
         assertThat(actual).isEqualTo(attendane.size());
     }

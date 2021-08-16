@@ -1,7 +1,5 @@
 package wooteco.retrospective.application.dto;
 
-import wooteco.retrospective.domain.member.Member;
-
 public class MemberTokenDto {
 
     private String token;

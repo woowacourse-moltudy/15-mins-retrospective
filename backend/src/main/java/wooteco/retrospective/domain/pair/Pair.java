@@ -1,16 +1,11 @@
 package wooteco.retrospective.domain.pair;
 
+import wooteco.retrospective.domain.attendance.Attendance;
+
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import wooteco.retrospective.domain.attendance.Attendance;
 
 @Entity
 public class Pair {
@@ -22,9 +17,9 @@ public class Pair {
     private Long groupId;
 
     @OneToMany(
-        mappedBy = "pair",
-        cascade = CascadeType.PERSIST,
-        fetch = FetchType.EAGER
+            mappedBy = "pair",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.PERSIST
     )
     private List<Attendance> attendances;
 
@@ -35,6 +30,10 @@ public class Pair {
         this.groupId = groupId;
         this.attendances = attendances;
         this.attendances.forEach(attendance -> attendance.appendTo(this));
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getGroupId() {
@@ -48,13 +47,13 @@ public class Pair {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Pair)) return false;
         Pair pair = (Pair) o;
-        return Objects.equals(groupId, pair.groupId) && Objects.equals(attendances, pair.attendances);
+        return Objects.equals(pair.getId(), getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, attendances);
+        return Objects.hash(id);
     }
 }

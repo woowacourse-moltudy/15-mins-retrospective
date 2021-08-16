@@ -1,16 +1,13 @@
 package wooteco.retrospective.domain.conference_time;
 
-import java.time.LocalTime;
-import java.util.Objects;
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import wooteco.retrospective.application.dto.ConferenceTimeDto;
-import wooteco.retrospective.domain.attendance.Attendance;
+import java.time.LocalTime;
+import java.util.Objects;
 
 @Entity
 public class ConferenceTime {
@@ -45,7 +42,7 @@ public class ConferenceTime {
         return this.conferenceTime.isBefore(conferenceTime);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -55,16 +52,14 @@ public class ConferenceTime {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        ConferenceTime conferenceTime1 = (ConferenceTime) o;
-        return conferenceTime == conferenceTime1.conferenceTime;
+        if (this == o) return true;
+        if (!(o instanceof ConferenceTime)) return false;
+        ConferenceTime that = (ConferenceTime) o;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conferenceTime);
+        return Objects.hash(getId());
     }
 }

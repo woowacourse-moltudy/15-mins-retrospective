@@ -1,21 +1,12 @@
 package wooteco.retrospective.domain.attendance;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Attendance {
@@ -30,11 +21,11 @@ public class Attendance {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "CONFERENCE_TIME_ID")
     private ConferenceTime conferenceTime;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PAIR_ID")
     private Pair pair;
 
@@ -68,7 +59,7 @@ public class Attendance {
         return this.date.equals(date);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -84,26 +75,24 @@ public class Attendance {
         return conferenceTime;
     }
 
-    public long getMemberId() {
+    public Long getMemberId() {
         return member.getId();
     }
 
-    public long getConferenceTimeId() {
+    public Long getConferenceTimeId() {
         return conferenceTime.getId();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (!(o instanceof Attendance)) return false;
         Attendance that = (Attendance) o;
-        return date.equals(that.date) && member.getName().equals(that.member.getName()) && conferenceTime.equals(that.conferenceTime);
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, member, conferenceTime);
+        return Objects.hash(getId());
     }
 }

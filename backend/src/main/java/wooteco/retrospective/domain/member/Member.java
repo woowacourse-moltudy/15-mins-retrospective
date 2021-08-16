@@ -1,11 +1,12 @@
 package wooteco.retrospective.domain.member;
 
-import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Objects;
 
 @Entity
 public class Member {
@@ -55,6 +56,7 @@ public class Member {
         if (this == o) {
             return true;
         }
+
         if (!(o instanceof Member)) {
             return false;
         }
