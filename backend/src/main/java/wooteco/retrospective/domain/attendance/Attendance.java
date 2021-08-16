@@ -1,16 +1,42 @@
 package wooteco.retrospective.domain.attendance;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
+import wooteco.retrospective.domain.pair.Pair;
 
+@Entity
 public class Attendance {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDate date;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "CONFERENCE_TIME_ID")
     private ConferenceTime conferenceTime;
+
+    @ManyToOne
+    @JoinColumn(name = "PAIR_ID")
+    private Pair pair;
 
     protected Attendance() {
     }
@@ -28,6 +54,10 @@ public class Attendance {
         this.date = date;
         this.member = member;
         this.conferenceTime = conferenceTime;
+    }
+
+    public void appendTo(Pair pair) {
+        this.pair = pair;
     }
 
     public boolean isAttendAt(ConferenceTime conferenceTime) {

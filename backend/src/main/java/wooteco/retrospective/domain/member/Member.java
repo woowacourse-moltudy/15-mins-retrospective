@@ -1,15 +1,22 @@
 package wooteco.retrospective.domain.member;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import org.apache.commons.lang3.StringUtils;
 
+@Entity
 public class Member {
 
     private static final int MAX_LENGTH = 10;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
+    private String name;
 
     protected Member() {
     }

@@ -3,13 +3,26 @@ package wooteco.retrospective.domain.conference_time;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.domain.attendance.Attendance;
 
+@Entity
 public class ConferenceTime {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalTime conferenceTime;
+
+    protected ConferenceTime() {
+    }
 
     public ConferenceTime(LocalTime conferenceTime) {
         this(null, conferenceTime);
