@@ -1,6 +1,5 @@
 package wooteco.retrospective.presentation.dto.pair;
 
-import wooteco.retrospective.application.dto.MemberResponseDto;
 import wooteco.retrospective.application.dto.PairResponseDto;
 
 import java.util.List;

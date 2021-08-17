@@ -1,9 +1,9 @@
 package wooteco.retrospective.presentation.dto;
 
+import wooteco.retrospective.application.dto.ConferenceTimeDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
-import wooteco.retrospective.application.dto.ConferenceTimeDto;
 
 public class TimesResponse {
     private final List<TimeResponse> timesResponse;

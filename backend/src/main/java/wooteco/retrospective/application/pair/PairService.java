@@ -4,12 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
-import wooteco.retrospective.domain.dao.AttendanceDao;
-import wooteco.retrospective.domain.dao.ConferenceTimeDao;
-import wooteco.retrospective.domain.dao.PairDao;
+import wooteco.retrospective.domain.attendance.repository.AttendanceRepository;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.repository.ConferenceTimeRepository;
 import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
+import wooteco.retrospective.domain.pair.repository.PairRepository;
 import wooteco.retrospective.exception.InvalidConferenceTimeException;
 import wooteco.retrospective.exception.InvalidDateException;
 import wooteco.retrospective.exception.InvalidTimeException;
@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,14 +25,16 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class PairService {
 
-    private final ConferenceTimeDao conferenceTimeDao;
-    private final PairDao pairDao;
-    private final AttendanceDao attendanceDao;
+    private final ConferenceTimeRepository conferenceTimeRepository;
+    private final PairRepository pairRepository;
+    private final AttendanceRepository attendanceRepository;
 
-    public PairService(ConferenceTimeDao conferenceTimeDao, PairDao pairDao, AttendanceDao attendanceDao) {
-        this.conferenceTimeDao = conferenceTimeDao;
-        this.pairDao = pairDao;
-        this.attendanceDao = attendanceDao;
+    public PairService(ConferenceTimeRepository conferenceTimeRepository,
+                       PairRepository pairRepository,
+                       AttendanceRepository attendanceRepository) {
+        this.conferenceTimeRepository = conferenceTimeRepository;
+        this.pairRepository = pairRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
     @Transactional
@@ -42,20 +43,21 @@ public class PairService {
                                                        LocalDateTime currentDateTime) {
         validateIsRightDate(date, currentDateTime.toLocalDate());
 
-        ConferenceTime conferenceTime = conferenceTimeDao.findById(conferenceTimeId)
+        ConferenceTime conferenceTime = conferenceTimeRepository.findById(conferenceTimeId)
                 .orElseThrow(InvalidConferenceTimeException::new);
 
         isCallableTime(conferenceTime, currentDateTime.toLocalTime());
 
-        return pairDao.findByDateAndTime(date, conferenceTime)
-                .map(toPairResponseDtos())
-                .orElseGet(() -> createNewPairAndReturnPairResponseDtoAt(date, conferenceTime));
-    }
+        List<PairResponseDto> pairResponseDtos = pairRepository.findByDateAndConferenceTime(date, conferenceTime)
+                .stream()
+                .map(PairResponseDto::new)
+                .collect(toList());
 
-    private void isCallableTime(ConferenceTime conferenceTime, LocalTime currentTime) {
-        if(!conferenceTime.isBefore(currentTime)) {
-            throw new InvalidTimeException();
+        if(pairResponseDtos.isEmpty()) {
+            return createNewPairAndReturnPairResponseDtoAt(date, conferenceTime);
         }
+
+        return pairResponseDtos;
     }
 
     private void validateIsRightDate(LocalDate date, LocalDate currentDate) {
@@ -64,10 +66,10 @@ public class PairService {
         }
     }
 
-    private Function<Pairs, List<PairResponseDto>> toPairResponseDtos() {
-        return pairs -> pairs.getPairs().stream()
-                .map(PairResponseDto::new)
-                .collect(toList());
+    private void isCallableTime(ConferenceTime conferenceTime, LocalTime currentTime) {
+        if(!conferenceTime.isBefore(currentTime)) {
+            throw new InvalidTimeException();
+        }
     }
 
     private List<PairResponseDto> createNewPairAndReturnPairResponseDtoAt(LocalDate date,
@@ -76,14 +78,13 @@ public class PairService {
 
         Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendances));
 
-        return pairDao.insert(pairs).getPairs().stream()
+        return pairs.getPairs().stream()
+                .map(pairRepository::save)
                 .map(PairResponseDto::new)
                 .collect(toList());
     }
 
     private List<Attendance> getAttendancesOf(LocalDate date, ConferenceTime conferenceTime) {
-        return attendanceDao.findByDate(date).stream()
-                .filter(attendance -> attendance.isAttendAt(conferenceTime))
-                .collect(toList());
+        return attendanceRepository.findAttendanceByDateAndConferenceTime(date, conferenceTime);
     }
 }

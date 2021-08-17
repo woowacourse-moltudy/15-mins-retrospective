@@ -1,17 +1,6 @@
 package wooteco.retrospective.presentation.attendance;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,22 +12,31 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import wooteco.config.RestDocsConfiguration;
 import wooteco.retrospective.application.attendance.AttendanceService;
-import wooteco.retrospective.application.attendance.ConferenceTimeService;
+import wooteco.retrospective.application.conference_time.ConferenceTimeService;
 import wooteco.retrospective.application.dto.ConferenceTimeDto;
 import wooteco.retrospective.application.dto.MembersDto;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
-import wooteco.retrospective.domain.dao.ConferenceTimeDao;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.repository.ConferenceTimeRepository;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.infrastructure.dao.attendance.ConferenceTimeDaoImpl;
 import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
 import wooteco.retrospective.presentation.member.MemberController;
 import wooteco.retrospective.presentation.pair.PairController;
 import wooteco.retrospective.utils.auth.JwtTokenProvider;
+
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("출석부 - Controller 테스트")
 @WebMvcTest
@@ -65,7 +63,7 @@ class AttendanceControllerTest {
     private ConferenceTimeService conferenceTimeService;
 
     @MockBean
-    private ConferenceTimeDao conferenceTimeDao;
+    private ConferenceTimeRepository conferenceTimeRepository;
 
     @MockBean
     private MemberController memberController;
@@ -82,15 +80,15 @@ class AttendanceControllerTest {
         BDDMockito.given(jwtTokenProvider.validateToken(any()))
             .willReturn(true);
 
-        given(conferenceTimeDao.insert(any(ConferenceTime.class)))
+        given(conferenceTimeRepository.save(any(ConferenceTime.class)))
             .willReturn(CONFERENCE_TIME_SIX);
 
 
-        given(conferenceTimeDao.insert(any(ConferenceTime.class)))
+        given(conferenceTimeRepository.save(any(ConferenceTime.class)))
             .willReturn(CONFERENCE_TIME_TEN);
 
 
-        given(conferenceTimeDao.findAll())
+        given(conferenceTimeRepository.findAll())
             .willReturn(Arrays.asList(CONFERENCE_TIME_SIX, CONFERENCE_TIME_TEN));
 
         given(conferenceTimeService.findAllTime())
@@ -163,10 +161,10 @@ class AttendanceControllerTest {
         BDDMockito.given(jwtTokenProvider.validateToken(any()))
             .willReturn(true);
 
-        given(conferenceTimeDao.insert(any(ConferenceTime.class)))
+        given(conferenceTimeRepository.save(any(ConferenceTime.class)))
             .willReturn(CONFERENCE_TIME_SIX);
 
-        given(conferenceTimeDao.findById(any(Long.class)))
+        given(conferenceTimeRepository.findById(any(Long.class)))
             .willReturn(Optional.of(CONFERENCE_TIME_SIX));
 
         AttendanceRequest attendanceRequest = new AttendanceRequest(

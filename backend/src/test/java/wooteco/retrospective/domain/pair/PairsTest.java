@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import wooteco.retrospective.common.Fixture;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.matchpolicy.MatchPolicy;
 
 import java.util.Collections;
@@ -42,9 +41,9 @@ class PairsTest {
         List<Pair> pairs = Pairs.withDefaultMatchPolicy(attendances).getPairs();
 
         long actual = pairs.stream()
+                .flatMap(pair -> pair.getAttendances().stream())
                 .distinct()
-                .mapToLong(pair -> pair.getAttendances().size())
-                .sum();
+                .count();
 
         assertThat(actual).isEqualTo(attendances.size());
     }

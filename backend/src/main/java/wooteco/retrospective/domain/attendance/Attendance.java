@@ -1,17 +1,36 @@
 package wooteco.retrospective.domain.attendance;
 
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.presentation.dto.attendance.AttendanceRequest;
+import wooteco.retrospective.domain.pair.Pair;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
 public class Attendance {
 
-    private final Long id;
-    private final LocalDate date;
-    private final Member member;
-    private final ConferenceTime conferenceTime;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private LocalDate date;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "CONFERENCE_TIME_ID")
+    private ConferenceTime conferenceTime;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "PAIR_ID")
+    private Pair pair;
+
+    protected Attendance() {
+    }
 
     public Attendance(Member member, ConferenceTime conferenceTime) {
         this(LocalDate.now(), member, conferenceTime);
@@ -28,6 +47,10 @@ public class Attendance {
         this.conferenceTime = conferenceTime;
     }
 
+    public void appendTo(Pair pair) {
+        this.pair = pair;
+    }
+
     public boolean isAttendAt(ConferenceTime conferenceTime) {
         return this.conferenceTime.equals(conferenceTime);
     }
@@ -36,7 +59,7 @@ public class Attendance {
         return this.date.equals(date);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -52,26 +75,24 @@ public class Attendance {
         return conferenceTime;
     }
 
-    public long getMemberId() {
+    public Long getMemberId() {
         return member.getId();
     }
 
-    public long getConferenceTimeId() {
+    public Long getConferenceTimeId() {
         return conferenceTime.getId();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (!(o instanceof Attendance)) return false;
         Attendance that = (Attendance) o;
-        return date.equals(that.date) && member.getName().equals(that.member.getName()) && conferenceTime.equals(that.conferenceTime);
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, member, conferenceTime);
+        return Objects.hash(getId());
     }
 }

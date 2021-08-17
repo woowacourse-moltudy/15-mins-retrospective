@@ -1,7 +1,6 @@
 package wooteco.retrospective.domain.pair.member;
 
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.member.Member;
 
 import java.util.ArrayList;
 import java.util.Collections;

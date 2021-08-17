@@ -1,27 +1,27 @@
 package wooteco.retrospective.application;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import wooteco.retrospective.application.dto.MemberResponseDto;
 import wooteco.retrospective.application.dto.PairResponseDto;
 import wooteco.retrospective.application.pair.PairService;
 import wooteco.retrospective.domain.attendance.Attendance;
-import wooteco.retrospective.domain.attendance.ConferenceTime;
-import wooteco.retrospective.domain.dao.AttendanceDao;
-import wooteco.retrospective.domain.dao.PairDao;
-import wooteco.retrospective.domain.dao.ConferenceTimeDao;
+import wooteco.retrospective.domain.attendance.repository.AttendanceRepository;
+import wooteco.retrospective.domain.conference_time.ConferenceTime;
+import wooteco.retrospective.domain.conference_time.repository.ConferenceTimeRepository;
 import wooteco.retrospective.domain.member.Member;
 import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
-import wooteco.retrospective.exception.InvalidConferenceTimeException;
+import wooteco.retrospective.domain.pair.repository.PairRepository;
 import wooteco.retrospective.exception.InvalidDateException;
 import wooteco.retrospective.exception.InvalidTimeException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,40 +30,75 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.retrospective.common.Fixture.*;
+import static wooteco.retrospective.common.Fixture.chu;
 
-
+@DataJpaTest
 class PairServiceTest {
 
-    private static PairService pairService;
-    private static ConferenceTimeDao conferenceTimeDao;
-    private static PairDao pairDao;
-    private static AttendanceDao attendanceDao;
+    @Autowired
+    private ConferenceTimeRepository conferenceTimeRepository;
 
-    private static List<Attendance> yesterdayAttendances = List.of(
-            new Attendance(1L, YESTERDAY, neozal.getMember(), new ConferenceTime(TIME_SIX)),
-            new Attendance(2L, YESTERDAY, danijani.getMember(), new ConferenceTime(TIME_SIX)),
-            new Attendance(3L, YESTERDAY, whyguy.getMember(), new ConferenceTime(TIME_SIX))
-    );
-    private static Pair yesterdayPair = new Pair(1L ,yesterdayAttendances);
+    @Autowired
+    private PairRepository pairRepository;
 
-    private static Pair pairOne = new Pair(1L, List.of(neozal, whyguy, duck));
-    private static Pair pairTwo = new Pair(2L, List.of(danijani, soulg, chu));
+    @Autowired
+    private AttendanceRepository attendanceRepository;
 
-    @BeforeAll
-    static void beforeAll() {
-        conferenceTimeDao = new ConferenceTimeDao.Fake();
-        pairDao = new PairDao.Fake();
-        attendanceDao = new AttendanceDao.Fake();
-        pairService = new PairService(conferenceTimeDao, pairDao, attendanceDao);
+    @Autowired
+    private TestEntityManager testEntityManager;
 
-        pairDao.insert(
-                Pairs.from(List.of(
-                        pairOne,
-                        pairTwo
-                ))
+    private PairService pairService;
+
+    private List<Attendance> yesterdayAttendances;
+    private Pair yesterdayPair;
+
+    private Pair pairOne;
+    private Pair pairTwo;
+
+    private ConferenceTime timeSix;
+    private ConferenceTime timeTen;
+
+    @BeforeEach
+    void setUp() {
+        pairRepository.deleteAll();
+        attendanceRepository.deleteAll();
+        conferenceTimeRepository.deleteAll();
+        testEntityManager.flush();
+        testEntityManager.clear();
+        prepare();
+
+        pairService = new PairService(conferenceTimeRepository, pairRepository, attendanceRepository);
+
+        pairRepository.save(pairOne);
+        pairRepository.save(pairTwo);
+
+        yesterdayAttendances.forEach(attendanceRepository::save);
+
+        testEntityManager.flush();
+        testEntityManager.clear();
+    }
+
+    private void prepare() {
+        timeSix = conferenceTimeRepository.save(new ConferenceTime(LocalTime.of(18, 00)));
+        timeTen = conferenceTimeRepository.save(new ConferenceTime(LocalTime.of(22, 00)));
+
+        Attendance neozal = new Attendance(TODAY, new Member("손너잘"), timeSix);
+        Attendance whyguy = new Attendance(TODAY, new Member("웨지"), timeSix);
+        Attendance danijani = new Attendance(TODAY, new Member("다니"), timeSix);
+        Attendance soulg = new Attendance(TODAY, new Member("솔지"), timeSix);
+        Attendance chu = new Attendance(TODAY, new Member("피카"), timeSix);
+        Attendance duck = new Attendance(TODAY, new Member("조연우"), timeSix);
+
+        yesterdayAttendances = List.of(
+                new Attendance(YESTERDAY, neozal.getMember(), timeSix),
+                new Attendance(YESTERDAY, danijani.getMember(), timeSix),
+                new Attendance(YESTERDAY, whyguy.getMember(), timeSix)
         );
 
-        yesterdayAttendances.forEach(attendanceDao::insert);
+        yesterdayPair = new Pair(1L, yesterdayAttendances);
+
+        pairOne = new Pair(1L, List.of(neozal, whyguy, duck));
+        pairTwo = new Pair(2L, List.of(danijani, soulg, chu));
     }
 
     @DisplayName("페어를 반환한다.")
@@ -71,7 +106,7 @@ class PairServiceTest {
     void getPairsByDateAndTime() {
         List<PairResponseDto> pairResponse = pairService.getPairsByDateAndTime(
                 TODAY,
-                1L,
+                timeSix.getId(),
                 LocalDateTime.of(
                         TODAY,
                         LocalTime.of(19, 0)
@@ -91,7 +126,7 @@ class PairServiceTest {
     void getPairsByDateAndTimeWithTwice() {
         List<PairResponseDto> once = pairService.getPairsByDateAndTime(
                 TODAY,
-                1L,
+                timeSix.getId(),
                 LocalDateTime.of(
                         TODAY,
                         LocalTime.of(19, 0)
@@ -100,7 +135,7 @@ class PairServiceTest {
 
         List<PairResponseDto> twice = pairService.getPairsByDateAndTime(
                 TODAY,
-                1L,
+                timeSix.getId(),
                 LocalDateTime.of(
                         TODAY,
                         LocalTime.of(19, 0)
@@ -117,7 +152,7 @@ class PairServiceTest {
     void getPairsByDateAndTimeWithBeforeDays() {
         List<PairResponseDto> pairs = pairService.getPairsByDateAndTime(
                 YESTERDAY,
-                1L,
+                timeSix.getId(),
                 LocalDateTime.of(
                         TODAY,
                         LocalTime.of(19, 0)
@@ -145,7 +180,7 @@ class PairServiceTest {
         assertThatThrownBy(
                 () -> pairService.getPairsByDateAndTime(
                         TODAY.plusDays(1),
-                        1L,
+                        timeSix.getId(),
                         LocalDateTime.of(
                                 TODAY,
                                 LocalTime.of(19, 0)
@@ -176,7 +211,7 @@ class PairServiceTest {
         assertThatThrownBy(
                 () -> pairService.getPairsByDateAndTime(
                         TODAY,
-                        1L,
+                        timeSix.getId(),
                         LocalDateTime.of(
                                 TODAY,
                                 LocalTime.of(1, 0)

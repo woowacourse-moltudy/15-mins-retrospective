@@ -4,9 +4,16 @@ spring:
     url: ENC(vBS1YY41plyzrBTRP0zZOSHpi8XrwNAz0br4U47uyt1CEAfEGJ067Hx84xKY9Z10yG2mB7B796coGptJHseZYcWnCJcXaZz6fEW+eCZop5sDbNWZO3G65g==)
     username: ENC(VVKeXAFc8s9OaXl+ie0H6Q==)
     password:
-  h2:
-    console:
-      enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialects: org.hibernate.dialect.MySQL57InnoDBDialect
+        format_sql: true
+        default_batch_fetch_size: 1000
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
 
 server:
   front:

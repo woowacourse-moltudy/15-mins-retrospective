@@ -11,7 +11,6 @@ import wooteco.retrospective.presentation.dto.pair.PairRequest;
 import wooteco.retrospective.presentation.dto.pair.PairResponse;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;

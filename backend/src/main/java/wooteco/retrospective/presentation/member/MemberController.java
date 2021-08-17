@@ -2,10 +2,10 @@ package wooteco.retrospective.presentation.member;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import wooteco.retrospective.application.dto.MemberDTO;
 import wooteco.retrospective.application.dto.MemberLoginDto;
 import wooteco.retrospective.application.member.MemberService;
 import wooteco.retrospective.domain.auth.TokenToName;
-import wooteco.retrospective.application.dto.MemberDTO;
 import wooteco.retrospective.presentation.dto.member.MemberLoginRequest;
 import wooteco.retrospective.presentation.dto.member.MemberLoginResponse;
 import wooteco.retrospective.presentation.dto.member.MemberResponse;
