@@ -18,9 +18,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         ConferenceTime timeSix = new ConferenceTime(LocalTime.of(18, 00));
-        ConferenceTime timeTen = new ConferenceTime(LocalTime.of(22, 00));
-        ConferenceTime six = conferenceTimeRepository.save(timeSix);
-        ConferenceTime ten = conferenceTimeRepository.save(timeTen);
+        ConferenceTime timeTen = new ConferenceTime(LocalTime.of(22, 00));;
+
+        conferenceTimeRepository.save(timeSix);
+        conferenceTimeRepository.save(timeTen);
     }
 }

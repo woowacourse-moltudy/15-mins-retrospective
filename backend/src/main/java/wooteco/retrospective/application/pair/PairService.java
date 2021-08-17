@@ -7,6 +7,8 @@ import wooteco.retrospective.domain.attendance.Attendance;
 import wooteco.retrospective.domain.attendance.repository.AttendanceRepository;
 import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.conference_time.repository.ConferenceTimeRepository;
+import wooteco.retrospective.domain.pair.GroupedAttendance;
+import wooteco.retrospective.domain.pair.Pair;
 import wooteco.retrospective.domain.pair.Pairs;
 import wooteco.retrospective.domain.pair.member.ShuffledAttendances;
 import wooteco.retrospective.domain.pair.repository.PairRepository;
@@ -18,7 +20,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -48,8 +52,12 @@ public class PairService {
 
         isCallableTime(conferenceTime, currentDateTime.toLocalTime());
 
-        List<PairResponseDto> pairResponseDtos = pairRepository.findByDateAndConferenceTime(date, conferenceTime)
+        Map<Long, List<GroupedAttendance>> groupedPairs = pairRepository.findByDateAndConferenceTime(date, conferenceTime)
                 .stream()
+                .collect(groupingBy(GroupedAttendance::getGroupId));
+
+        List<PairResponseDto> pairResponseDtos = groupedPairs.entrySet().stream()
+                .map(entry -> new Pair(entry.getKey(), toAttendances(entry.getValue())))
                 .map(PairResponseDto::new)
                 .collect(toList());
 
@@ -58,6 +66,12 @@ public class PairService {
         }
 
         return pairResponseDtos;
+    }
+
+    private List<Attendance> toAttendances(List<GroupedAttendance> groupedAttendances) {
+        return groupedAttendances.stream()
+                .map(GroupedAttendance::getAttendance)
+                .collect(toList());
     }
 
     private void validateIsRightDate(LocalDate date, LocalDate currentDate) {
@@ -78,8 +92,16 @@ public class PairService {
 
         Pairs pairs = Pairs.withDefaultMatchPolicy(new ShuffledAttendances(attendances));
 
-        return pairs.getPairs().stream()
+        List<GroupedAttendance> groupedAttendances = pairs.getPairs().stream()
+                .flatMap(pair -> pair.toGroupedPairs().stream())
                 .map(pairRepository::save)
+                .collect(toList());
+
+        Map<Long, List<GroupedAttendance>> groupedPairsByGroupId = groupedAttendances.stream()
+                .collect(groupingBy(GroupedAttendance::getGroupId));
+
+        return groupedPairsByGroupId.entrySet().stream()
+                .map(entry -> new Pair(entry.getKey(), toAttendances(entry.getValue())))
                 .map(PairResponseDto::new)
                 .collect(toList());
     }

@@ -69,8 +69,11 @@ class PairServiceTest {
 
         pairService = new PairService(conferenceTimeRepository, pairRepository, attendanceRepository);
 
-        pairRepository.save(pairOne);
-        pairRepository.save(pairTwo);
+        pairOne.getAttendances().forEach(attendanceRepository::save);
+        pairTwo.getAttendances().forEach(attendanceRepository::save);
+
+        pairOne.toGroupedPairs().forEach(pairRepository::save);
+        pairTwo.toGroupedPairs().forEach(pairRepository::save);
 
         yesterdayAttendances.forEach(attendanceRepository::save);
 

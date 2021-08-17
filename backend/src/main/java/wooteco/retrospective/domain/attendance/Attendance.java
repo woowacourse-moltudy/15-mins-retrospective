@@ -2,7 +2,6 @@ package wooteco.retrospective.domain.attendance;
 
 import wooteco.retrospective.domain.conference_time.ConferenceTime;
 import wooteco.retrospective.domain.member.Member;
-import wooteco.retrospective.domain.pair.Pair;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,10 +24,6 @@ public class Attendance {
     @JoinColumn(name = "CONFERENCE_TIME_ID")
     private ConferenceTime conferenceTime;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PAIR_ID")
-    private Pair pair;
-
     protected Attendance() {
     }
 
@@ -45,10 +40,6 @@ public class Attendance {
         this.date = date;
         this.member = member;
         this.conferenceTime = conferenceTime;
-    }
-
-    public void appendTo(Pair pair) {
-        this.pair = pair;
     }
 
     public boolean isAttendAt(ConferenceTime conferenceTime) {

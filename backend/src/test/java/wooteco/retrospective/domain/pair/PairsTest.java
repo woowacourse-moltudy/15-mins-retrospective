@@ -79,7 +79,9 @@ class PairsTest {
 
         List<Pair> actual = Pairs.from(attendances, matchPolicy).getPairs();
 
-        assertThat(actual).isEqualTo(Collections.singletonList(new Pair(1L, attendances)));
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .isEqualTo(Collections.singletonList(new Pair(1L, attendances)));
     }
 
 }
